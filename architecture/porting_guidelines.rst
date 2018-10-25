@@ -238,10 +238,10 @@ software.
 
 **Update build.git**
 
-This isn't strictly necessary, but we are trying to create repo setup(s) for the
-device(s) that we are in charge of. That makes it very easy for newcomers to get
-started with a certain platform. So please consider creating a new manifest_
-for the device you have added to OP-TEE.
+This isn't strictly necessary, but we are trying to create repo setup(s) for
+the device(s) that we are in charge of. That makes it very easy for newcomers
+to get started with a certain platform. So please consider creating a new
+:ref:`manifest`: for the device you have added to OP-TEE.
 
 3. Hardware Unique Key
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -383,7 +383,6 @@ plans on extending this to make it a bit more flexible. Exactly when that will
 happen has not been decided yet.
 
 .. _HSM: https://en.wikipedia.org/wiki/Hardware_security_module
-.. _manifest: https://github.com/OP-TEE/build#6-manifests
 .. _MAINTAINERS.md: https://github.com/OP-TEE/optee_os/blob/master/MAINTAINERS
 .. _OTP: https://en.wikipedia.org/wiki/Programmable_read-only_memory
 .. _plat_arm_security_setup: https://github.com/ARM-software/arm-trusted-firmware/search?utf8=%E2%9C%93&q=plat_arm_security_setup&type=
@@ -391,4 +390,3 @@ happen has not been decided yet.
 .. _TZC-400: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.100325_0001_02_en/index.html
 .. _Platform-specific configuration and flags: build_system.md#platform-specific-configuration-and-flags
 .. _core/arch/arm/plat-hikey/conf.mk: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-hikey/conf.mk
-

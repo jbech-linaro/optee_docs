@@ -4,9 +4,22 @@ OP-TEE is yada yada
 
 .. toctree::
    :maxdepth: 2
+   :caption: About OP-TEE
+
+   newbie/about.rst
+
+.. toctree::
+   :maxdepth: 2
    :caption: Getting started
 
    newbie/getting_started
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Architecture documentation
+
+   architecture/globalplatform_api
+   architecture/porting_guidelines
 
 .. toctree::
    :maxdepth: 1
@@ -23,13 +36,6 @@ OP-TEE is yada yada
    :caption: Debugging techinques
 
    debug/debug.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Architecture documentation
-
-   architecture/globalplatform_api
-   architecture/porting_guidelines
 
 .. toctree::
    :maxdepth: 2
