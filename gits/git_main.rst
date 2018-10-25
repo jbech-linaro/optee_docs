@@ -1,4 +1,4 @@
-OP-TEE related gits
+OP-TEE gits
 ===================
 
 

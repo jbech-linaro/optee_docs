@@ -1,2 +1,2 @@
-Technical Documentation
-=======================
+.. include:: porting_guidelines.rst
+

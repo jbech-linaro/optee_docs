@@ -26,7 +26,7 @@ OP-TEE is yada yada
 
 .. toctree::
    :maxdepth: 2
-   :caption: Technical documentation
+   :caption: Architecture documentation
 
    architecture/architecture_overview
 
