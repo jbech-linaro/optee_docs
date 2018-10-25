@@ -28,7 +28,8 @@ OP-TEE is yada yada
    :maxdepth: 2
    :caption: Architecture documentation
 
-   architecture/architecture_overview
+   architecture/globalplatform_api
+   architecture/porting_guidelines
 
 .. toctree::
    :maxdepth: 2
