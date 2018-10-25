@@ -11,9 +11,10 @@ platforms, a ``PLATFORM_FLAVOR`` flag has been introduced. The ``PLATFORM`` and
 the Trusted OS runs. Note that there is also a composite form which makes it
 possible to append ``PLATFORM_FLAVOR`` directly, by adding a dash in-between
 the names. The composite form is shown below for the different boards. For more
-specific details about build flags etc, please read :ref:`flags`. Some
-platforms have different sub-maintainers, please refer to the file MAINTAINERS_
-for contact details for various platforms.
+specific details about build flags etc, please read
+:ref:`configuration_and_flags`. Some platforms have different sub-maintainers,
+please refer to the file MAINTAINERS_ for contact details for various
+platforms.
 
 .. Please keep this list sorted in alphabetic order
 
