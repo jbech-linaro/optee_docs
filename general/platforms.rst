@@ -1,5 +1,3 @@
-History
-=======
 
 .. _platforms_supported:
 
