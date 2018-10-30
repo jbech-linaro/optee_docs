@@ -40,7 +40,7 @@ IRC
 ^^^
 Some of the OP-TEE developers can be reached at Freenode (``chat.freenode.net``)
 at channel ``#linaro-security``. Having that said, the activity there is a bit
-limited, so it is probably the best place to discuss OP-TEE.
+limited, so it is probably **not** the best place to discuss OP-TEE.
 
 Vulnerability reporting
 ^^^^^^^^^^^^^^^^^^^^^^^
