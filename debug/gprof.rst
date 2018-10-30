@@ -62,21 +62,3 @@ collected:
         - The profiling buffer into which call graph and sampling data are
           recorded is allocated in the TA's ``.bss`` section. Some space is
           reserved by the linker script, only when the TA is instrumented.
-
-.. _gdb:
-
-GDB
-===
-This is how to use GDB
-
-.. _jtag:
-
-JTAG
-====
-This is how to use JTAG
-
-.. _openocd:
-
-OpenOCD
-^^^^^^^
-This is how to use OpenOCD

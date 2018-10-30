@@ -4,4 +4,7 @@ Debugging techniques
 .. toctree::
    :maxdepth: 2
 
-   debug
+   abort_dumps
+   gprof
+   gdb
+   jtag
