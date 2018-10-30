@@ -1,17 +1,20 @@
+.. _globalplatform_api:
+
 GlobalPlatform API
 ==================
 
-
-1. Introduction
-^^^^^^^^^^^^^^^
+Introduction
+^^^^^^^^^^^^
 GlobalPlatform_ works across industries to identify, develop and publish
 specifications which facilitate the secure and interoperable deployment and
 management of multiple embedded applications on secure chip technology. OP-TEE
 has support for GlobalPlatform TEE Client API Specification_ v1.0 (GPD_SPE_007)
 and TEE Internal Core API Specification v1.1.2 (GPD_SPE_010).
 
-2. TEE Client API
-^^^^^^^^^^^^^^^^^
+.. _tee_client_api:
+
+TEE Client API
+^^^^^^^^^^^^^^
 The TEE Client API describes and defines how a client running in a rich
 operating environment (REE) should communicate with the TEE. To identify a
 Trusted Application (TA) to be used, the client provides an UUID_. All TA's
@@ -82,11 +85,12 @@ when the session has been established.
 For a complete example, please see chapter **5.2 Example 1: Using the TEE
 Client API** in the GlobalPlatform TEE Client API Specification_ v1.0.
 
+.. _tee_internal_core_api:
 
-3. TEE Internal API
-^^^^^^^^^^^^^^^^^^^
-The Internal API is the API that is exposed to the Trusted Applications running
-in the secure world. The TEE Internal API consists of four major parts:
+TEE Internal Core API
+^^^^^^^^^^^^^^^^^^^^^
+The Internal Core API is the API that is exposed to the Trusted Applications
+running in the secure world. The TEE Internal API consists of four major parts:
 
 1. Trusted Storage API for Data and Keys
 2. Cryptographic Operations API
