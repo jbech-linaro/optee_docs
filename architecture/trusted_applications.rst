@@ -98,7 +98,4 @@ with the command:
 
     $ xtest --install-ta
 
-
-
-
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
