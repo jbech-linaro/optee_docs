@@ -5,6 +5,7 @@ Debugging techniques
    :maxdepth: 2
 
    abort_dumps
+   benchmark
    gprof
    gdb
    jtag
