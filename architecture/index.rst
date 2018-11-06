@@ -7,4 +7,6 @@ Architecture documentation
    core
    file_structure
    globalplatform_api
+   libraries
    porting_guidelines
+   trusted_applications
