@@ -1,16 +1,15 @@
 .. _contribute:
 
+==========
 Contribute
 ==========
-Contributions to OP-TEE are managed by the OP-TEE gatekeepers, whose contact
-email is op-tee[at]linaro[.]org.
-
-Anyone can contribute to OP-TEE as long as it is understood that it will
-require a sign-off. The sign-off is a simple line at the end of the explanation
-for the patch, which certifies that you wrote it or otherwise have the right to
-pass it on as an open-source patch (see below). You thereby assure that you
-have read and are following the rules stated in the ``Developer Certificate of
-Origin`` as stated below.
+Contributions to OP-TEE are managed by the OP-TEE `core team`_ and anyone can
+contribute to OP-TEE as long as it is understood that it will require a
+sign-off. The sign-off is a simple line at the end of the explanation for the
+patch, which certifies that you wrote it or otherwise have the right to pass it
+on as an open-source patch (see below). You thereby assure that you have read
+and are following the rules stated in the ``Developer Certificate of Origin``
+as stated below.
 
 .. _DCO:
 
@@ -189,6 +188,7 @@ branch in order to update the pull request page.
 At this point, it is the project maintainer's job to apply your patches to the
 master branch.
 
+.. _core team: https://github.com/orgs/OP-TEE/teams/linaro/members
 .. _fork a repo: https://help.github.com/articles/fork-a-repo
 .. _GitHub: https://github.com
 .. _Connecting to GitHub with SSH: https://help.github.com/articles/connecting-to-github-with-ssh
