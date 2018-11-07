@@ -1,3 +1,4 @@
+============
 About OP-TEE
 ============
 OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a
@@ -32,30 +33,22 @@ The main design goals for OP-TEE are:
 
 OP-TEE components
 ^^^^^^^^^^^^^^^^^
-
 The OP-TEE solution is divided in various components:
 
-    -	A secure privileged layer, executing at Arm secure PL-1 (v7-A) or EL-1
-        (v8-A) level.
-
-      -	A set of secure user space libraries designed for Trusted Applications
-        needs.
-
-    -	A Linux kernel TEE framework and driver (merged since v4.12).
-
-    -	A Linux user space library designed upon the GlobalPlatform
-        :ref:`tee_client_api` specifications.
-
-    -	A Linux user space supplicant daemon responsible for remote services
-        expected by the TEE OS.
-
-    -   A test suite (xtest), for doing regression testing and testing the
-        consistency of the API implementations.
-
-    -	An example git containing a couple of simple host- and TA-examples.
-
-    -	And some build scripts, debugging tools to ease its integration and the
-        development of Trusted Applications and secure services.
+    - A secure privileged layer, executing at Arm secure PL-1 (v7-A) or EL-1
+      (v8-A) level.
+    - A set of secure user space libraries designed for Trusted Applications
+      needs.
+    - A Linux kernel TEE framework and driver (merged since v4.12).
+    - A Linux user space library designed upon the GlobalPlatform
+      :ref:`tee_client_api` specifications.
+    - A Linux user space supplicant daemon responsible for remote services
+      expected by the TEE OS.
+    - A test suite (xtest), for doing regression testing and testing the
+      consistency of the API implementations.
+    - An example git containing a couple of simple host- and TA-examples.
+    - And some build scripts, debugging tools to ease its integration and the
+      development of Trusted Applications and secure services.
 
 These components are available from several git repositories. The main ones are
 :ref:`build`, :ref:`optee_os`, :ref:`optee_client`, :ref:`optee_test`,
@@ -64,20 +57,21 @@ These components are available from several git repositories. The main ones are
 History
 ^^^^^^^
 OP-TEE was initially developed by ST-Ericsson (and later on by
-STMicroelectronis), but this was before OP-TEE got the name "OP-TEE" and was
-turned into an open source project. Back then it was a closed source and
-a proprietary TEE solution. In 2013, ST-Ericsson obtained GlobalPlatform’s
+STMicroelectronics), but this was before OP-TEE got the name "OP-TEE" and was
+turned into an open source project. Back then it was a closed source and a
+proprietary TEE solution. In 2013, ST-Ericsson obtained GlobalPlatform’s
 compliance qualification with this implementation, proving that the APIs were
 behaving as expected in the GlobalPlatform specifications.
 
 Later on the same year (2013) Linaro was about to form Security Working Group
-(SWG) and one of the initial key tasks for SWG was to work on an open source TEE
-solution. After talking to various TEE vendors Linaro ended up working with
-STMicroelectronis TEE solution. But before being able to open source it there
+(SWG) and one of the initial key tasks for SWG was to work on an open source
+TEE solution. After talking to various TEE vendors Linaro ended up working with
+STMicroelectronics TEE solution. But before being able to open source it there
 was a need to replace some proprietary components with open source components.
-For a couple of months Linaro/SWG together with engineers from STMicroelectronis
-re-wrote major parts (crypto library, secure monitor, build system etc), cleaned
-up the solution by enforcing :ref:`coding_standards`, running checkpatch_ etc.
+For a couple of months Linaro/SWG together with engineers from
+STMicroelectronics re-wrote major parts (crypto library, secure monitor, build
+system etc), cleaned up the solution by enforcing :ref:`coding_standards`,
+running checkpatch_ etc.
 
 June 12 2014 was the day when OP-TEE was "born" as an open source project. At
 that day the OP-TEE team pushed the `first commit
@@ -85,11 +79,11 @@ that day the OP-TEE team pushed the `first commit
 to GitHub. A bit after this Linaro also made a `press release
 <https://www.linaro.org/blog/op-tee-open-source-security-mass-market/>`_ about
 this. That press release contains a bit more information. At the first year as
-an open source project it was owned by STMicroelectronis but maintained by
-Linaro and STMicroelectronis. In 2015 there was an ownership transfer of OP-TEE
-from STMicroelectronis to Linaro and since then it has been Linaro who is the
-primary owner and maintainer of the project. But for the maintenance part, it
-has become a shared responsibility between Linaro, Linaro members and other
-companies who are using OP-TEE.
+an open source project it was owned by STMicroelectronics but maintained by
+Linaro and STMicroelectronics. In 2015 there was an ownership transfer of
+OP-TEE from STMicroelectronics to Linaro and since then it has been Linaro who
+is the primary owner and maintainer of the project. But for the maintenance
+part, it has become a shared responsibility between Linaro, Linaro members and
+other companies who are using OP-TEE.
 
 .. _checkpatch: http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl
