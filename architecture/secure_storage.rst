@@ -1,7 +1,7 @@
 .. _secure_storage:
 
 ==============
-Secure Storage
+Secure storage
 ==============
 
 Background
@@ -31,8 +31,8 @@ identifiers have been defined: ``TEE_STORAGE_PRIVATE_REE`` and
 or several values may be used. The value ``TEE_STORAGE_PRIVATE`` selects the
 REE FS when available, otherwise the RPMB FS (in this order).
 
-Overview of REE FS
-^^^^^^^^^^^^^^^^^^
+REE FS Secure Storage
+^^^^^^^^^^^^^^^^^^^^^
 .. figure:: ../images/secure_storage/secure_storage_system_architecture.png
     :figclass: align-center
 
@@ -228,6 +228,153 @@ following operations should support atomic update::
 The strategy used in OP-TEE secure storage to guarantee the atomicity is
 out-of-place update.
 
+.. _rpmb:
+
+RPMB Secure Storage
+^^^^^^^^^^^^^^^^^^^
+This document describes the RPMB secure storage implementation in OP-TEE, which
+is enabled by setting ``CFG_RPMB_FS=y``. Trusted Applications may use this
+implementation by passing a storage ID equal to ``TEE_STORAGE_PRIVATE_RPMB``,
+or ``TEE_STORAGE_PRIVATE`` if ``CFG_REE_FS`` is disabled. For details about
+RPMB, please refer to the JEDEC eMMC specification (JESD84-B51).
+
+The architecture is depicted below.
+
+.. code-block:: none
+
+    |          NORMAL WORLD           :            SECURE WORLD              |
+                                      :
+    U        tee-supplicant           :        Trusted application
+    S           (rpmb.c)              :        (secure storage API)
+    E         ^          ^            :                  ^
+    R         |          |            :~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~ ioctl ~~~~~~~|~~~~~~~~~~~~:                  v
+    K         |          |            :               OP-TEE
+    E         v          v            :         (tee_svc_storage.c)
+    R  MMC/SD subsys.  OP-TEE driver  : (tee_rpmb_fs.c, tee_fs_key_manager.c)
+    N         ^                 ^     :                  ^
+    E         |                 |     :                  |
+    L         v                 |     :                  |
+        Controller driver       |     :                  |
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
+                                v                        v
+                              Secure monitor / EL3 firmware
+
+For information about the ``ioctl()`` interface to the MMC/SD subsystem in the
+Linux kernel, see the Linux core MMC header file `linux/mmc/core.h`_ and the
+mmc-utils_ repository.
+
+The Secure Storage API
+~~~~~~~~~~~~~~~~~~~~~~
+This part is common with the REE-based filesystem. The interface between the
+system calls in `core/tee/tee_svc_storage.c`_ and the RPMB filesystem is the
+*tee_file_operations*, namely ``struct tee_file_ops``.
+
+The RPMB filesystem
+~~~~~~~~~~~~~~~~~~~
+The FS implementation is entirely in `core/tee/tee_rpmb_fs.c`_ and the RPMB
+partition is divided in three parts:
+
+    - The first 128 bytes are reserved for partition data (``struct
+      rpmb_fs_partition``).
+
+    - At offset 512 is the File Allocation Table (FAT). It is an array of
+      ``struct rpmb_fat_entry`` elements, one per file. The FAT grows
+      dynamically as files are added to the filesystem. Among other things,
+      each entry has the start address for the file data, its size, and the
+      filename.
+
+    - Starting from the end of the RPMB partition and extending downwards is
+      the file data area.
+
+Space in the partition is allocated by the general-purpose allocator functions,
+``tee_mm_alloc()`` and ``tee_mm_alloc2()``.
+
+All file operations are atomic. This is achieved thanks to the following
+properties:
+
+    - Writing one single block of data to the RPMB partition is guaranteed to
+      be atomic by the eMMC specification.
+
+    - The FAT block for the modified file is always updated last, after data
+      have been written successfully.
+
+    - Updates to file content is done in-place only if the data do not span
+      more than the "reliable write block count" blocks. Otherwise, or if the
+      file needs to be extended, a new file is created.
+
+Device access
+~~~~~~~~~~~~~
+There is no eMMC controller driver in OP-TEE. The device operations all have to
+go through the normal world. They are handled by the ``tee-supplicant`` process
+which further relies on the kernel's ``ioctl()`` interface to access the
+device. ``tee-supplicant`` also has an emulation mode which implements a
+virtual RPMB device for test purposes.
+
+RPMB operations are the following:
+    - Reading device information (partition size, reliable write block count).
+
+    - Programming the security key. This key is used for authentication
+      purposes. Note that it is different from the Secure Storage Key (SSK)
+      defined below, which is used for encryption. Like the SSK however, the
+      security key is also derived from a hardware unique key or identifier.
+      Currently, the function ``tee_otp_get_hw_unique_key()`` is used to
+      generate the RPMB security key.
+
+    - Reading the write counter value. The write counter is used in the HMAC
+      computation during read and write requests. The value is read at
+      initialization time, and stored in ``struct tee_rpmb_ctx``, i.e.,
+      ``rpmb_ctx->wr_cnt``.
+
+    - Reading or writing blocks of data.
+
+RPMB operations are initiated on request from the FS layer. Memory buffers for
+requests and responses are allocated in shared memory using
+``thread_optee_rpc_alloc_payload()``. Buffers are passed to the normal world in
+a ``TEE_RPC_RPMB_CMD`` message, thanks to the ``thread_rpc_cmd()`` function.
+Most RPMB requests and responses use the data frame format defined by the JEDEC
+eMMC specification. HMAC authentication is implemented here also.
+
+Encryption
+~~~~~~~~~~
+The FS encryption routines are in `core/tee/tee_fs_key_manager.c`_. Block
+encryption protects file data. The algorithm is 128-bit AES in Cipher Block
+Chaining (CBC) mode with Encrypted Salt-Sector Initialization Vector (ESSIV),
+see CBC-ESSIV_ for details.
+
+    - During OP-TEE initialization, a 128-bit AES Secure Storage Key (SSK) is
+      derived from a Hardware Unique Key (HUK). It is kept in secure memory and
+      never written to disk. A Trusted Application Storage Key is derived from
+      the SSK and the TA UUID.
+
+    - For each file, a 128-bit encrypted File Encryption Key (FEK) is randomly
+      generated when the file is created, encrypted with the TSK and stored in
+      the FAT entry for the file.
+
+    - Each 256-byte block of data is then encrypted in CBC mode. The
+      initialization vector is obtained by the ESSIV algorithm, that is, by
+      encrypting the block number with a hash of the FEK. This allows direct
+      access to any block in the file, as follows:
+
+    .. code-block:: none
+
+        FEK = AES-Decrypt(TSK, encrypted FEK);
+        k = SHA256(FEK);
+        IV = AES-Encrypt(128 bits of k, block index padded to 16 bytes)
+        Encrypted block = AES-CBC-Encrypt(FEK, IV, block data);
+        Decrypted block = AES-CBC-Decrypt(FEK, IV, encrypted block data);
+
+
+SSK, TSK and FEK handling is common with the REE-based secure storage, while
+the AES CBC block encryption is used only for RPMB (the REE implementation uses
+GCM). The FAT is not encrypted.
+
+REE FS hash state
+~~~~~~~~~~~~~~~~~
+If configured with both ``CFG_REE_FS=y`` and ``CFG_RPMB_FS=y`` the REE FS will
+create a special file, ``dirfile.db.hash`` in RPMB which hold a hash
+representing the state of REE FS.
+
 Important caveats
 ^^^^^^^^^^^^^^^^^
 .. warning::
@@ -254,15 +401,20 @@ implementations in your platform code for:
 These implementations should fetch the key data from your SoC-specific e-fuses,
 or crypto unit according to the method defined by your SoC vendor.
 
-Reference
-^^^^^^^^^
+References
+^^^^^^^^^^
 For more information about secure storage, please see SFO15-503, LAS16-504,
 SFO17-309 at :ref:`presentations` and the :ref:`tee_internal_core_api`
 specification.
+
+.. _CBC-ESSIV: https://en.wikipedia.org/wiki/Disk_encryption_theory#Cipher-block_chaining_(CBC)
+.. _linux/mmc/core.h: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/include/linux/mmc/core.h
+.. _mmc-utils: http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git
 
 .. _core/tee/tee_svc_storage.c: https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_svc_storage.c
 .. _core/tee/tee_ree_fs.c: https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_ree_fs.c
 .. _core/tee/fs_htree.c: https://github.com/OP-TEE/optee_os/blob/master/core/tee/fs_htree.c
 .. _core/include/tee/fs_htree.h: https://github.com/OP-TEE/optee_os/blob/master/core/include/tee/fs_htree.h
 .. _core/tee/tee_fs_key_manager.c: https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_fs_key_manager.c
+.. _core/tee/tee_rpmb_fs.c: https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_rpmb_fs.c
 .. _lib/libutee/: https://github.com/OP-TEE/optee_os/blob/master/lib/libutee/
