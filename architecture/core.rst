@@ -1,5 +1,6 @@
 .. _core:
 
+====
 Core
 ====
 
@@ -7,6 +8,7 @@ Core
 
 Interrupt handling
 ^^^^^^^^^^^^^^^^^^
+.. include:: interrupts.rst
 
 .. _memory_objects:
 
