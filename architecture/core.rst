@@ -453,6 +453,101 @@ directly to ``thread_unwind_user_mode()``.
 
 Shared Memory
 ^^^^^^^^^^^^^
+Shared Memory is a block of memory that is shared between the non-secure and
+the secure world. It is used to transfer data between both worlds.
+
+Shared Memory Allocation
+~~~~~~~~~~~~~~~~~~~~~~~~
+The shared memory is allocated by the Linux driver from a pool ``struct
+shm_pool``, the pool contains:
+
+    - The physical address of the start of the pool
+    - The size of the pool
+    - Whether or not the memory is cached
+    - List of chunk of memory allocated.
+
+.. note::
+    - The shared memory pool is physically contiguous.
+    - The shared memory area is **not secure** as it is used by both non-secure
+      and secure world.
+
+Shared Memory Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It is the Linux kernel driver for OP-TEE that is responsible for initializing
+the shared memory pool, given information provided by the OP-TEE core. The
+Linux driver issues a SMC call ``OPTEE_SMC_GET_SHM_CONFIG`` to retrieve the
+information
+
+    - Physical address of the start of the pool
+    - Size of the pool
+    - Whether or not the memory is cached
+
+The shared memory pool configuration is platform specific. The memory mapping,
+including the area ``MEM_AREA_NSEC_SHM`` (shared memory with non-secure world),
+is retrieved by calling the platform-specific function
+``bootcfg_get_memory()``. Please refer to this function and the area type
+``MEM_AREA_NSEC_SHM`` to see the configuration for the platform of interest.
+The Linux driver will then initialize the shared memory pool accordingly.
+
+Shared Memory Chunk Allocation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It is the Linux kernel driver for OP-TEE that is responsible for allocating
+chunks of shared memory. OP-TEE linux kernel driver relies on linux kernel
+generic allocation support (``CONFIG_GENERIC_ALLOCATION``) to
+allocation/release of shared memory physical chunks. OP-TEE linux kernel driver
+relies on linux kernel dma-buf support (``CONFIG_DMA_SHARED_BUFFER``) to track
+shared memory buffers references.
+
+Using shared memory
+~~~~~~~~~~~~~~~~~~~
+
+**From the Client Application**
+
+The client application can ask for shared memory allocation using the
+GlobalPlatform Client API function ``TEEC_AllocateSharedMemory()``. The client
+application can also provide shared memory through the GlobalPlatform Client
+API function ``TEEC_RegisterSharedMemory()``. In such a case, the provided
+memory must be physically contiguous so that the OP-TEE core, that does not
+handle scatter-gather memory, is able to use the provided range of memory
+addresses. Note that the reference count of a shared memory chunk is
+incremented when shared memory is registered, and initialized to 1 on
+allocation.
+
+**From the Linux Driver**
+
+Occasionally the Linux kernel driver needs to allocate shared memory for the
+communication with secure world, for example when using buffers of type
+TEEC_TempMemoryReference.
+
+**From the OP-TEE core**
+
+In case the OP-TEE core needs information from the TEE supplicant (dynamic TA
+loading, REE time request,...), shared memory must be allocated. Allocation
+depends on the use case. The OP-TEE core asks for the following shared memory
+allocation:
+
+    - ``optee_msg_arg`` structure, used to pass the arguments to the non-secure
+      world, where the allocation will be done by sending a
+      ``OPTEE_SMC_RPC_FUNC_ALLOC`` message.
+
+    - In some cases, a payload might be needed for storing the result from TEE
+      supplicant, for example when loading a Trusted Application. This type of
+      allocation will be done by sending the message
+      ``OPTEE_MSG_RPC_CMD_SHM_ALLOC(OPTEE_MSG_RPC_SHM_TYPE_APPL,...)``, which
+      then will return:
+
+        - the physical address of the shared memory
+        - a handle to the memory, that later on will be used later on when
+          freeing this memory.
+
+**From the TEE Supplicant**
+
+The TEE supplicant is also working with shared memory, used to exchange data
+between normal and secure worlds. The TEE supplicant receives a memory address
+from the OP-TEE core, used to store the data. This is for example the case when
+a Trusted Application is loaded. In this case, the TEE supplicant must register
+the provided shared memory in the same way a client application would do,
+involving the Linux driver.
 
 .. _smc:
 
@@ -484,10 +579,109 @@ fast call.
 
 Thread handling
 ^^^^^^^^^^^^^^^
+OP-TEE core uses a couple of threads to be able to support running jobs in
+parallel (not fully enabled!). There are handlers for different purposes. In
+thread.c_ you will find a function called ``thread_init_primary`` which assigns
+``init_handlers`` (functions) that should be called when OP-TEE core receives
+standard or fast calls, FIQ and PSCI calls. There are default handlers for
+these services, but the platform can decide if they want to implement their own
+platform specific handlers instead.
 
+Synchronization primitives
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+OP-TEE has three primitives for synchronization of threads and CPUs:
+*spin-lock*, *mutex*, and *condvar*.
+
+**Spin-lock**
+
+A spin-lock is represented as an ``unsigned int``. This is the most primitive
+lock. Interrupts should be disabled before attempting to take a spin-lock and
+should remain disabled until the lock is released. A spin-lock is initialized
+with ``SPINLOCK_UNLOCK``.
+
+.. list-table:: Spin lock functions
+    :header-rows: 1
+
+    * - Function
+      - Purpose
+
+    * - ``cpu_spin_lock()``
+      - Locks a spin-lock
+
+    * - ``cpu_spin_trylock()``
+      - Locks a spin-lock if unlocked and returns ``0`` else the spin-lock is
+        unchanged and the function returns ``!0``
+
+    * - ``cpu_spin_unlock()``
+      - Unlocks a spin-lock
+
+**Mutex**
+
+A mutex is represented by ``struct mutex``. A mutex can be locked and unlocked
+with interrupts enabled or disabled, but only from a normal thread. A mutex
+cannot be used in an interrupt handler, abort handler or before a thread has
+been selected for the CPU. A mutex is initialized with either
+``MUTEX_INITIALIZER`` or ``mutex_init()``.
+
+.. list-table:: Mutex functions
+    :header-rows: 1
+
+    * - Function
+      - Purpose
+
+    * - ``mutex_lock()``
+      - Locks a mutex. If the mutex is unlocked this is a fast operation, else
+        the function issues an RPC to wait in normal world.
+
+    * - ``mutex_unlock()``
+      - Unlocks a mutex. If there is no waiters this is a fast operation, else
+        the function issues an RPC to wake up a waiter in normal world.
+
+    * - ``mutex_trylock()``
+      - Locks a mutex if unlocked and returns ``true`` else the mutex is
+        unchanged and the function returns ``false``.
+
+    * - ``mutex_destroy()``
+      - Asserts that the mutex is unlocked and there is no waiters, after this
+        the memory used by the mutex can be freed.
+
+When a mutex is locked it is owned by the thread calling ``mutex_lock()`` or
+``mutex_trylock()``, the mutex may only be unlocked by the thread owning the
+mutex. A thread should not exit to TA user space when holding a mutex.
+
+**Condvar**
+A condvar is represented by ``struct condvar``. A condvar is similar to a
+pthread_condvar_t in the pthreads standard, only less advanced. Condition
+variables are used to wait for some condition to be fulfilled and are always
+used together a mutex. Once a condition variable has been used together with a
+certain mutex, it must only be used with that mutex until destroyed. A condvar
+is initialized with ``CONDVAR_INITIALIZER`` or ``condvar_init()``.
+
+.. list-table:: Condvar functions
+    :header-rows: 1
+
+    * - Function
+      - Purpose
+
+    * - ``condvar_wait()``
+      - Atomically unlocks the supplied mutex and waits in normal world via an
+        RPC for the condition variable to be signaled, when the function
+        returns the mutex is locked again.
+
+    * - ``condvar_signal()``
+      - Wakes up one waiter of the condition variable (waiting in
+        ``condvar_wait()``).
+
+    * - ``condvar_broadcast()``
+      - Wake up all waiters of the condition variable.
+
+The caller of ``condvar_signal()`` or ``condvar_broadcast()`` should hold the
+mutex associated with the condition variable to guarantee that a waiter does
+not miss the signal.
 
 .. _optee_smc.h: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/sm/optee_smc.h
 .. _optee_msg.h: https://github.com/OP-TEE/optee_os/blob/master/core/include/optee_msg.h
+.. _thread.c: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/thread.c
 .. _thread.h: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/kernel/thread.h
 
 .. _Cortex-A53 TRM: http://infocenter.arm.com/help/topic/com.arm.doc.ddi0500j/DDI0500J_cortex_a53_trm.pdf
