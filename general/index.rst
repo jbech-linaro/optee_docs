@@ -11,5 +11,6 @@ This is general information about OP-TEE.
    contribute
    contact
    disclousure
+   license_headers
    platforms
    presentations

@@ -1,6 +1,7 @@
 .. _manifest:
 
-manifest.git
-============
+========
+manifest
+========
 
 manifest.git is used to Yada yada

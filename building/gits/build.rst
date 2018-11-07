@@ -1,7 +1,8 @@
 .. _build:
 
-build.git
-=========
+=====
+build
+=====
 
 build.git is used to Yada yada
 
