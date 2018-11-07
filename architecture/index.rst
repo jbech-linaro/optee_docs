@@ -11,4 +11,5 @@ Architecture documentation
    libraries
    porting_guidelines
    secure_boot
+   secure_storage
    trusted_applications
