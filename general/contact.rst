@@ -45,12 +45,16 @@ Some of the OP-TEE developers can be reached at Freenode (``chat.freenode.net``)
 at channel ``#linaro-security``. Having that said, the activity there is a bit
 limited, so it is probably **not** the best place to discuss OP-TEE.
 
+.. _vulnerability_reporting:
+
 Vulnerability reporting
 ^^^^^^^^^^^^^^^^^^^^^^^
 Please send an email to the address mentioned above (**not** to TEE-dev). Don't
 include any details at this point, just mention that you'd like to report a
 security issue. An engineer from the core OP-TEE team will get back to you for
-further communication and discussions about your findings.
+further communication and discussions about your findings. Please also read the
+:ref:`disclosure_policy` page and especially the :ref:`reporting_issues`
+section, so you are aware of the rules we are following.
 
 
 .. _core team: https://github.com/orgs/OP-TEE/teams/linaro/members
