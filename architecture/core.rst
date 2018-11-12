@@ -64,7 +64,38 @@ compact representation of its L1 translation table. The compact representation
 is used to initialize the thread specific L1 translation table when the TA
 context is activated.
 
-.. image:: ../images/core/xlat_table.png
+.. graphviz::
+
+    digraph xlat_table {
+        graph [
+            rankdir = "LR"
+        ];
+        node [
+            fontsize = "16"
+            shape = "ellipse"
+        ];
+        edge [
+        ];
+        "node_ttb" [
+            label = "<f0> TTBR0 | <f1> TTBR1"
+            shape = "record"
+        ];
+        "node_large_l1" [
+            label = "<f0> Large L1\nSpans 4 GiB"
+            shape = "record"
+        ];
+        "node_small_l1" [
+            label = "Small L1\nSpans 32 MiB\nper entry | <f0> 0 | <f1> 1 | ... | <fn> n"
+            shape = "record"
+        ];
+
+        "node_ttb":f0 -> "node_small_l1":f0 [ label = "Thread 0 ctx active" ];
+        "node_ttb":f0 -> "node_small_l1":f1 [ label = "Thread 1 ctx active" ];
+        "node_ttb":f0 -> "node_small_l1":fn [ label = "Thread n ctx active" ];
+        "node_ttb":f0 -> "node_large_l1" [ label="No active ctx" ];
+        "node_ttb":f1 -> "node_large_l1";
+    }
+
 
 Switching to user mode
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -120,7 +151,7 @@ otherwise lead to deadlock. The virtual memory is partitioned as:
 
 .. code-block:: none
 
-      Type      Sections
+      Type           Sections
     +--------------+-----------------+
     |              | text            |
     |              | rodata          |

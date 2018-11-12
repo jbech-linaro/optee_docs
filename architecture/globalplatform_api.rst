@@ -108,8 +108,8 @@ optee_examples_ git.
 Secure Element API
 ^^^^^^^^^^^^^^^^^^
 .. note::
-    It's been a long time since this feature was tested. Most likely things
-    will not work. There are not plans on updating this at the moment. But if
+    It's been a long time since this feature was tested. Most likely things will
+    **not** work. There are no plans on updating this at the moment. But if
     there is anyone out there interested in this willing to spend time on this,
     it would of course be appreciated.
 

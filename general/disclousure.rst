@@ -224,7 +224,7 @@ the person finding the issue prefer not being mentioned directly for some
 reason. A patch would typically look like this:
 
 .. code-block:: none
-    :emphasize-lines: 10,11
+    :emphasize-lines: 11,12
 
     core: fixes privilege escalation
 
