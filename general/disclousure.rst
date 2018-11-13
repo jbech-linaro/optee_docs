@@ -289,10 +289,10 @@ exploited.
     * - 7
       - TEE core (kernel space) compromised and leaking trivial information.
 
-    * - 9 
+    * - 9
       - TEE core (kernel space) compromised and leaking sensitive information.
 
-    * - 10 
+    * - 10
       - TEE fully compromised and the attacker in full control.
 
 **Reproducibility**
@@ -308,7 +308,7 @@ This describes how easy (or hard) it is to reproduce the attack.
 
     * - 0
       - Not reproducible.
-        
+
     * - 1
       - No proven attack exists.
 
@@ -330,7 +330,7 @@ This describes how easy (or hard) it is to reproduce the attack.
         ChipWhisperer_ etc) / software / knowledge that is readily available to
         anyone.
 
-    * - 10 
+    * - 10
       - The attack can be reproduced every time by a novice user without any
         need for extra tools.
 
@@ -361,7 +361,7 @@ This should answer how easy it is to launch an attack.
     * - 9
       - A novice programmer could make the attack in a short time.
 
-    * - 10 
+    * - 10
       - A novice user could make the attack in a short time (exploits readily
         available on internet and/or integrated in known hacker/pen-testing
         tools).
@@ -417,7 +417,7 @@ This should answer how easy it is to discover the threat.
         small group of people (and it is not intended to be shared publicly in a
         foreseeable time or until mitigations has been merged).
 
-    * - 10 
+    * - 10
       - Published information explains the attack.
 
 .. _severity_table:
