@@ -8,7 +8,7 @@ These are the gits considered as the main OP-TEE gits which together makes up
 the entire TEE solution.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    build
    manifest
