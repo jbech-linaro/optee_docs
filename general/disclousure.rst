@@ -438,7 +438,7 @@ severity.
       - Comment
 
     * - No risk
-      - 1
+      - [0, 1)
       - No CVE created.
       - This is not considered as a security issue, it's a regular bug.
 
