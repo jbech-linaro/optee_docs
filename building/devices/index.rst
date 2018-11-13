@@ -1,10 +1,17 @@
+.. _device_specific:
+
+=================================
 Device specific build information
 =================================
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 1
 
-   hikey6220
-   hikey960
-   rpi3
+    fvp
+    hikey6220
+    hikey960
+    juno
+    qemu
+    rpi3
+    ti
 
