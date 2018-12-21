@@ -20,9 +20,9 @@ belong to a specific git, then please use `issues in optee_os`_ in that case.
 
 Email
 ^^^^^
-You can reach the core team `core team`_ by sending an email to
-<op-tee[at]linaro[dot]org>. However note that the team consist of engineers from
-different companies, i.e, it **not** just Linaro engineers on that email
+You can reach the `core team`_ by sending an email to
+<op-tee[at]linaro[dot]org>. However note that the team consist of engineers
+from different companies, i.e, it **not** just Linaro engineers on that email
 address.
 
 From time to time we are also using the "TEE-dev" mailinglist

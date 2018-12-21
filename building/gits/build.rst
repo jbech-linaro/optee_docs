@@ -238,6 +238,8 @@ supported by older releases:
 | Raspberry Pi 3 | ``rpi3_stable.xml``         |
 +----------------+-----------------------------+
 
+.. _get_and_build_the_solution:
+
 Get and build the solution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 Below we will describe the general way of how to get the source, build the
@@ -327,6 +329,8 @@ it by running:
 .. note::
     If you've built using our manifest you should not need to modprobe any
     OP-TEE/TEE kernel driver since it's built into the kernel in all our setups.
+
+.. _run_xtest:
 
 Step 9 - Run xtest
 ~~~~~~~~~~~~~~~~~~
