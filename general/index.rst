@@ -10,7 +10,7 @@ This is general information about OP-TEE.
    coding_standards
    contribute
    contact
-   disclousure
+   disclosure
    license_headers
    platforms
    presentations
