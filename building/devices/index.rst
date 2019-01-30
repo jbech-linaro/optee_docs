@@ -1,8 +1,8 @@
 .. _device_specific:
 
-=================================
-Device specific build information
-=================================
+===========================
+Device specific information
+===========================
 
 .. toctree::
     :maxdepth: 1

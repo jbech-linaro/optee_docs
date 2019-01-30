@@ -300,6 +300,9 @@ that you simply start the build by running:
 This step will also take some time, but you can speed up subsequent builds by
 enabling ccache_ (again see :ref:`tips_and_tricks`).
 
+
+.. _build_flash:
+
 Step 6 - Flash the device
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 On non-emulated solutions, you will need to flash the software in some way.
@@ -316,6 +319,9 @@ Step 7 - Boot up the device
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is device specific (see :ref:`device_specific`).
 
+
+.. _build_tee_supplicant:
+
 Step 8 - Load tee-supplicant
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 On **some** solutions tee-supplicant is already running (check by running ``$ ps
@@ -329,6 +335,7 @@ it by running:
 .. note::
     If you've built using our manifest you should not need to modprobe any
     OP-TEE/TEE kernel driver since it's built into the kernel in all our setups.
+
 
 .. _run_xtest:
 
