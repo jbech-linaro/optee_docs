@@ -270,11 +270,11 @@ Pi3, then at line 3 below, ``${TARGET}.xml`` shall be ``rpi3.xml``.
     $ mkdir -p $HOME/devel/optee
     $ cd $HOME/devel/optee
     $ repo init -u https://github.com/OP-TEE/manifest.git -m ${TARGET}.xml [-b ${BRANCH}]
-    $ repo sync
+    $ repo sync -j4 --no-clone-bundle
 
 .. note::
-    The ``repo sync`` step will take some time if you aren't referencing an existing
-    tree (see the :ref:`tips_and_tricks` section).
+    The ``repo sync`` step will take quite some time if you aren't referencing
+    an existing tree (see the :ref:`tips_and_tricks` section).
 
 Step 4 - Get the toolchains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -285,7 +285,7 @@ toolchains by:
 .. code-block:: bash
 
     $ cd build
-    $ make toolchains
+    $ make -j2 toolchains
 
 Step 5 - Build the solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -295,18 +295,27 @@ that you simply start the build by running:
 
 .. code-block:: bash
 
-    $ make
+    $ make -j `nproc`
 
 This step will also take some time, but you can speed up subsequent builds by
 enabling ccache_ (again see :ref:`tips_and_tricks`).
+
+.. note::
+
+    **If you're having build issues**, then you can pipe the entire build log to
+    a file, which makes it easier to search for the issue using a regular
+    editor. In that case also avoid the ``-j`` flag so it's easier to see in what
+    order things are happening. To create a ``build.log`` file do: ``$ make 2>&1
+    | tee build.log``
 
 
 .. _build_flash:
 
 Step 6 - Flash the device
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-On non-emulated solutions, you will need to flash the software in some way.
-We've tried to "hide" that under the following make target:
+On **non-emulated** solutions (this means that you shouldn't do this step when
+you are running QEMU-v7/v8 and FVP), you will need to flash the software in some
+way. We've tried to "hide" that under the following make target:
 
 .. code-block:: bash
 
