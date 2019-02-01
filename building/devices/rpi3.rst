@@ -18,7 +18,7 @@ Disclaimer
     boot, memory, peripherals or other secure functions are not available. Use
     of OP-TEE or TrustZone capabilities within this package **does not result**
     in a secure implementation. This package is provided solely for
-    **educational purposes**.
+    **educational purposes** and **prototyping**.
 
 
 .. _rpi3_software:
@@ -207,7 +207,7 @@ Boot sequence
       ``zImage`` and then ``DTB`` and boot.
 
 
-.. _rpi_build_instructions:
+.. _rpi3_build_instructions:
 
 Build instructions
 ^^^^^^^^^^^^^^^^^^
@@ -258,25 +258,25 @@ NFS boot
 ^^^^^^^^
 Booting via NFS is quite useful for several reasons, but the obvious reason when
 working with Raspberry Pi is that you don't have to move the SD-card back and
-forth between the host machine and the RPi3 itself when working with Normal
-World files, like Linux kernel and user space programs. Here we will describe
-how to setup NFS server, so the rootfs can be mounted via NFS.
+forth between the host machine and the Raspberry Pi 3 itself when working with
+**Normal World** files, like Linux kernel and user space programs. Here we will
+describe how to setup NFS server, so the rootfs can be mounted via NFS.
 
 .. warning::
 
     This guide doesn't focus on any desktop security, so eventually you would
     need to harden your setup.
 
-Also it might seem that this is a lot of steps, and it is, but most of them is
-something you do once and never more and it will save tons of time in the long
-run.
-
-In the description below we will use the following terminology:
+In the description below we will use the following terminology, IP addresses and
+paths. The reader of this guide is supposed to update this to match his
+environment.
 
 .. code-block:: none
 
-    HOST_IP=192.168.1.100   <--- This is your desktop computer
-    RPI_IP=192.168.1.200    <--- This is the Raspberry Pi
+    192.168.1.100   <--- This is your desktop computer (NFS server)
+    192.168.1.200   <--- This is the Raspberry Pi
+    /srv/nfs/rpi    <--- Location for the NFS share
+
 
 Configure NFS
 ~~~~~~~~~~~~~
@@ -296,13 +296,14 @@ In this file you shall tell where your files/folder are and the IP's allowed to
 access the files. The way it's written below will make it available to every
 machine on the same subnet (again, be careful about security here). Let's add
 this line to the file (it's the only line necessary in the file, but if you have
-several different filesystems available, then you should of course add them too).
+several different filesystems available, then you should of course add them
+too, one line for each share).
 
 .. code-block:: none
 
     /srv/nfs/rpi 192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)
 
-Next create the folder
+Next create the folder where you are going to put the root filesystem
 
 .. code-block:: none
 
@@ -330,54 +331,62 @@ previous section.
     $ sudo gunzip -cd <rpi3-project>/out-br/images/rootfs.cpio.gz | sudo cpio -idmv
     $ sudo rm -rf /srv/nfs/rpi/boot/*
 
-Update uboot.env
-~~~~~~~~~~~~~~~~
-There are two ways to update ``uboot.env``. First, you can edit
-``<rpi3-project>/build/rpi3/firmware/uboot.env.txt`` file, which is used as
-simple text source for generation of ``uboot.env`` during build. Alternatively
-you can just edit U-Boot env via UART and save new values to ``uboot.env``. The
-latter avoids rebuilding and copying ``uboot.env`` to SD-card.
+uboot.env configuration
+~~~~~~~~~~~~~~~~~~~~~~~
+The file ``uboot.env`` contains boot configurations that tells what binaries to
+load and at what addresses. When using NFS you need to tell U-Boot where the NFS
+server is located (IP and path). Since the exact IP and path varies for each
+user, we must update ``uboot.env`` accordingly.
+
+There are two ways to update ``uboot.env``, one is to update
+``uboot.env.txt`` (in :ref:`build`) and the other is to update directly from
+the U-Boot console. Pick the one that you suits your needs. We will cover each
+of them separately here.
 
 Edit uboot.env.txt
 ~~~~~~~~~~~~~~~~~~
-All you need to do is to edit network configuration in
-``<rpi3-project>/build/rpi3/firmware/uboot.env.txt``.
-**TO-DO (got feedback on GitHub that this is wrong)**
-You have to change value of ``serverip`` to the IP address of your NFS server,
-``gatewayip`` to your router IP address and ``nfspath`` to the exported path,
-where root filesystem is stored (``/srv/nfs/rpi``). Then you need to generate
-new ``uboot.env``:
+In an editor open: ``<rpi3-project>/build/rpi3/firmware/uboot.env.txt`` and
+change:
+
+    - ``nfsserverip`` to match the IP address of your NFS server.
+    - ``gatewayip`` to the IP address of your router.
+    - ``nfspath`` to the exported filesystem in your NFS share.
+
+As an example a section of ``uboot.env.txt`` could look like this:
+
+.. code-block:: c
+    :emphasize-lines: 2,4,5
+
+    # NFS/TFTP boot configuraton
+    gatewayip=192.168.1.1
+    netmask=255.255.255.0
+    nfsserverip=192.168.1.100
+    nfspath=/srv/nfs/rpi
+
+Next, you need to re-generate ``uboot.env``:
 
 .. code-block:: bash
 
-    $ cd /home/jbech/devel/optee_projects/rpi3/boot/
-    # clean previous uboot.env
+    $ cd <rpi3-project>/build
     $ make u-boot-env-clean
-    # generate new
-    $ make u-boot-bin
+    $ make u-boot-env
 
-Then you need to copy your newly generated ``uboot.env`` (found at
-``<rpi3-project>/out/uboot.env``) to the BOOT partition of your SD-card.
+Finally, you need to copy the updated ``<rpi3-project>/out/uboot.env`` to the
+**BOOT** partition of your SD-card (mount it as described in
+:ref:`rpi3_build_instructions` and then just overwrite (``cp``) the file on the
+**BOOT** partition of your SD-card).
 
-Update u-boot.env using UART
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Start by inserting the UART cable and open up ``/dev/ttyUSB0``
-
-.. code-block:: bash
-
-    # sudo apt-get install picocom
-    $ picocom -b 115200 /dev/ttyUSB0
-
-Power up the device and when you see U-Boot counting down, hit any key and you
-should see the ``U-Boot>`` prompt. First edit your NFS server IP address:
+Update u-boot.env from U-Boot console
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Boot up the device until you see U-Boot running and counting down, then hit any
+key and will see the ``U-Boot>`` prompt. You update the ``nfsserverip``,
+``gatewayip`` and ``nfspath`` by writing
 
 .. code-block:: bash
 
-    U-Boot> setenv serverip '192.168.1.100'
-
-Perform the same steps for ``gateway`` (your router IP address) and ``nfspath``
-(the exported path, where NFS root filesystem  is stored, for example
-``/srv/nfs/rpi``)
+    U-Boot> setenv nfsserverip '192.168.1.100'
+    U-Boot> setenv gatewayip '192.168.1.1'
+    U-Boot> setenv nfspath '/srv/nfs/rpi'
 
 If you want those environment variables to persist between boots, then type.
 
@@ -385,8 +394,6 @@ If you want those environment variables to persist between boots, then type.
 
     U-Boot> saveenv
 
-And don't worry about the ``FAT: Misaligned buffer address ...`` message, it
-will still work.
 
 Boot up with NFS
 ~~~~~~~~~~~~~~~~
@@ -399,53 +406,31 @@ then type.
 
     U-Boot> run nfsboot
 
-Profit!
 
-.. _rpi3_tricks:
-
-Tricks
-^^^^^^
-If everything works, you can simply copy paste files like ``xtest``, the Trusted
-Applications etc directly from your build folders to the ``/srv/nfs/rpi/...``
-folders. By doing so you don't have to reboot the device when doing development
-and testing. Just rebuild and copy is sufficient.
+If everything works, you can simply copy paste files like ``xtest``, Trusted
+Applications and other things that usually resides on the file system  directly
+from your build folders to the ``/srv/nfs/rpi/...`` folders. By doing so you
+don't have to reboot the device when doing development and testing. Just rebuild
+and copy is sufficient.
 
 .. note::
 
     You **cannot** make symlinks in the NFS share to the built files, i.e., you
     must copy them!
 
-Other root filesystems than the Buildroot based?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Sometimes you want to use a more traditional Linux filesystem, such as those
-that are in distros. With such filesystem you can apt-get (if Debian based)
-other useful tools, such as gdb on the device, valgrind etc to mention a few. An
-example of such a root filesystem is a Debian based `Linaro rootfs`_. The
-procedure to use that filesystem with NFS is the same as for the Buildroot
-based, you need to extract the files to a folder which is known by the NFS
-server (use regular ``tar -xvf ...`` command).
 
-Then you need to copy ``xtest`` and ``tee-supplicant`` to ``<NFS>/bin/``, copy
-``libtee.so*`` to ``<NFS>/lib/`` and copy all ``*.ta`` files to
-``<NFS>/lib/optee_armtz/``. Easiest here is to write a small shell script or add
-a target to the makefile which will do this so the files always are up-to-date
-after a rebuild.
+.. _rpi3_jtag:
 
-When that has been done, you can run OP-TEE tests, TA's etc and if you're only
-updating files in normal world (the ones just mentioned), then you don't even
-need to reboot the device after a rebuild.
+JTAG
+^^^^
+To enable JTAG you need to add a line saying ``enable_jtag_gpio=1`` in
+``<rpi3-project>/firmware/config.txt``.
 
-OpenOCD and JTAG
-^^^^^^^^^^^^^^^^
-First a word of warning here, even though this seems to be working quite good as
-of now, it should be well understood that this is based on incomplete and out of
-tree patches. There are major changes in our U-Boot fork that add capability to
-load and execute ARM Trusted Firmware binary.
-
-To enable JTAG you need to uncomment the line: ``enable_jtag_gpio=1`` in
-``rpi3/firmware/config.txt``.
-
-The pin configuration and the wiring for the cable looks like this:
+JTAG cable
+~~~~~~~~~~
+We have created our own cables, get a standard 20-pin JTAG connector and 22-pin
+connector for the Raspberry Pi 3 itself, then using a ribbon cable, connect the
+cables according to the table below (JTAG pin <-> Header pin).
 
 +----------+--------+--------+------+------------+
 | JTAG pin | Signal | GPIO   | Mode | Header pin |
@@ -469,17 +454,22 @@ The pin configuration and the wiring for the cable looks like this:
 | 20       | GND    | N/A    | N/A  | 20         |
 +----------+--------+--------+------+------------+
 
-Note that this configuration seems to remain in the Raspberry Pi3 setup we're
+.. warning::
+
+    Be careful and cross check the wiring as incorrect wiring might **damage**
+    your device!
+
+Note that this configuration seems to remain in the Raspberry Pi 3 setup we're
 using. But someone with root access could change the GPIO configuration at any
 point in time and thereby disable JTAG functionality.
 
-Debug cable / UART cable
-^^^^^^^^^^^^^^^^^^^^^^^^
-We have created our own cables, get a standard 20-pin JTAG connector and 22-pin
-connector for the Raspberry Pi 3 itself, then using a ribbon cable, connect the
-cables according to the table in section 6 (JTAG pin <-> Header pin). In
-addition to that we have also connected a USB FTDI to UART cable to a few more
-pins.
+UART cable
+^^^^^^^^^^
+In addition to the JTAG connections we have also wired up the RX/TX to be able
+to use the UART. Note, for this you don't need to do JTAG wirings, i.e., it's
+perfectly fine to just wire up the UART only. There are many ready made cables
+for this on the net (`eBay`_) and cost almost nothing. Get one of those if you
+**don't** intend to use JTAG.
 
 +-------------+-------+--------+------+-----------+
 | UART pin    | Signal| GPIO   | Mode | Header pin|
@@ -490,6 +480,11 @@ pins.
 +-------------+-------+--------+------+-----------+
 | Green (TXD) | RXD   | GPIO15 | ALT0 | 10        |
 +-------------+-------+--------+------+-----------+
+
+.. warning::
+
+    Be careful and cross check the wiring as incorrect wiring might **damage**
+    your device!
 
 OpenOCD
 ^^^^^^^
@@ -660,6 +655,7 @@ improvements, as usual, feel free to contribute.
 .. _`Authentication Framework`: https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/auth-framework.rst
 .. _Bus Blaster: http://dangerousprototypes.com/docs/Bus_Blaster
 .. _core team: https://github.com/orgs/OP-TEE/teams/linaro/members
+.. _eBay: https://www.ebay.com/sch/i.html?&_nkw=UART+cable
 .. _J-Link debuggers: https://www.segger.com/jlink_base.html
 .. _Linaro rootfs: http://releases.linaro.org/debian/images/installer-arm64/latest/linaro*.tar.gz
 .. _official OpenOCD: http://openocd.org
