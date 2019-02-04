@@ -8,6 +8,7 @@ modifications in U-Boot, Trusted Firmware A and Linux kernel. Since that initial
 port more and more patches have found mainline trees and today the OP-TEE setup
 for Raspberry Pi 3 uses only upstream tree's with the exception of Linux kernel.
 
+
 Disclaimer
 ^^^^^^^^^^
 .. warning::
@@ -25,46 +26,51 @@ Disclaimer
 
 What is expected to work?
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-First, note that all OP-TEE builds have rather simple overall goals:
+First, note that all OP-TEE developer builds (ref, :ref:`build`) have rather
+simple overall goals:
 
     - Successfully build OP-TEE for certain devices.
-    - Run xtest successfully with no regressions using UART(s).
+    - Run xtest and optee_example binaries successfully with no regressions
+      using UART(s).
 
-I.e., it is important to understand that our "OP-TEE builds" shall not be
-compared with full Linux distributions which supports "everything". As a couple
-of examples, we don't enable any particular drivers in Linux kernel, we don't
-include all sorts of daemons, we do not include an X-environment etc. At the
-same time this doesn't mean that you cannot use OP-TEE in real environments. It
-is usually perfectly fine to run on all sorts of devices, environments etc. It's
-just that for the OP-TEE developer configurations we have intentionally stripped
+I.e., it is important to understand that our "`OP-TEE developer builds`" shall
+not be compared with full Linux distributions which supports "everything". As a
+couple of examples, we don't enable any particular drivers in Linux kernel, we
+don't include all sorts of daemons, we do not include an X-environment etc. At
+the same time this doesn't mean that you cannot use OP-TEE in real environments.
+It is usually perfectly fine to run on all sorts of devices, environments etc.
+It's just that for the OP-TEE developer builds we have intentionally stripped
 down the environment to make it rather fast to get all the source code, build it
 all and run xtest.
 
-We are highlighting this here, since over the years we have had tons of
-questions at GitHub about things that people usually find working on their
-Raspberry Pi devices when they are using Raspbian (which this is not).
+We are highlighting this here, since over the years we have had many questions
+at GitHub about things that people usually find working on their Raspberry Pi
+devices when they are using Raspbian (which this is not). The table below
+describes what is `officially` supported in the Raspberry Pi 3 OP-TEE developer
+builds and right after that follows sections for each of giving a bit more
+context to it.
 
-+-----------------+------------+
-| Name            | Supported? |
-+=================+============+
-| Buildroot       | Yes        |
-+-----------------+------------+
-| HDMI            | No         |
-+-----------------+------------+
-| NFS             | Yes        |
-+-----------------+------------+
-| Random packages | Maybe      |
-+-----------------+------------+
-| Raspbian        | No         |
-+-----------------+------------+
-| Secure boot     | Maybe      |
-+-----------------+------------+
-| TFTP            | Yes        |
-+-----------------+------------+
-| UART            | Yes        |
-+-----------------+------------+
-| Wi-Fi           | No         |
-+-----------------+------------+
+    +-----------------+------------+
+    | Name            | Supported? |
+    +=================+============+
+    | Buildroot       | Yes        |
+    +-----------------+------------+
+    | HDMI            | No         |
+    +-----------------+------------+
+    | NFS             | Yes        |
+    +-----------------+------------+
+    | Random packages | Maybe      |
+    +-----------------+------------+
+    | Raspbian        | No         |
+    +-----------------+------------+
+    | Secure boot     | Maybe      |
+    +-----------------+------------+
+    | TFTP            | Yes        |
+    +-----------------+------------+
+    | UART            | Yes        |
+    +-----------------+------------+
+    | Wi-Fi           | No         |
+    +-----------------+------------+
 
 
 .. _rpi3_support_buildroot:
@@ -73,9 +79,9 @@ Buildroot
 ~~~~~~~~~
 We are using Buildroot as the tool to create a stripped down filesystem for
 Linux where we also put OP-TEE binaries like Trusted Applications, client
-libraries and TEE supplicant. If a user want to add/enable additional packages,
+libraries and TEE supplicant. If a user wants to add/enable additional packages,
 then that is also possible by adding new lines in ``common.mk`` in :ref:`build`
-(search for ``BR2_PACKAGE_`` to see how it's done).
+(search for ``BR2_PACKAGE_`` in the git to see how it's done).
 
 
 .. _rpi3_support_hdmi:
@@ -117,11 +123,12 @@ Secure boot
 First pay attention to the initial warning on this page. I.e., no matter what
 you are doing with Raspberry Pi and TrustZone / OP-TEE you **cannot** make it
 secure. But that doesn't mean that you cannot "enable" secure features as such
-to learn how to build and use those. That knowledge can be transferred and used
-on other devices which have all the necessary secure capabilities needed to make
-a secure system. We haven't tested to enable secure boot on Raspberry Pi 3. But
-we believe that a good starting point would be Trusted Firmware A's
-documentation about the "`Authentication Framework`_" and `RPi3 in TF-A`_.
+for prototyping and to learn how to build and use those. That kind of knowledge
+can later on be transferred and used on other devices which have all the
+necessary secure capabilities needed to make a secure system. We haven't tested
+to enable secure boot on Raspberry Pi 3. But we believe that a good starting
+point would be Trusted Firmware A's documentation about the "`Authentication
+Framework`_" and `RPi3 in TF-A`_.
 
 
 .. _rpi3_support_tftp:
@@ -129,8 +136,11 @@ documentation about the "`Authentication Framework`_" and `RPi3 in TF-A`_.
 TFTP
 ~~~~
 When you reach U-Boot (see :ref:`rpi3_boot_sequence`), then you can start using
-TFTP to load boot firmware etc. For more about TFTP, look at the TFTP section
-further down.
+TFTP to load boot firmware etc. Note that if you overwrite ``armstub8.bin`` for
+example and that happens to be faulty, then you will need to re-mount the BOOT
+partition on the SD-card and put a new working version of it. Also note that
+changing early boot binaries (TF-A, OP-TEE core etc) will require you to reboot
+the device see the changes.
 
 
 .. _rpi3_support_uart:
@@ -152,44 +162,44 @@ stripped down builds.
 
 What versions of Raspberry Pi will work?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Below is a table of supported hardware in our setup. We have only used the
-Raspberry Pi 3 Model B, i.e., the first RPi 3 device that was released. But we
-know that people have successfully been able to use it with both RPi 2's as well
-as the newer RPi 3 B+. But as long as we in the `core team`_ doesn't have those
-at hands we cannot guarantee anything, therefore we simply say "No" below.
+Below is a table of supported hardware in our OP-TEE developer builds. We have
+only used the Raspberry Pi 3 Model B, i.e., the first RPi 3 device that was
+released. But we know that people have successfully been able to use it with
+both RPi 2's as well as the newer RPi 3 B+. But as long as we in the `core
+team`_ doesn't have those at hands we cannot guarantee anything, therefore we
+simply say "No" below.
 
-+-------------------------------+------------+
-| Hardware                      | Supported? |
-+===============================+============+
-| Raspberry Pi 1 Model A        | No         |
-+-------------------------------+------------+
-| Raspberry Pi 1 Model B        | No         |
-+-------------------------------+------------+
-| Raspberry Pi 1+ Model A       | No         |
-+-------------------------------+------------+
-| Raspberry Pi 1+ Model B       | No         |
-+-------------------------------+------------+
-| Raspberry Pi 2 Model B        | No         |
-+-------------------------------+------------+
-| Raspberry Pi 2 Model B v1.2   | No         |
-+-------------------------------+------------+
-| Raspberry Pi 3+ Model A       | No         |
-+-------------------------------+------------+
-| Raspberry Pi 3 Model B        | Yes        |
-+-------------------------------+------------+
-| Raspberry Pi 3+ Model B       | No         |
-+-------------------------------+------------+
-| Zero - all versions           | No         |
-+-------------------------------+------------+
-| Compute module - all versions | No         |
-+-------------------------------+------------+
+    +-------------------------------+------------+
+    | Hardware                      | Supported? |
+    +===============================+============+
+    | Raspberry Pi 1 Model A        | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 1 Model B        | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 1+ Model A       | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 1+ Model B       | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 2 Model B        | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 2 Model B v1.2   | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 3+ Model A       | No         |
+    +-------------------------------+------------+
+    | Raspberry Pi 3 Model B        | Yes        |
+    +-------------------------------+------------+
+    | Raspberry Pi 3+ Model B       | No         |
+    +-------------------------------+------------+
+    | Zero - all versions           | No         |
+    +-------------------------------+------------+
+    | Compute module - all versions | No         |
+    +-------------------------------+------------+
 
 
 .. _rpi3_boot_sequence:
 
 Boot sequence
 ^^^^^^^^^^^^^
-
     - The **GPU** starts executing the first stage bootloader, which is stored
       in ROM on the SoC. The first stage bootloader reads the SD-card, and loads
       the second stage bootloader (``bootcode.bin``) into the L2 cache, and runs
@@ -249,8 +259,8 @@ Build instructions
    see on the UART (not :ref:`rpi3_support_hdmi`).
 
 6. When you have a shell, then it's simply just to follow the ":ref:`run_xtest`"
-   instructions (eventually you need to load TEE supplicant before being able to
-   run xtest, please see ":ref:`build_tee_supplicant`).
+   instructions.
+
 
 .. _rpi3_nfs:
 
@@ -268,7 +278,7 @@ describe how to setup NFS server, so the rootfs can be mounted via NFS.
     need to harden your setup.
 
 In the description below we will use the following terminology, IP addresses and
-paths. The reader of this guide is supposed to update this to match his
+paths. The reader of this guide is supposed to update this to match his own
 environment.
 
 .. code-block:: none
@@ -315,6 +325,13 @@ After this, restart the NFS kernel server
 
     $ service nfs-kernel-server restart
 
+.. hint::
+
+    To see that your shares are correctly setup and that the NFS server is
+    running, you can you: ``$ showmount --all localhost`` and you should get a
+    list of ``IP:<path>'s`` based on what you have added in your exports file.
+    If you get nothing there, then your NFS server hasn't been setup correctly.
+
 Prepare files to be shared
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 We are now going to put the root filesystem on the location we prepared in the
@@ -343,8 +360,8 @@ There are two ways to update ``uboot.env``, one is to update
 the U-Boot console. Pick the one that you suits your needs. We will cover each
 of them separately here.
 
-Edit uboot.env.txt
-~~~~~~~~~~~~~~~~~~
+Change uboot.env.txt
+~~~~~~~~~~~~~~~~~~~~
 In an editor open: ``<rpi3-project>/build/rpi3/firmware/uboot.env.txt`` and
 change:
 
@@ -379,8 +396,8 @@ Finally, you need to copy the updated ``<rpi3-project>/out/uboot.env`` to the
 Update u-boot.env from U-Boot console
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Boot up the device until you see U-Boot running and counting down, then hit any
-key and will see the ``U-Boot>`` prompt. You update the ``nfsserverip``,
-``gatewayip`` and ``nfspath`` by writing
+key and will see the ``U-Boot>`` prompt. You can then update the
+``nfsserverip``, ``gatewayip`` and ``nfspath`` by writing
 
 .. code-block:: bash
 
@@ -394,10 +411,9 @@ If you want those environment variables to persist between boots, then type.
 
     U-Boot> saveenv
 
-
 Boot up with NFS
 ~~~~~~~~~~~~~~~~
-With all preparations done correctly above, you should now be able to boot up
+With all preparations above done correctly, you should now be able to boot up
 the device and kernel, secure side OP-TEE and the entire root filesystem should
 be loaded from the network shares (NFS). Power up the Raspberry, halt in U-Boot and
 then type.
@@ -408,10 +424,10 @@ then type.
 
 
 If everything works, you can simply copy paste files like ``xtest``, Trusted
-Applications and other things that usually resides on the file system  directly
-from your build folders to the ``/srv/nfs/rpi/...`` folders. By doing so you
-don't have to reboot the device when doing development and testing. Just rebuild
-and copy is sufficient.
+Applications and other things that usually resides on the host PC's filesystem,
+i.e., directly from your build folders to the ``/srv/nfs/rpi/...`` folders. By
+doing so you don't have to reboot the device when doing development and testing.
+Just rebuild and copy is sufficient.
 
 .. note::
 
@@ -424,73 +440,107 @@ and copy is sufficient.
 JTAG
 ^^^^
 To enable JTAG you need to add a line saying ``enable_jtag_gpio=1`` in
-``<rpi3-project>/firmware/config.txt``.
+``config.txt``. There are two ways you can do this, both requires that you to
+mount the **BOOT** partition on the SD-card at your computer (see the ``make
+img-help`` step under :ref:`rpi3_build_instructions`). **After** you have
+mounted the BOOT partition continue with whichever way is most suitable for you.
 
-JTAG cable
-~~~~~~~~~~
-We have created our own cables, get a standard 20-pin JTAG connector and 22-pin
-connector for the Raspberry Pi 3 itself, then using a ribbon cable, connect the
-cables according to the table below (JTAG pin <-> Header pin).
+Change config.txt directly
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+With your editor, open ``/media/boot/config.txt`` and add a line
+``enable_jtag_gpio=1``, save the file, unmount the BOOT partition and you're
+good to go after rebooting the device.
 
-+----------+--------+--------+------+------------+
-| JTAG pin | Signal | GPIO   | Mode | Header pin |
-+==========+========+========+======+============+
-| 1        | 3v3    | N/A    | N/A  | 1          |
-+----------+--------+--------+------+------------+
-| 3        | nTRST  | GPIO22 | ALT4 | 15         |
-+----------+--------+--------+------+------------+
-| 5        | TDI    | GPIO26 | ALT4 | 37         |
-+----------+--------+--------+------+------------+
-| 7        | TMS    | GPIO27 | ALT4 | 13         |
-+----------+--------+--------+------+------------+
-| 9        | TCK    | GPIO25 | ALT4 | 22         |
-+----------+--------+--------+------+------------+
-| 11       | RTCK   | GPIO23 | ALT4 | 16         |
-+----------+--------+--------+------+------------+
-| 13       | TDO    | GPIO24 | ALT4 | 18         |
-+----------+--------+--------+------+------------+
-| 18       | GND    | N/A    | N/A  | 14         |
-+----------+--------+--------+------+------------+
-| 20       | GND    | N/A    | N/A  | 20         |
-+----------+--------+--------+------+------------+
+Rebuild and untar
+~~~~~~~~~~~~~~~~~
+1. With your editor, open ``<rpi3-project>/build/rpi3/firmware/config.txt`` and
+   add a line ``enable_jtag_gpio=1``, save the file.
+
+2. ``$ cd <rpi3-project>/build && make``
+
+3. ``$ cd /media``
+
+4. ``$ sudo gunzip -cd <rpi3-project>/out-br/images/rootfs.cpio.gz | sudo cpio -idmv "boot/*"``
+
+   .. note::
+
+    You didn't forget to mount the BOOT partition before trying this step?
+
+5. Unmount the BOOT partition and you're good to go after rebooting the device.
+
+
+.. _rpi3_jtag_cable:
+
+JTAG/RPi3 cable
+~~~~~~~~~~~~~~~
+We have created our own cables that consists of a standard 20-pin JTAG
+connector and a 22-pin connector for the Raspberry Pi 3 itself. Then using a
+ribbon cable we have connected the cables according to the table below (JTAG pin
+<-> Raspberry Pi 3 Header pin).
+
++----------+--------+--------+------+-----------------+
+| JTAG pin | Signal | GPIO   | Mode | RPi3 Header pin |
++==========+========+========+======+=================+
+| 1        | 3v3    | N/A    | N/A  | 1               |
++----------+--------+--------+------+-----------------+
+| 3        | nTRST  | GPIO22 | ALT4 | 15              |
++----------+--------+--------+------+-----------------+
+| 5        | TDI    | GPIO26 | ALT4 | 37              |
++----------+--------+--------+------+-----------------+
+| 7        | TMS    | GPIO27 | ALT4 | 13              |
++----------+--------+--------+------+-----------------+
+| 9        | TCK    | GPIO25 | ALT4 | 22              |
++----------+--------+--------+------+-----------------+
+| 11       | RTCK   | GPIO23 | ALT4 | 16              |
++----------+--------+--------+------+-----------------+
+| 13       | TDO    | GPIO24 | ALT4 | 18              |
++----------+--------+--------+------+-----------------+
+| 18       | GND    | N/A    | N/A  | 14              |
++----------+--------+--------+------+-----------------+
+| 20       | GND    | N/A    | N/A  | 20              |
++----------+--------+--------+------+-----------------+
 
 .. warning::
 
     Be careful and cross check the wiring as incorrect wiring might **damage**
-    your device!
+    your device! Also be careful to connect the cable correctly at both ends
+    (don't flip it and don't put it at the wrong pins in the Raspberry Pi 3
+    side).
 
-Note that this configuration seems to remain in the Raspberry Pi 3 setup we're
-using. But someone with root access could change the GPIO configuration at any
-point in time and thereby disable JTAG functionality.
 
-UART cable
-^^^^^^^^^^
+.. _rpi3_uart_cable:
+
+UART/RPi3 cable
+^^^^^^^^^^^^^^^
 In addition to the JTAG connections we have also wired up the RX/TX to be able
 to use the UART. Note, for this you don't need to do JTAG wirings, i.e., it's
 perfectly fine to just wire up the UART only. There are many ready made cables
 for this on the net (`eBay`_) and cost almost nothing. Get one of those if you
 **don't** intend to use JTAG.
 
-+-------------+-------+--------+------+-----------+
-| UART pin    | Signal| GPIO   | Mode | Header pin|
-+=============+=======+========+======+===========+
-| Black (GND) | GND   | N/A    | N/A  | 6         |
-+-------------+-------+--------+------+-----------+
-| White (RXD) | TXD   | GPIO14 | ALT0 | 8         |
-+-------------+-------+--------+------+-----------+
-| Green (TXD) | RXD   | GPIO15 | ALT0 | 10        |
-+-------------+-------+--------+------+-----------+
++-------------+-------+--------+------+----------------+
+| UART pin    | Signal| GPIO   | Mode | RPi3 Header pin|
++=============+=======+========+======+================+
+| Black (GND) | GND   | N/A    | N/A  | 6              |
++-------------+-------+--------+------+----------------+
+| White (RXD) | TXD   | GPIO14 | ALT0 | 8              |
++-------------+-------+--------+------+----------------+
+| Green (TXD) | RXD   | GPIO15 | ALT0 | 10             |
++-------------+-------+--------+------+----------------+
 
 .. warning::
 
     Be careful and cross check the wiring as incorrect wiring might **damage**
     your device!
 
+
+.. _rpi3_openocd:
+
 OpenOCD
 ^^^^^^^
 Build OpenOCD
 ~~~~~~~~~~~~~
-Before building OpenOCD, ``libusb-dev`` package should be installed in advance:
+Before building OpenOCD, ensure that you have the ``libusb-dev`` installed.
 
 .. code-block:: bash
 
@@ -501,17 +551,19 @@ and then building is like a lot of other software, i.e.,
 
 .. code-block:: bash
 
-    $ git clone http://repo.or.cz/openocd.git && cd openocd
+    $ git clone http://repo.or.cz/openocd.git
+    $ cd openocd
     $ ./bootstrap
     $ ./configure
     $ make
 
-If a JTAG debugger needs legacy ft2332 support, OpenOCD should be configured
-accordingly:
 
-.. code-block:: bash
+.. note::
 
-    $ ./configure --enable-legacy-ft2232_libftdi
+    In recent versions of OpenOCD, the legacy ft2332 support has been depracted.
+    All these devices now uses libftdi instead. From OpenOCD release notes:
+    `"GPL-incompatible FTDI D2XX library support dropped (Presto, OpenJTAG and
+    USB-Blaster I are using libftdi only now)"`.
 
 We leave it up to the reader of this guide to decide if he wants to install it
 properly (``make install``) or if he will just run it from the tree directly.
@@ -521,20 +573,7 @@ OpenOCD RPi3 configuration file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Unfortunately, the necessary `RPi3 OpenOCD config`_ isn't upstreamed yet into
 the `official OpenOCD`_ repository, so you should use the one stored here
-``<rpi3-project/build/rpi3/debugger/pi3.cfg``. As you can read there, it's
-prepared for four targets, but only one is enabled. The reason for that is
-simply because it's a lot simpler to get started with JTAG when running on a
-single core. When you have a stable setup using a single core, then you can
-start playing with enabling additional cores.
-
-.. code-block:: none
-
-    ...
-    target create $_TARGETNAME_0 aarch64 -chain-position $_CHIPNAME.dap -dbgbase 0x80010000 -ctibase 0x80018000
-    #target create $_TARGETNAME_1 aarch64 -chain-position $_CHIPNAME.dap -dbgbase 0x80012000 -ctibase 0x80019000
-    #target create $_TARGETNAME_2 aarch64 -chain-position $_CHIPNAME.dap -dbgbase 0x80014000 -ctibase 0x8001a000
-    #target create $_TARGETNAME_3 aarch64 -chain-position $_CHIPNAME.dap -dbgbase 0x80016000 -ctibase 0x8001b000
-    ...
+``<rpi3-project/build/rpi3/debugger/pi3.cfg``.
 
 Running OpenOCD
 ~~~~~~~~~~~~~~~
@@ -554,25 +593,26 @@ For Bus Blaster type:
 
     $ ./src/openocd -f ./tcl/interface/ftdi/dp_busblaster.cfg \ -f <rpi3_repo_dir>/build/rpi3/debugger/pi3.cfg
 
-To be able to write commands to OpenOCD, you simply open up another shell and
-type:
+To be able to write commands directly to OpenOCD, you simply open up another
+shell and type:
 
 .. code-block:: bash
 
     $ nc localhost 4444
 
 From there you can set breakpoints, examine memory etc ("``> help``" will give
-you a list of available commands).
+you a list of available commands). Having that said, if you connect to OpenOCD
+using GDB, then there is not much incentive connecting to OpenOCD directly,
+since you will be able to do the same in GDB by the ``monitor`` command.
 
 Use GDB
 ~~~~~~~
-The ``pi3.cfg`` file is configured to listen to GDB connections on port
-``3333``. So all you have to do in GDB after starting OpenOCD is to connect to
-the target on that port, i.e.,
+OpenOCD will by default listen to GDB connections on port ``3333``. So after
+starting OpenOCD, make a connection to GDB.
 
 .. code-block:: bash
 
-    # Ensure that you have gdb in your $PATH
+    # Ensure that you have "gdb" in your $PATH
     $ aarch64-linux-gnu-gdb -q
     (gdb) target remote localhost:3333
 
@@ -582,75 +622,55 @@ debugging this works:
 
 .. code-block:: none
 
-    define jlink_rpi3
+    define jtag_rpi3
       target remote localhost:3333
-      symbol-file /home/jbech/devel/optee_projects/rpi3/optee_os/out/arm/core/tee.elf
+      symbol-file <rpi3-project>/optee_os/out/arm/core/tee.elf
     end
 
-So, when running GDB, you simply type: ``(gdb) jlink_rpi3`` and it will both
+So, when running GDB, you simply type: ``(gdb) jtag_rpi3`` and it will both
 connect and load the symbols for TEE core. For Linux kernel and other binaries
 you would do the same.
 
-Wrap it all up in a debug session
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you have everything prepared, i.e. a working setup for Raspberry Pi 3 and
-OP-TEE. You've setup both OpenOCD and GDB according to the instructions, then
-you should be good to go. Start by booting up to U-Boot, but stop there. In
-there start by disable [SMP] and then continue the boot sequence.
-
-.. code-block:: none
-
-    U-Boot> setenv smp off
-    U-Boot> boot
-
-When Linux is up and running, start a new shell where you run OpenOCD:
+Debug session example
+~~~~~~~~~~~~~~~~~~~~~
+After making an initial Raspberry Pi 3 build for OP-TEE where you've enabled
+JTAG, installed and built OpenOCD, connected the JTAG cable, then you're ready
+for debugging OP-TEE using JTAG on Raspberry 3. Boot up the Raspberry Pi 3 until
+you are in Linux and ready to run xtest. Start a new shell (on the host machine)
+where you run OpenOCD:
 
 .. code-block:: bash
 
     $ cd <openocd>
-    $ ./src/openocd -f ./tcl/interface/jlink.cfg -f ./pi3.cfg
+    $ ./src/openocd -f ./tcl/interface/jlink.cfg -f <rpi3-project>/build/rpi3/debugger/pi3.cfg
 
-Start a third shell, where you run GDB
+Start another shell, where you run GDB
 
 .. code-block:: bash
 
-    $ aarch64-linux-gnu-gdb -q
+    $ <rpi3-project>/toolchains/aarch64/bin/aarch64-linux-gnu-gdb -q
     (gdb) target remote localhost:3333
     (gdb) symbol-file <rpi3-project>/optee_os/out/arm/core/tee.elf
 
-Next, try to set a breakpoint, here use **hardware** breakpoints!
-
-**TO-DO** Functions doesn't exist anymore
+Next, try to set a breakpoint for the function ``hmac_init``, here use
+**hardware** breakpoints (i.e., ``hb``)!
 
 .. code-block:: bash
 
-    (gdb) hb tee_ta_invoke_command
-    Hardware assisted breakpoint 1 at 0x842bf98: file core/kernel/tee_ta_manager.c, line 534.
+    (gdb) hb hmac_init
+    Hardware assisted breakpoint 2 at 0x1012a178: file core/lib/libtomcrypt/src/mac/hmac/hmac_init.c, line 65.
     (gdb) c
     Continuing.
 
-And if you run tee-supplicant and xtest for example, the breakpoint should
-trigger and you will see something like this in the GDB window:
+In the UART console (RPi3/Linux), run xtest.
 
-.. code-block:: none
+.. code-block:: bash
 
-    Breakpoint 1, tee_ta_invoke_command (err=0x84940d4 <stack_thread+7764>,
-        err@entry=0x8494104 <stack_thread+7812>, sess=sess@entry=0x847bf20, clnt_id=clnt_id@entry=0x0,
-        cancel_req_to=cancel_req_to@entry=0xffffffff, cmd=0x2,
-        param=param@entry=0x84940d8 <stack_thread+7768>) at core/kernel/tee_ta_manager.c:534
-    534     {
+    # xtest
 
-From here you can debug using normal GDB commands.
+And shortly thereafter you will see GDB stops on your breakpoint and from there
+you can debug using normal GDB commands.
 
-Known issues when running the JTAG setup
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-As mentioned in the beginning, this is based on forks and etc, so it's a moving
-targets. Sometime you will see that you loose the connection between GDB and
-OpenOCD. If that happens, simply reconnect to the target. Another thing that you
-will notice is that if you're running all on a single core, then Linux kernel
-will be a bit upset when continue running after triggering a breakpoint in
-secure world (rcu starving messages etc). If you have suggestion and or
-improvements, as usual, feel free to contribute.
 
 .. _`Authentication Framework`: https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/auth-framework.rst
 .. _Bus Blaster: http://dangerousprototypes.com/docs/Bus_Blaster
