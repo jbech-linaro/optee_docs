@@ -101,6 +101,7 @@ html_style = 'css/mystyle.css'
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 
 
