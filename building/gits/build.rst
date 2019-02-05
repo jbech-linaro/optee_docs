@@ -17,9 +17,11 @@ With this particular git **built.git** our goal is to simply to make it easy for
 newcomers to get started with OP-TEE using the devices we've listed in this
 document.
 
+
 git location
 ^^^^^^^^^^^^
 https://github.com/OP-TEE/build
+
 
 Why repo?
 ^^^^^^^^^
@@ -34,19 +36,21 @@ with different manifests containing both stable and non-stable release. Using
 some tips and tricks you can also speed up setup time significantly. For day to
 day work with commits, branches etc we tend to use git commands directly.
 
+
 .. _root_fs:
 
-Root FS
-^^^^^^^
-The root fs in the builds that we cover here are as small as possible and is
-based on a stripped down Buildroot_ configuration adding just enough in the root
-fs such that one can:
+Root filesystem
+^^^^^^^^^^^^^^^
+The rootfs in the builds that we cover here are as small as possible and is
+based on a stripped down Buildroot_ configuration adding just enough in the
+rootfs such that one can:
 
     - Boot OP-TEE.
     - Run xtest with no regressions.
     - Easily add additional developer tools like, strace, valgrind etc.
 
 .. note::
+
     As a consequence of enabling "just enough", it is likely that **non-UART**
     based enviroments won't work out of the box. I.e., if you try to boot up an
     enviroment using HDMI and connect keyboards and other devices it is likely
@@ -55,12 +59,14 @@ fs such that one can:
     enable binaries/daemons in Buildroot that might be necessary (user space
     tools and drivers).
 
+
 How do I build using AOSP / OpenEmbedded?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 For guides how to build AOSP, please refer to our :ref:`aosp` page. For
 OpenEmbedded we have no guide ready, however there are teams in Linaro who are
 building OP-TEE using OpenEmbedded. If you want to get in contact with them,
 please reach out to us (see :ref:`contact`).
+
 
 Platforms supported by build.git
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -94,7 +100,7 @@ related questions etc. Please see the MAINTAINERS_ file for contact information.
       - ``PLATFORM=hikey-hikey960``
       - Yes
 
-    * - `MediaTek MT8173 EVB Board`_
+    * - `MediaTek MT8173 EVB Board`_ (deprecated)
       - ``PLATFORM=mediatek-mt8173``
       - No
 
@@ -125,6 +131,7 @@ related questions etc. Please see the MAINTAINERS_ file for contact information.
     * - `Texas Instruments AM43xx`_
       - ``PLATFORM=ti-am43xx``
       - Yes
+
 
 Manifests
 ^^^^^^^^^
@@ -174,16 +181,14 @@ same manifests as for current version above, but with the difference that **you
 also need to specify a branch** where the name corresponds to the release
 version. I.e., when we are doing releases we are creating a branch with a name
 corresponding to the release version. So, let's for example say that you want to
-checkout a stable OP-TEE ``v3.2`` for Raspberry Pi 3, then you do like this
-instead of what is mentioned further down in section ``7.3`` (note the ``-b
-3.2.0``):
-
-TODO
+checkout a stable OP-TEE ``v3.4`` for Raspberry Pi 3, then you do like this
+instead of what is mentioned further down in section
+":ref:`build_get_the_source`" (note the ``-b 3.4.0``):
 
 .. code-block:: bash
 
     ...
-    $ repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml -b 3.2.0
+    $ repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml -b 3.4.0
     ...
 
 Stable releases prior to OP-TEE v3.1 (v1.0.0 to v3.0.0)
@@ -195,9 +200,8 @@ use the ``xyz_stable.xml`` file corresponding to your device. The way to init
 of manifest being referenced (``-m xyz_stable.xml``) and that we are referring
 to a tag instead of a branch (``-b refs/tags/MAJOR.MINOR.PATCH``). So as an
 example, if you need to setup the ``2.1.0`` stable release for HiKey, then you
-would do like this instead of what is mentioned further down in section ``7.3``
-
-TODO
+would do like this instead of what is mentioned further down in section
+":ref:`build_get_the_source`".
 
 .. code-block:: bash
 
@@ -240,12 +244,12 @@ supported by older releases:
 
 .. _get_and_build_the_solution:
 
+
 Get and build the solution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 Below we will describe the general way of how to get the source, build the
 solution and how to run xtest on the device. For device specific instructions,
-please see the links in the table in the :ref:`current_version` section.
-
+please see the links in the table in the ":ref:`current_version`" section.
 
 .. _build_prerequisites:
 
@@ -260,7 +264,7 @@ Step 2 - Install Android repo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Note that here you don't install a huge SDK, it's simply a Python script that
 you download and put in your ``$PATH``, that's it. Exactly how to "install"
-repo, could be found in the Google repo_ pages, so follow those instructions
+repo, can be found at the Google repo_ pages, so follow those instructions
 before continuing.
 
 
@@ -269,21 +273,25 @@ before continuing.
 Step 3 - Get the source code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Choose the manifest corresponding to the platform you intend to use (see the
-table in :ref:`current_version`. For example, if you intend to use Raspberry
-Pi3, then at line 3 below, ``${TARGET}.xml`` shall be ``rpi3.xml``.
+table in section ":ref:`current_version`". For example, if you intend to use
+Raspberry Pi3, then at line 3 below, ``${TARGET}.xml`` shall be ``rpi3.xml``.
+The ``<optee-project>`` is whatever location where you want to store the entire
+OP-TEE developer setup.
 
 .. code-block:: bash
     :linenos:
     :emphasize-lines: 3
 
-    $ mkdir -p $HOME/devel/optee
-    $ cd $HOME/devel/optee
+    $ mkdir -p <optee-project>
+    $ cd <optee-project>
     $ repo init -u https://github.com/OP-TEE/manifest.git -m ${TARGET}.xml [-b ${BRANCH}]
     $ repo sync -j4 --no-clone-bundle
 
-.. note::
-    The ``repo sync`` step will take quite some time if you aren't referencing
-    an existing tree (see the :ref:`tips_and_tricks` section).
+.. hint::
+
+    By referencing an existing and locally saved repo forest you can save lots
+    of time. We are talking about doing repo sync in 30 seconds instead of 15-30
+    minutes (see the :ref:`tips_and_tricks` section for more details).
 
 
 .. _build_get_toolchains:
@@ -296,7 +304,7 @@ toolchains by:
 
 .. code-block:: bash
 
-    $ cd build
+    $ cd <optee-project>/build
     $ make -j2 toolchains
 
 
@@ -306,7 +314,7 @@ Step 5 - Build the solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 We've configured our repo manifests, so that repo will always automatically
 symlink the ``Makefile`` to the correct device specific makefile, that means
-that you simply start the build by running:
+that you simply start the build by running (still in ``<optee-project>/build``)
 
 .. code-block:: bash
 
@@ -348,13 +356,13 @@ This is device specific (see :ref:`device_specific`).
 
 Step 8 - Load tee-supplicant
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-On **some** solutions tee-supplicant is already running (check by running ``$ ps
+On **most** solutions tee-supplicant is already running (check by running ``$ ps
 aux | grep tee-supplicant``) on others not. If it's **not** running, then start
 it by running:
 
 .. code-block:: bash
 
-    $ tee-supplicant &
+    $ tee-supplicant -d
 
 .. note::
     If you've built using our manifest you should not need to modprobe any
@@ -365,8 +373,8 @@ it by running:
 
 Step 9 - Run xtest
 ~~~~~~~~~~~~~~~~~~
-The entire xtest test suite has been deployed when you we're running ``$ make
-run`` in previous step, i.e, in general there is no need to copy any binaries
+The entire xtest test suite has been deployed when you we're making the builds
+in previous steps, i.e, in general there is no need to copy any binaries
 manually. Everything has been put into the :ref:`root_fs` automatically. So, to
 run xtest, you simply type:
 
@@ -395,8 +403,8 @@ Reference existing project to speed up repo sync
 Doing a ``repo init``, ``repo sync`` from scratch can take a fair amount of
 time. The main reason for that is simply because of the size of some of the gits
 we are using, like for the Linux kernel and EDK2. With repo you can reference an
-existing forest and by doing so you can speed up repo sync to taking 20 seconds
-instead of an hour. The way to do this are as follows.
+existing forest and by doing so you can speed up repo sync to taking 30 seconds
+instead of 15-30 minutes. The way to do this are as follows.
 
     1. Start by setup a clean forest that you will not touch, in this example,
        let us call that ``optee-ref`` and put that under for
@@ -408,12 +416,13 @@ instead of an hour. The way to do this are as follows.
 
     3. Now you should setup your actual tree which you are going to use as your
        working tree. The way to do this is almost the same as stated in the
-       instructions above, the only difference is that you reference the other
-       local forest when running ``repo init``, like this
+       instructions above (see the ":ref:`build_get_the_source`" section) , the
+       only difference is that you **also** reference the other local forest
+       when running ``repo init``, like this
 
        .. code-block:: bash
 
-        $ repo init -u https://github.com/OP-TEE/manifest.git --reference /home/jbech/devel/optee-ref
+        $ repo init -u https://github.com/OP-TEE/manifest.git --reference $HOME/devel/optee-ref
 
     4. The rest is the same above, but now it will only take a couple of seconds
        to clone a forest.
