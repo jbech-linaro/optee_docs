@@ -328,7 +328,7 @@ After this, restart the NFS kernel server
 .. hint::
 
     To see that your shares are correctly setup and that the NFS server is
-    running, you can you: ``$ showmount --all localhost`` and you should get a
+    running, you can run: ``$ showmount --all localhost`` and you should get a
     list of ``IP:<path>'s`` based on what you have added in your exports file.
     If you get nothing there, then your NFS server hasn't been setup correctly.
 
