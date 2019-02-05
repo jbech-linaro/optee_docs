@@ -8,7 +8,7 @@ Device specific information
     :maxdepth: 1
 
     fvp
-    hikey6220
+    hikey620
     hikey960
     juno
     qemu

@@ -258,8 +258,8 @@ Build instructions
 5. Power up the Raspberry Pi 3 and the system shall start booting which you will
    see on the UART (not :ref:`rpi3_support_hdmi`).
 
-6. When you have a shell, then it's simply just to follow the ":ref:`run_xtest`"
-   instructions.
+6. When you have a shell, then it's simply just to follow the
+   ":ref:`build_run_xtest`" instructions.
 
 
 .. _rpi3_nfs:

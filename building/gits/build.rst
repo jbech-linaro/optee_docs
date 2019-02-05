@@ -160,9 +160,9 @@ gits, then please refer to the next section instead.
 +----------------+------------------+----------------------+
 | Poplar Debian  | ``poplar.xml``   |                      |
 +----------------+------------------+----------------------+
-| QEMU           | ``default.xml``  | :ref:`qemu`          |
+| QEMU           | ``default.xml``  | :ref:`qemu_v7`       |
 +----------------+------------------+----------------------+
-| QEMUv8         | ``qemu_v8.xml``  | :ref:`qemuv8`        |
+| QEMUv8         | ``qemu_v8.xml``  | :ref:`qemu_v8`       |
 +----------------+------------------+----------------------+
 | Raspberry Pi 3 | ``rpi3.xml``     | :ref:`rpi3`          |
 +----------------+------------------+----------------------+
@@ -246,9 +246,15 @@ Below we will describe the general way of how to get the source, build the
 solution and how to run xtest on the device. For device specific instructions,
 please see the links in the table in the :ref:`current_version` section.
 
+
+.. _build_prerequisites:
+
 Step 1 - Prerequisites
 ~~~~~~~~~~~~~~~~~~~~~~
 Install prerequisites according to the :ref:`prerequisites` page.
+
+
+.. _build_install_repo:
 
 Step 2 - Install Android repo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,6 +262,9 @@ Note that here you don't install a huge SDK, it's simply a Python script that
 you download and put in your ``$PATH``, that's it. Exactly how to "install"
 repo, could be found in the Google repo_ pages, so follow those instructions
 before continuing.
+
+
+.. _build_get_the_source:
 
 Step 3 - Get the source code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -276,6 +285,9 @@ Pi3, then at line 3 below, ``${TARGET}.xml`` shall be ``rpi3.xml``.
     The ``repo sync`` step will take quite some time if you aren't referencing
     an existing tree (see the :ref:`tips_and_tricks` section).
 
+
+.. _build_get_toolchains:
+
 Step 4 - Get the toolchains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 In OP-TEE we're using different toolchains for different targets (depends on
@@ -286,6 +298,9 @@ toolchains by:
 
     $ cd build
     $ make -j2 toolchains
+
+
+.. _build_make:
 
 Step 5 - Build the solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -300,7 +315,7 @@ that you simply start the build by running:
 This step will also take some time, but you can speed up subsequent builds by
 enabling ccache_ (again see :ref:`tips_and_tricks`).
 
-.. note::
+.. hint::
 
     **If you're having build issues**, then you can pipe the entire build log to
     a file, which makes it easier to search for the issue using a regular
@@ -346,7 +361,7 @@ it by running:
     OP-TEE/TEE kernel driver since it's built into the kernel in all our setups.
 
 
-.. _run_xtest:
+.. _build_run_xtest:
 
 Step 9 - Run xtest
 ~~~~~~~~~~~~~~~~~~

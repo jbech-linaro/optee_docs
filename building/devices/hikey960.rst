@@ -6,8 +6,8 @@ HiKey 960
 
 The instructions here will tell how to run OP-TEE on `HiKey 960`_.
 
-Supported HiKey960 boards?
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Supported HiKey960 boards
+^^^^^^^^^^^^^^^^^^^^^^^^^
 There are two different versions of the HiKey960 board.
 
 +----------+--------------------+--------+-------+-------------------------------+
@@ -25,14 +25,10 @@ by default configured to UART6. If you have a v1 board and need to use UART5,
 then you need to change that before building. See ``CFG_CONSOLE_UART`` in
 `hikey960.mk`_.
 
-Regular build
-^^^^^^^^^^^^^
-Just follow the instructions at :ref:`get_and_build_the_solution`. If ``make
+Build instructions
+^^^^^^^^^^^^^^^^^^
+Just follow the instructions at ":ref:`get_and_build_the_solution`". If ``make
 flash`` doesn't work, try ``make recovery``.
-
-External guide
-^^^^^^^^^^^^^^
-https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/hikey960.rst
 
 Recovery
 ^^^^^^^^
@@ -40,6 +36,10 @@ If you manage to corrupt the device, such that fastboot doesn't load
 automatically on boot, then you will need to run the recovery procedure.
 Basically what you will need to do is use another make target and change some
 jumpers. All that is described when you run the target:
+
+External guide
+^^^^^^^^^^^^^^
+https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/hikey960.rst
 
 .. code-block:: bash
 
