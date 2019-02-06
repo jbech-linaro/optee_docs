@@ -10,6 +10,7 @@ Interrupt handling
 ^^^^^^^^^^^^^^^^^^
 .. include:: interrupts.rst
 
+
 .. _memory_objects:
 
 Memory objects
@@ -19,26 +20,30 @@ is mostly abstract when it comes to using the MOBJ to populate translation
 tables etc. There are different kinds of MOBJs describing:
 
     - Physically contiguous memory
-        - created with ``mobj_phys_alloc()``.
+        - created with ``mobj_phys_alloc(...)``.
+
     - Virtual memory
         - one instance with the name ``mobj_virt`` available.
         - spans the entire virtual address space.
+
     - Physically contiguous memory allocated from a ``tee_mm_pool_t *``
-        - created with ``mobj_mm_alloc()``.
+        - created with ``mobj_mm_alloc(...)``.
+
     - Paged memory
-        - created with ``mobj_paged_alloc()``.
-        - only contains the supplied size and makes ``mobj_is_paged()`` return
-          true if supplied as argument.
+        - created with ``mobj_paged_alloc(...)``.
+        - only contains the supplied size and makes ``mobj_is_paged(...)``
+          return true if supplied as argument.
+
     - Secure copy paged shared memory
-        - created with ``mobj_seccpy_shm_alloc()``.
-        - makes ``mobj_is_paged()`` and ``mobj_is_secure()`` return true if
-          supplied as argument.
+        - created with ``mobj_seccpy_shm_alloc(...)``.
+        - makes ``mobj_is_paged(...)`` and ``mobj_is_secure(...)`` return true
+          if supplied as argument.
+
 
 .. _mmu:
 
 MMU
 ^^^
-
 Translation tables
 ~~~~~~~~~~~~~~~~~~
 OP-TEE uses several L1 translation tables, one large spanning 4 GiB and two or
@@ -111,18 +116,25 @@ translation table is restored in TTBR1.
 
 Switching to normal world
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-When switching to normal world either via a foreign interrupt or RPC there is a
-chance that secure world will resume execution on a different CPU. This means
-that the new CPU need to be configured with the context of the currently active
-TA. This is solved by always setting the TA context in the CPU when resuming
-execution. Here is room for improvements since it is more likely than not that
-it is the same CPU that resumes execution in secure world.
+When switching to normal world either via a foreign interrupt (see
+:ref:`native_foreign_irqs` or RPC there is a chance that secure world will
+resume execution on a different CPU. This means that the new CPU need to be
+configured with the context of the currently active TA. This is solved by always
+setting the TA context in the CPU when resuming execution. Here is room for
+improvements since it is more likely than not that it is the same CPU that
+resumes execution in secure world.
+
+.. todo::
+
+    Joakim: Jens? Didn't you do some tweaks here already? I.e., "room for
+    improvements" above?
+
 
 .. _pager:
 
 Pager
 ^^^^^
-OP-TEE currently requires ~256 KiB RAM for OP-TEE kernel memory. This is not a
+OP-TEE currently requires >256 KiB RAM for OP-TEE kernel memory. This is not a
 problem if OP-TEE uses TrustZone protected DDR, but for security reasons OP-TEE
 may need to use TrustZone protected SRAM instead. The amount of available SRAM
 varies between platforms, from just a few KiB up to over 512 KiB. Platforms with
@@ -149,27 +161,25 @@ Partitioning of memory
 The code that handles demand paging must always be available as it would
 otherwise lead to deadlock. The virtual memory is partitioned as:
 
-.. code-block:: none
-
-      Type           Sections
-    +--------------+-----------------+
-    |              | text            |
-    |              | rodata          |
-    |              | data            |
-    | unpaged      | bss             |
-    |              | heap1           |
-    |              | nozi            |
-    |              | heap2           |
-    +--------------+-----------------+
-    | init / paged | text_init       |
-    |              | rodata_init     |
-    +------------- +-----------------+
-    | paged        | text_pageable   |
-    |              | rodata_pageable |
-    +--------------+-----------------+
-    | demand alloc |                 |
-    |              |                 |
-    +--------------+-----------------+
+    +--------------+-------------------+
+    | Type         | Sections          |
+    +==============+===================+
+    | unpaged      | | text            |
+    |              | | rodata          |
+    |              | | data            |
+    |              | | bss             |
+    |              | | heap1           |
+    |              | | nozi            |
+    |              | | heap2           |
+    +--------------+-------------------+
+    | init / paged | | text_init       |
+    |              | | rodata_init     |
+    +--------------+-------------------+
+    | paged        | | text_pageable   |
+    |              | | rodata_pageable |
+    +--------------+-------------------+
+    | demand alloc |                   |
+    +--------------+-------------------+
 
 Where ``nozi`` stands for "not zero initialized", this section contains entry
 stacks (thread stack when TEE pager is not enabled) and translation tables (TEE
@@ -197,9 +207,10 @@ Partitioning of the binary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 The binary is partitioned into four parts as:
 
-.. code-block:: none
 
     +----------+
+    | Binary   |
+    +==========+
     | Header   |
     +----------+
     | Init     |
@@ -239,29 +250,33 @@ for OP-TEE to be able to initialize at all. The loader supplies in ``r0/x0`` the
 address of the first byte following what was not copied and jumps to the load
 address to start OP-TEE.
 
-In addition to overall binary with partitions inside described as above, extra
-three binaries are generated simultaneously during build process for loaders who
+In addition to overall binary with partitions inside described as above, three
+extra binaries are generated simultaneously during build process for loaders who
 support loading separate binaries:
 
-.. code-block:: none
+    +-----------+
+    | v2 binary |
+    +===========+
+    | Header    |
+    +-----------+
 
-    +----------+
-    | Header   |
-    +----------+
+    +-----------+
+    | v2 binary |
+    +===========+
+    | Init      |
+    +-----------+
+    | Hashes    |
+    +-----------+
 
-    +----------+
-    | Init     |
-    +----------+
-    | Hashes   |
-    +----------+
-
-    +----------+
-    | Pageable |
-    +----------+
+    +-----------+
+    | v2 binary |
+    +===========+
+    | Pageable  |
+    +-----------+
 
 In this case, loaders load header binary first to get image list and information
 of each image; and then load each of them into specific load address assigned in
-structure. These binaries are named with v2 suffix to distinguish from the
+structure. These binaries are named with `v2` suffix to distinguish from the
 existing binaries. Header format is updated to help loaders loading binaries
 efficiently:
 
@@ -297,7 +312,7 @@ Initializing the pager
 The pager is initialized as early as possible during boot in order to minimize
 the "init" area. The global variable ``tee_mm_vcore`` describes the virtual
 memory range that is covered by the level 2 translation table supplied to
-``tee_pager_init()``.
+``tee_pager_init(...)``.
 
 **Assign pageable areas**
 
@@ -317,7 +332,7 @@ and hashes of the pages.
 
 **Assign physical pages**
 
-Physical SRAM pages are supplied by calling ``tee_pager_add_pages()``
+Physical SRAM pages are supplied by calling ``tee_pager_add_pages(...)``
 
 .. code-block:: c
 
@@ -325,12 +340,13 @@ Physical SRAM pages are supplied by calling ``tee_pager_add_pages()``
                              size_t npages,
                              bool unmap);
 
-``tee_pager_add_pages()`` takes the physical address stored in the entry mapping
-the virtual address "vaddr" and "npages" entries after that and uses it to map
-new pages when needed. The unmap parameter tells whether the pages should be
-unmapped immediately since they does not contain initialized data or be kept
-mapped until they need to be recycled. The pages in the "init" area are supplied
-with ``unmap == false`` since those page have valid content and are in use.
+``tee_pager_add_pages(...)`` takes the physical address stored in the entry
+mapping the virtual address ``vaddr`` and ``npages`` entries after that and uses
+it to map new pages when needed. The unmap parameter tells whether the pages
+should be unmapped immediately since they does not contain initialized data or
+be kept mapped until they need to be recycled. The pages in the "init" area are
+supplied with ``unmap == false`` since those page have valid content and are in
+use.
 
 Invocation
 ~~~~~~~~~~
@@ -351,9 +367,9 @@ differences:
     - Read/write pages are paged in addition to read-only pages
     - Page tables are managed dynamically
 
-``tee_pager_add_uta_area()`` is used to setup initial read/write mapping needed
-when populating the TA. When the TA is fully populated and relocated
-``tee_pager_set_uta_area_attr()`` changes the mapping of the area to strict
+``tee_pager_add_uta_area(...)`` is used to setup initial read/write mapping
+needed when populating the TA. When the TA is fully populated and relocated
+``tee_pager_set_uta_area_attr(...)`` changes the mapping of the area to strict
 permissions used when the TA is running.
 
 
@@ -366,13 +382,16 @@ Different stacks are used during different stages. The stacks are:
     - **Secure monitor stack** (128 bytes), bound to the CPU. Only available if
       OP-TEE is compiled with a secure monitor always the case if the target is
       Armv7-A but never for Armv8-A.
+
     - **Temp stack** (small ~1KB), bound to the CPU. Used when transitioning
       from one state to another. Interrupts are always disabled when using this
       stack, aborts are fatal when using the temp stack.
+
     - **Abort stack** (medium ~2KB), bound to the CPU. Used when trapping a data
       or pre-fetch abort. Aborts from user space are never fatal the TA is only
       killed. Aborts from kernel mode are used by the pager to do the demand
       paging, if pager is disabled all kernel mode aborts are fatal.
+
     - **Thread stack** (large ~8KB), not bound to the CPU instead used by the
       current thread/task. Interrupts are usually enabled when using this stack.
 
@@ -380,6 +399,7 @@ Different stacks are used during different stages. The stacks are:
 
 .. list-table:: Armv7-A / AArch32
     :header-rows: 1
+    :widths: 1 5
 
     * - Stack
       - Comment
@@ -416,13 +436,13 @@ pointer.
 Normal entry
 ~~~~~~~~~~~~
 Each time OP-TEE is entered from normal world the temp stack is used as the
-initial stack. For fast calls this is the only stack used. For normal calls an
+initial stack. For fast calls, this is the only stack used. For normal calls an
 empty thread slot is selected and the CPU switches to that stack.
 
 Normal exit
 ~~~~~~~~~~~
 Normal exit occurs when a thread has finished its task and the thread is freed.
-When the main thread function, ``tee_entry_std()``, returns interrupts are
+When the main thread function, ``tee_entry_std(...)``, returns interrupts are
 disabled and the CPU switches to the temp stack instead. The thread is freed and
 OP-TEE exits to normal world.
 
@@ -430,7 +450,7 @@ RPC exit
 ~~~~~~~~
 RPC exit occurs when OP-TEE need some service from normal world. RPC can
 currently only be performed with a thread is in running state. RPC is initiated
-with a call to ``thread_rpc()`` which saves the state in a way that when the
+with a call to ``thread_rpc(...)`` which saves the state in a way that when the
 thread is restored it will continue at the next instruction as if this function
 did a normal return. CPU switches to use the temp stack before returning to
 normal world.
@@ -440,15 +460,15 @@ Foreign interrupt exit
 Foreign interrupt exit occurs when OP-TEE receives a foreign interrupt. For Arm
 GICv2 mode, foreign interrupt is sent as IRQ which is always handled in normal
 world. Foreign interrupt exit is similar to RPC exit but it is
-``thread_irq_handler()`` and ``elx_irq()`` (respectively for Armv7-A/Aarch32 and
-for Aarch64) that saves the thread state instead. The thread is resumed in the
-same way though. For Arm GICv3 mode, foreign interrupt is sent as FIQ which
-could be handled by either secure world (EL3 in AArch64) or normal world. This
-mode is not supported yet.
+``thread_irq_handler(...)`` and ``elx_irq(...)`` (respectively for
+Armv7-A/Aarch32 and for Aarch64) that saves the thread state instead. The thread
+is resumed in the same way though. For Arm GICv3 mode, foreign interrupt is sent
+as FIQ which could be handled by either secure world (EL3 in AArch64) or normal
+world. This mode is not supported yet.
 
 **Notes for Armv7-A/AArch32:**
 
-SP_IRQ is initialized to temp stack instead of a separate stack.  Prior to
+SP_IRQ is initialized to temp stack instead of a separate stack. Prior to
 exiting to normal world CPU state is changed to SVC and temp stack is selected.
 
 **Notes for AArch64:**
@@ -465,7 +485,7 @@ same.
 
 Syscall
 ~~~~~~~
-Syscalls are executed using the thread stack.
+Syscall's are executed using the thread stack.
 
 **Notes for Armv7-A/AArch32:**
 
@@ -477,15 +497,16 @@ Early in the exception processing the original ``SP_EL0`` is saved in ``struct
 thread_svc_regs`` in case the TA is executed in AArch64. Current thread stack is
 assigned to ``SP_EL0`` which is then selected. When returning ``SP_EL0`` is
 assigned what is in ``struct thread_svc_regs``. This allows
-``tee_svc_sys_return_helper()`` having the syscall exception handler return
-directly to ``thread_unwind_user_mode()``.
+``tee_svc_sys_return_helper(...)`` having the syscall exception handler return
+directly to ``thread_unwind_user_mode(...)``.
+
 
 .. _shared_memory:
 
 Shared Memory
 ^^^^^^^^^^^^^
-Shared Memory is a block of memory that is shared between the non-secure and
-the secure world. It is used to transfer data between both worlds.
+Shared Memory is a block of memory that is shared between the non-secure and the
+secure world. It is used to transfer data between both worlds.
 
 Shared Memory Allocation
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -515,47 +536,48 @@ information
 
 The shared memory pool configuration is platform specific. The memory mapping,
 including the area ``MEM_AREA_NSEC_SHM`` (shared memory with non-secure world),
-is retrieved by calling the platform-specific function
-``bootcfg_get_memory()``. Please refer to this function and the area type
-``MEM_AREA_NSEC_SHM`` to see the configuration for the platform of interest.
-The Linux driver will then initialize the shared memory pool accordingly.
+is retrieved by calling the platform-specific function ``bootcfg_get_memory()``.
+Please refer to this function and the area type ``MEM_AREA_NSEC_SHM`` to see the
+configuration for the platform of interest. The Linux driver will then
+initialize the shared memory pool accordingly.
+
+.. todo::
+
+    Joakim: bootcfg_get_memory(...) is no longer in our code. Text needs update.
 
 Shared Memory Chunk Allocation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 It is the Linux kernel driver for OP-TEE that is responsible for allocating
 chunks of shared memory. OP-TEE linux kernel driver relies on linux kernel
-generic allocation support (``CONFIG_GENERIC_ALLOCATION``) to
-allocation/release of shared memory physical chunks. OP-TEE linux kernel driver
-relies on linux kernel dma-buf support (``CONFIG_DMA_SHARED_BUFFER``) to track
-shared memory buffers references.
+generic allocation support (``CONFIG_GENERIC_ALLOCATION``) to allocation/release
+of shared memory physical chunks. OP-TEE linux kernel driver relies on linux
+kernel dma-buf support (``CONFIG_DMA_SHARED_BUFFER``) to track shared memory
+buffers references.
 
 Using shared memory
 ~~~~~~~~~~~~~~~~~~~
-
 **From the Client Application**
 
 The client application can ask for shared memory allocation using the
-GlobalPlatform Client API function ``TEEC_AllocateSharedMemory()``. The client
-application can also provide shared memory through the GlobalPlatform Client
-API function ``TEEC_RegisterSharedMemory()``. In such a case, the provided
-memory must be physically contiguous so that the OP-TEE core, that does not
+GlobalPlatform Client API function ``TEEC_AllocateSharedMemory(...)``. The
+client application can also provide shared memory through the GlobalPlatform
+Client API function ``TEEC_RegisterSharedMemory(...)``. In such a case, the
+provided memory must be physically contiguous, since OP-TEE core, who does not
 handle scatter-gather memory, is able to use the provided range of memory
-addresses. Note that the reference count of a shared memory chunk is
-incremented when shared memory is registered, and initialized to 1 on
-allocation.
+addresses. Note that the reference count of a shared memory chunk is incremented
+when shared memory is registered, and initialized to 1 on allocation.
 
 **From the Linux Driver**
 
 Occasionally the Linux kernel driver needs to allocate shared memory for the
 communication with secure world, for example when using buffers of type
-TEEC_TempMemoryReference.
+``TEEC_TempMemoryReference``.
 
-**From the OP-TEE core**
+**From OP-TEE core**
 
-In case the OP-TEE core needs information from the TEE supplicant (dynamic TA
-loading, REE time request,...), shared memory must be allocated. Allocation
-depends on the use case. The OP-TEE core asks for the following shared memory
-allocation:
+In case OP-TEE core needs information from TEE supplicant (dynamic TA loading,
+REE time request,...), shared memory must be allocated. Allocation depends on
+the use case. OP-TEE core asks for the following shared memory allocation:
 
     - ``optee_msg_arg`` structure, used to pass the arguments to the non-secure
       world, where the allocation will be done by sending a
@@ -571,14 +593,15 @@ allocation:
         - a handle to the memory, that later on will be used later on when
           freeing this memory.
 
-**From the TEE Supplicant**
+**From TEE Supplicant**
 
-The TEE supplicant is also working with shared memory, used to exchange data
-between normal and secure worlds. The TEE supplicant receives a memory address
-from the OP-TEE core, used to store the data. This is for example the case when
-a Trusted Application is loaded. In this case, the TEE supplicant must register
-the provided shared memory in the same way a client application would do,
-involving the Linux driver.
+TEE supplicant is also working with shared memory, used to exchange data between
+normal and secure worlds. TEE supplicant receives a memory address from the
+OP-TEE core, used to store the data. This is for example the case when a Trusted
+Application is loaded. In this case, TEE supplicant must register the provided
+shared memory in the same way a client application would do, involving the Linux
+driver.
+
 
 .. _smc:
 
@@ -606,17 +629,18 @@ information.  Parameters for the SMC are passed in registers 1 to 7, register 0
 holds the SMC id which among other things tells whether it is a standard or a
 fast call.
 
+
 .. _thread_handling:
 
 Thread handling
 ^^^^^^^^^^^^^^^
 OP-TEE core uses a couple of threads to be able to support running jobs in
 parallel (not fully enabled!). There are handlers for different purposes. In
-thread.c_ you will find a function called ``thread_init_primary`` which assigns
-``init_handlers`` (functions) that should be called when OP-TEE core receives
-standard or fast calls, FIQ and PSCI calls. There are default handlers for
-these services, but the platform can decide if they want to implement their own
-platform specific handlers instead.
+thread.c_ you will find a function called ``thread_init_primary(...)`` which
+assigns ``init_handlers`` (functions) that should be called when OP-TEE core
+receives standard or fast calls, FIQ and PSCI calls. There are default handlers
+for these services, but the platform can decide if they want to implement their
+own platform specific handlers instead.
 
 Synchronization primitives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -632,18 +656,19 @@ with ``SPINLOCK_UNLOCK``.
 
 .. list-table:: Spin lock functions
     :header-rows: 1
+    :widths: 1 5
 
     * - Function
       - Purpose
 
-    * - ``cpu_spin_lock()``
+    * - ``cpu_spin_lock(...)``
       - Locks a spin-lock
 
-    * - ``cpu_spin_trylock()``
+    * - ``cpu_spin_trylock(...)``
       - Locks a spin-lock if unlocked and returns ``0`` else the spin-lock is
         unchanged and the function returns ``!0``
 
-    * - ``cpu_spin_unlock()``
+    * - ``cpu_spin_unlock(...)``
       - Unlocks a spin-lock
 
 **Mutex**
@@ -652,62 +677,65 @@ A mutex is represented by ``struct mutex``. A mutex can be locked and unlocked
 with interrupts enabled or disabled, but only from a normal thread. A mutex
 cannot be used in an interrupt handler, abort handler or before a thread has
 been selected for the CPU. A mutex is initialized with either
-``MUTEX_INITIALIZER`` or ``mutex_init()``.
+``MUTEX_INITIALIZER`` or ``mutex_init(...)``.
 
 .. list-table:: Mutex functions
     :header-rows: 1
+    :widths: 1 5
 
     * - Function
       - Purpose
 
-    * - ``mutex_lock()``
+    * - ``mutex_lock(...)``
       - Locks a mutex. If the mutex is unlocked this is a fast operation, else
         the function issues an RPC to wait in normal world.
 
-    * - ``mutex_unlock()``
+    * - ``mutex_unlock(...)``
       - Unlocks a mutex. If there is no waiters this is a fast operation, else
         the function issues an RPC to wake up a waiter in normal world.
 
-    * - ``mutex_trylock()``
+    * - ``mutex_trylock(...)``
       - Locks a mutex if unlocked and returns ``true`` else the mutex is
         unchanged and the function returns ``false``.
 
-    * - ``mutex_destroy()``
+    * - ``mutex_destroy(...)``
       - Asserts that the mutex is unlocked and there is no waiters, after this
         the memory used by the mutex can be freed.
 
-When a mutex is locked it is owned by the thread calling ``mutex_lock()`` or
-``mutex_trylock()``, the mutex may only be unlocked by the thread owning the
+When a mutex is locked it is owned by the thread calling ``mutex_lock(...)`` or
+``mutex_trylock(...)``, the mutex may only be unlocked by the thread owning the
 mutex. A thread should not exit to TA user space when holding a mutex.
 
 **Condvar**
+
 A condvar is represented by ``struct condvar``. A condvar is similar to a
-pthread_condvar_t in the pthreads standard, only less advanced. Condition
+``pthread_condvar_t`` in the pthreads standard, only less advanced. Condition
 variables are used to wait for some condition to be fulfilled and are always
 used together a mutex. Once a condition variable has been used together with a
 certain mutex, it must only be used with that mutex until destroyed. A condvar
-is initialized with ``CONDVAR_INITIALIZER`` or ``condvar_init()``.
+is initialized with ``CONDVAR_INITIALIZER`` or ``condvar_init(...)``.
 
 .. list-table:: Condvar functions
     :header-rows: 1
+    :widths: 1 5
 
     * - Function
       - Purpose
 
-    * - ``condvar_wait()``
+    * - ``condvar_wait(...)``
       - Atomically unlocks the supplied mutex and waits in normal world via an
-        RPC for the condition variable to be signaled, when the function
-        returns the mutex is locked again.
+        RPC for the condition variable to be signaled, when the function returns
+        the mutex is locked again.
 
-    * - ``condvar_signal()``
+    * - ``condvar_signal(...)``
       - Wakes up one waiter of the condition variable (waiting in
-        ``condvar_wait()``).
+        ``condvar_wait(...)``).
 
-    * - ``condvar_broadcast()``
+    * - ``condvar_broadcast(...)``
       - Wake up all waiters of the condition variable.
 
-The caller of ``condvar_signal()`` or ``condvar_broadcast()`` should hold the
-mutex associated with the condition variable to guarantee that a waiter does
+The caller of ``condvar_signal(...)`` or ``condvar_broadcast(...)`` should hold
+the mutex associated with the condition variable to guarantee that a waiter does
 not miss the signal.
 
 .. _optee_smc.h: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/sm/optee_smc.h

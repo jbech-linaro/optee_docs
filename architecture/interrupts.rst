@@ -71,6 +71,8 @@ When the secure world is executing, the system is configured to route:
 Optee_os non-secure interrupts are always trapped in the state vector of the
 executing world. This is reflected by a static value of ``SCR_(IRQ|FIQ)``.
 
+.. _native_foreign_irqs:
+
 Native and foreign interrupts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Two types of interrupt are defined in optee_os:
@@ -108,9 +110,9 @@ ARM_DEN0028A_SMC_Calling_Convention_ for details).
 
 **Entry and exit of Trusted OS**
 
-On entry and exit of Trusted OS each CPU is uses a separate entry stack and
-runs with IRQ and FIQ blocked. SMCs are categorised in two flavor: *fast* and
-*standard*.
+On entry and exit of Trusted OS each CPU is uses a separate entry stack and runs
+with IRQ and FIQ blocked. SMCs are categorised in two flavors: **fast** and
+**standard**.
 
     - For **fast** SMCs, optee_os will execute on the entry stack with IRQ/FIQ
       blocked until the execution returns to normal world.
@@ -118,23 +120,21 @@ runs with IRQ and FIQ blocked. SMCs are categorised in two flavor: *fast* and
     - For **standard** SMCs, optee_os will at some point execute the requested
       service with interrupts unblocked. In order to handle interrupts, mainly
       forwarding of foreign interrupts, optee_os assigns a trusted thread
-      (`core/arch/arm/kernel/thread.c
-      <https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/thread.c>`_)
-      to the SMC request. The trusted thread stores the execution context of
-      the requested service. This context can be suspended and resumed as the
-      requested service executes and is interrupted. The trusted thread is
-      released only once the service execution returns with a completion
-      status.
+      (`core/arch/arm/kernel/thread.c`_) to the SMC request. The trusted thread
+      stores the execution context of the requested service. This context can be
+      suspended and resumed as the requested service executes and is
+      interrupted. The trusted thread is released only once the service
+      execution returns with a completion status.
 
-      For **standard** SMCs, optee_os allocates or resumes a trusted thread
-      then unblock the IRQ/FIQ lines. When the optee_os needs to invoke the
-      normal world from a foreign interrupt or a remote service call, optee_os
-      blocks IRQ/FIQ and suspends the trusted thread. When suspending, optee_os
-      gets back to the entry stack.
+      For **standard** SMCs, optee_os allocates or resumes a trusted thread then
+      unblock the IRQ/FIQ lines. When the optee_os needs to invoke the normal
+      world from a foreign interrupt or a remote service call, optee_os blocks
+      IRQ/FIQ and suspends the trusted thread. When suspending, optee_os gets
+      back to the entry stack.
 
-    - **Both** fast and standard SMC end on the entry stack with IRQ/FIQ
-      blocked and optee_os invokes the Monitor through a SMC to return to the
-      normal world.
+    - **Both** fast and standard SMC end on the entry stack with IRQ/FIQ blocked
+      and optee_os invokes the Monitor through a SMC to return to the normal
+      world.
 
 .. figure:: ../images/core/interrupt_handling/tee_invoke.png
     :figclass: align-center
@@ -153,8 +153,11 @@ When an IRQ is received in secure world as an IRQ exception then secure world:
 
     1. Saves trusted thread context (entire state of all processor modes for
        Armv7-A)
+
     2. Blocks (masks) all interrupts (IRQ and FIQ)
+
     3. Switches to entry stack
+
     4. Issues an SMC with a value to indicates to normal world that an IRQ has
        been delivered and last SMC call should be continued
 
@@ -170,8 +173,7 @@ exception where the execution would be resumed.
 Note that the monitor itself does not know/care that it has just forwarded an
 IRQ to normal world. The bookkeeping is done in the trusted thread handling in
 Trusted OS. Normal world is responsible to decide when the secure world thread
-should resume execution. See some details in section
-[Trusted Thread Scheduling](#5-trusted-thread-scheduling).
+should resume execution (for details, see :ref:`thread_handling`).
 
 .. figure:: ../images/core/interrupt_handling/irq.png
     :figclass: align-center
@@ -188,8 +190,8 @@ Deliver secure interrupts to Secure World
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section uses the Arm GICv1/v2 conventions: FIQ signals secure interrupts
 while IRQ signals non-secure interrupts. On a GICv3 configuration, one should
-exchange IRQ and FIQ in this section. A FIQ can be received during two
-different states, either in normal world (``SCR_NS`` is set) or in secure world
+exchange IRQ and FIQ in this section. A FIQ can be received during two different
+states, either in normal world (``SCR_NS`` is set) or in secure world
 (``SCR_NS`` is cleared). When the secure monitor is active (Armv8-A EL3 or
 Armv7-A Monitor mode) FIQ is masked. FIQ reception in the two different states
 is described below.
@@ -228,7 +230,6 @@ other exception by Trusted OS, the monitor is not involved at all.
 
 Trusted thread scheduling
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
 **Trusted thread for standard services**
 
 OP-TEE standard services are carried through standard SMC. Execution of these
@@ -263,17 +264,15 @@ Optee_os does not implement any thread scheduling. Each trusted thread is
 expected to track a service that is invoked from the normal world and should
 return to it with an execution status.
 
-The OP-TEE Linux driver (as implemented in `drivers/tee/optee
-<https://github.com/torvalds/linux/tree/master/drivers/tee/optee>`_ since Linux
+The OP-TEE Linux driver (as implemented in `drivers/tee/optee`_ since Linux
 kernel 4.12) is designed so that the Linux thread invoking OP-TEE gets assigned
-a trusted thread on TEE side. The execution of the trusted thread is tied to
-the execution of the caller Linux thread which is under the Linux kernel
-scheduling decision. This means trusted threads are scheduled by the Linux
-kernel.
+a trusted thread on TEE side. The execution of the trusted thread is tied to the
+execution of the caller Linux thread which is under the Linux kernel scheduling
+decision. This means trusted threads are scheduled by the Linux kernel.
 
 **Trusted thread constraints**
 
-optee_os handles a static number of trusted threads, see ``CFG_NUM_THREADS``.
+TEE core handles a static number of trusted threads, see ``CFG_NUM_THREADS``.
 
 Trusted threads are only expensive on memory constrained system, mainly
 regarding the execution stack size.
@@ -282,6 +281,9 @@ On SMP systems, optee_os can execute several trusted threads in parallel if the
 normal world supports scheduling of processes. Even on UP systems, supporting
 several trusted threads in optee_os helps normal world scheduler to be
 efficient.
+
+.. _core/arch/arm/kernel/thread.c: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/thread.c
+.. _drivers/tee/optee: https://github.com/torvalds/linux/tree/master/drivers/tee/optee
 
 .. _Trusted Firmware A: https://github.com/ARM-software/arm-trusted-firmware
 .. _ARM_DEN0028A_SMC_Calling_Convention: http://infocenter.arm.com/help/topic/com.arm.doc.den0028b/ARM_DEN0028B_SMC_Calling_Convention.pdf
