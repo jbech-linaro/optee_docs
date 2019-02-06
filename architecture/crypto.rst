@@ -1,16 +1,14 @@
 ============================
 Cryptographic implementation
 ============================
-
-This document describes how the TEE Cryptographic Operations API is
-implemented, how the default crypto provider may be configured at compile time,
-and how it may be replaced by another implementation.
+This document describes how the TEE Cryptographic Operations API is implemented,
+how the default crypto provider may be configured at compile time, and how it
+may be replaced by another implementation.
 
 Overview
 ^^^^^^^^
 There are several layers from the Trusted Application to the actual crypto
 algorithms. Most of the crypto code runs in kernel mode inside the TEE core.
-
 Here is a schematic view of a typical call to the crypto API. The numbers in
 square brackets ([1], [2]...) refer to the sections below.
 
@@ -25,16 +23,16 @@ square brackets ([1], [2]...) refer to the sections below.
 
 [1] The TEE Cryptographic Operations API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-OP-TEE implements the Cryptographic Operations API defined by the
-GlobalPlatform association in the :ref:`tee_internal_core_api`. This includes
-cryptographic functions that span various cryptographic needs: message digests,
-symmetric ciphers, message authentication codes (MAC), authenticated
-encryption, asymmetric operations (encryption/decryption or signing/verifying),
-key derivation, and random data generation. These functions make up the TEE
+OP-TEE implements the Cryptographic Operations API defined by the GlobalPlatform
+association in the :ref:`tee_internal_core_api`. This includes cryptographic
+functions that span various cryptographic needs: message digests, symmetric
+ciphers, message authentication codes (MAC), authenticated encryption,
+asymmetric operations (encryption/decryption or signing/verifying), key
+derivation, and random data generation. These functions make up the TEE
 Cryptographic Operations API.
 
-The Internal API is implemented in tee_api_operations.c_, which is compiled
-into a static library: ``${O}/ta_arm{32,64}-lib/libutee/libutee.a``.
+The Internal API is implemented in tee_api_operations.c_, which is compiled into
+a static library: ``${O}/ta_arm{32,64}-lib/libutee/libutee.a``.
 
 Most API functions perform some parameter checking and manipulations, then
 invoke some *utee\_\** function to switch to kernel mode and perform the
@@ -50,19 +48,20 @@ All cryptography-related system calls are declared in tee_svc_cryp.h_ and
 implemented in tee_svc_cryp.c_. In addition to dealing with the usual work
 required at the user/kernel interface (checking parameters and copying memory
 buffers between user and kernel space), the system calls invoke a private
-abstraction layer: the **Crypto API**, which is declared in crypto.h_. It
-serves two main purposes:
+abstraction layer: the **Crypto API**, which is declared in crypto.h_. It serves
+two main purposes:
 
     1. Allow for alternative implementations, such as hardware-accelerated
        versions.
+
     2. Provide an easy way to disable some families of algorithms at
-       compile-time to save space. See *LibTomCrypt* below.
+       compile-time to save space. See `LibTomCrypt` below.
 
 [3] crypto_*()
 ^^^^^^^^^^^^^^
 The ``crypto_*()`` functions implement the actual algorithms and helper
-functions. TEE Core has one global active implementation of this interface.
-The default implementation, mostly based on LibTomCrypt_, is as follows:
+functions. TEE Core has one global active implementation of this interface. The
+default implementation, mostly based on LibTomCrypt_, is as follows:
 
 .. code-block:: c
     :caption: File: core/crypto/crypto.c
@@ -110,11 +109,11 @@ algorithms. For instance, here is how a public RSA key is represented:
     };
 
 This is also how such keys are stored inside the TEE object attributes
-(``TEE_ATTR_RSA_PUBLIC_KEY`` in this case). ``struct bignum`` is an opaque
-type, known to the underlying implementation only. ``struct bignum_ops``
-provides functions so that the system services can manipulate data of this
-type. This includes allocation/deallocation, copy, and conversion to or from
-the big endian binary format.
+(``TEE_ATTR_RSA_PUBLIC_KEY`` in this case). ``struct bignum`` is an opaque type,
+known to the underlying implementation only. ``struct bignum_ops`` provides
+functions so that the system services can manipulate data of this type. This
+includes allocation/deallocation, copy, and conversion to or from the big endian
+binary format.
 
 .. code-block:: c
     :caption: File: core/include/crypto/crypto.h
@@ -130,9 +129,9 @@ the big endian binary format.
 
 [4] LibTomCrypt
 ^^^^^^^^^^^^^^^
-Some algorithms may be disabled at compile time if they are not needed, in
-order to reduce the size of the OP-TEE image and reduces its memory usage. This
-is done by setting the appropriate configuration variable. For example:
+Some algorithms may be disabled at compile time if they are not needed, in order
+to reduce the size of the OP-TEE image and reduces its memory usage. This is
+done by setting the appropriate configuration variable. For example:
 
 .. code-block:: bash
 
@@ -159,9 +158,12 @@ are the main things to consider when adding a new crypto provider:
     - Put all the new code in its own directory under ``core/lib`` unless it is
       code that will be used regardless of which crypto provider is in use. How
       we are dealing with AES-GCM in `core/crypto`_ could serve as an example.
+
     - Avoid modifying tee_svc_cryp.c_. It should not be needed.
+
     - Although not all crypto families need to be defined, all are required for
       compliance to the GlobalPlatform specification.
+
     - If you intend to make some algorithms optional, please try to re-use the
       same names for configuration variables as the default implementation.
 
