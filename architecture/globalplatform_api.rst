@@ -1,8 +1,8 @@
 .. _globalplatform_api:
 
+==================
 GlobalPlatform API
 ==================
-
 Introduction
 ^^^^^^^^^^^^
 GlobalPlatform_ works across industries to identify, develop and publish
@@ -10,6 +10,7 @@ specifications which facilitate the secure and interoperable deployment and
 management of multiple embedded applications on secure chip technology. OP-TEE
 has support for GlobalPlatform TEE Client API Specification_ v1.0 (GPD_SPE_007)
 and TEE Internal Core API Specification v1.1.2 (GPD_SPE_010).
+
 
 .. _tee_client_api:
 
@@ -23,18 +24,18 @@ exposes one or several functions. Those functions corresponds to a so called
 
 TEE Contexts
 ~~~~~~~~~~~~
-The TEE Context is used for creating a logical connection between the client
-and the TEE. The context must be initialized before the TEE Session can be
-created. When the client has completed a jobs running in secure world, it
-should finalize the context and thereby also releasing resources.
+The TEE Context is used for creating a logical connection between the client and
+the TEE. The context must be initialized before the TEE Session can be created.
+When the client has completed a jobs running in secure world, it should finalize
+the context and thereby also releasing resources.
 
 TEE Sessions
 ~~~~~~~~~~~~
 Sessions are used to create logical connections between a client and a specific
 Trusted Application. When the session has been established the client have a
 opened up the communication channel towards the specified Trusted Application
-identified by the ``UUID``. At this stage the client and the Trusted
-Application can start to exchange data.
+identified by the ``UUID``. At this stage the client and the Trusted Application
+can start to exchange data.
 
 
 TEE Client API example / usage
@@ -79,11 +80,12 @@ In principle the commands are called in this order:
     TEEC_CloseSession(...)
     TEEC_FinalizeContext(...)
 
-It is not uncommon that ``TEEC_InvokeCommand`` is called several times in row
-when the session has been established.
+It is not uncommon that ``TEEC_InvokeCommand(...)`` is called several times in
+row when the session has been established.
 
-For a complete example, please see chapter **5.2 Example 1: Using the TEE
-Client API** in the GlobalPlatform TEE Client API Specification_ v1.0.
+For a complete example, please see chapter **5.2 Example 1: Using the TEE Client
+API** in the GlobalPlatform TEE Client API Specification_ v1.0.
+
 
 .. _tee_internal_core_api:
 
@@ -92,18 +94,19 @@ TEE Internal Core API
 The Internal Core API is the API that is exposed to the Trusted Applications
 running in the secure world. The TEE Internal API consists of four major parts:
 
-1. Trusted Storage API for Data and Keys
-2. Cryptographic Operations API
-3. Time API
-4. Arithmetical API
+    1. Trusted Storage API for Data and Keys
+    2. Cryptographic Operations API
+    3. Time API
+    4. Arithmetical API
 
 Examples / usage
 ~~~~~~~~~~~~~~~~
 Calling the Internal Core API is done in the same way as described above using
-Client API. The best place to find information how this should be done is in
-the TEE Internal Core API Specification_ v1.1.2 which contains many examples of
-how to call the various APIs. One can also have a look at the examples in the
+Client API. The best place to find information how this should be done is in the
+TEE Internal Core API Specification_ v1.1.2 which contains many examples of how
+to call the various APIs. One can also have a look at the examples in the
 optee_examples_ git.
+
 
 .. _extensions:
 
@@ -124,10 +127,9 @@ Following functions have been introduced in order to operate with cache:
 
 These functions are available to any Trusted Application defined with the flag
 ``TA_FLAG_CACHE_MAINTENANCE`` sets on. When not set, each function returns the
-error code ``TEE_ERROR_NOT_SUPPORTED``.
-
-Within these extensions, a Trusted Application is able to operate on the data
-cache, with the following specification:
+error code ``TEE_ERROR_NOT_SUPPORTED``. Within these extensions, a Trusted
+Application is able to operate on the data cache, with the following
+specification:
 
 .. list-table::
     :widths: 10 60
@@ -162,10 +164,8 @@ Concat KDF
 ~~~~~~~~~~
 Support for the Concatenation Key Derivation Function (Concat KDF) according to
 `SP 800-56A`_ (*Recommendation for Pair-Wise Key Establishment Schemes Using
-Discrete Logarithm Cryptography*) can be found in OP-TEE.
-
-You may disable this extension by setting the following configuration variable
-in ``conf.mk``:
+Discrete Logarithm Cryptography*) can be found in OP-TEE. You may disable this
+extension by setting the following configuration variable in ``conf.mk``:
 
 .. code-block:: make
 
@@ -179,12 +179,10 @@ All key and parameter sizes **must** be multiples of 8 bits. That is:
     - Output parameter: the derived key (``DerivedKeyingMaterial``).
 
 In addition, the maximum size of the derived key is limited by the size of an
-object of type ``TEE_TYPE_GENERIC_SECRET`` (512 bytes).
-
-This implementation does **not** enforce any requirement on the content of the
-``OtherInfo`` parameter. It is the application's responsibility to make sure
-this parameter is constructed as specified by the NIST specification if
-compliance is desired.
+object of type ``TEE_TYPE_GENERIC_SECRET`` (512 bytes). This implementation does
+**not** enforce any requirement on the content of the ``OtherInfo`` parameter.
+It is the application's responsibility to make sure this parameter is
+constructed as specified by the NIST specification if compliance is desired.
 
 **API extension**
 
@@ -375,9 +373,8 @@ algorithm. Trusted Applications should include
 
 Note that the implementation follows the recommendations of version 1.1 of the
 specification for adding new algorithms. It should make it compatible with
-future changes to the official specification.
-
-You can disable this extension by setting the following in ``conf.mk``:
+future changes to the official specification. You can disable this extension by
+setting the following in ``conf.mk``:
 
 .. code-block:: make
 
@@ -570,10 +567,8 @@ PBKDF2
 This document describes the OP-TEE implementation of the key derivation
 function, *PBKDF2* as specified in `RFC 2898`_ section 5.2. This RFC is a
 republication of PKCS #5 v2.0 from RSA Laboratories' Public-Key Cryptography
-Standards (PKCS) series.
-
-You may disable this extension by setting the following configuration variable
-in ``conf.mk``:
+Standards (PKCS) series. You may disable this extension by setting the following
+configuration variable in ``conf.mk``:
 
 .. code-block:: make
 
