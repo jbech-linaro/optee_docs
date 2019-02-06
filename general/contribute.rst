@@ -3,13 +3,13 @@
 ==========
 Contribute
 ==========
-Contributions to OP-TEE are managed by the OP-TEE `core team`_ and anyone can
-contribute to OP-TEE as long as it is understood that it will require a
-sign-off. The sign-off is a simple line at the end of the explanation for the
-patch, which certifies that you wrote it or otherwise have the right to pass it
-on as an open-source patch (see below). You thereby assure that you have read
-and are following the rules stated in the ``Developer Certificate of Origin``
-as stated below.
+Contributions to OP-TEE are managed by the OP-TEE :ref:`core_team` and anyone
+can contribute to OP-TEE as long as it is understood that it will require a
+`Signed-off-by` tag from the one submitting the patch(es). The Signed-off-by tag
+is a simple line at the end of the explanation for the patch, which certifies
+that you wrote it or otherwise have the right to pass it on as an open source
+patch (see below). You thereby assure that you have read and are following the
+rules stated in the ``Developer Certificate of Origin`` as stated below.
 
 .. _DCO:
 
@@ -64,7 +64,8 @@ To sign-off a patch, just add a line in the commit message saying:
 
     Signed-off-by: Random J Developer <random@developer.example.org>
 
-using your real name (sorry, no pseudonyms or anonymous contributions.)
+Use your real name or on some rare cases a company email address, but we
+disallow pseudonyms or anonymous contributions.
 
 GitHub
 ^^^^^^
@@ -74,8 +75,8 @@ contributions.
 Setting up an account
 ~~~~~~~~~~~~~~~~~~~~~
 You do not need to own a GitHub account in order to clone a repository. But if
-you want to contribute, you need to create an account at GitHub_ first. Note
-that a free plan is sufficient to collaborate.
+you want to contribute, you need to create an account at GitHub_. Note that a
+free plan is sufficient to collaborate.
 
 SSH is recommended to access your GitHub repositories securely and without
 supplying your username and password each time you pull or push something.
@@ -83,13 +84,11 @@ To configure SSH for GitHub, please refer to `Connecting to GitHub with SSH`_.
 
 Forking
 ~~~~~~~
-Only owners of the OP-TEE projects have write permission to the Git
-repositories of those projects. Contributors should **fork**
-``OP-TEE/*.git`` and/or ``linaro-swg/*.git`` into their own account, then work
-on this forked repository. The complete documentation about **forking** can be
-found at `fork a repo`_.
-
-Note that the fork only has to be performed once.
+Only owners of the OP-TEE projects have write permissions to the git
+repositories of those projects. Contributors **should fork** ``OP-TEE/*.git``
+and/or ``linaro-swg/*.git`` into their own account, then work on this forked
+repository. The complete documentation about **forking** can be found at `fork a
+repo`_.
 
 Creating pull requests
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -132,11 +131,12 @@ Commit messages
 
 Review feedback
 ~~~~~~~~~~~~~~~
-It's very likely that you will get review comments from other OP-TEE users
+It is very likely that you will get review comments from other OP-TEE users
 asking you to fix certain things etc. When fixing review comments, do:
 
-    - **Add** patches on top of your existing branch. **Do not** squash and
-      force push when fixing review comments.
+    - **Add** `fixup` patches on **top** of your existing branch. **Do not**
+      squash and force push while fixing review comments.
+
     - When all comments have been addressed, just write a simple messages in the
       comments field saying something like "All comments have been addressed".
       By doing so you will notify the maintainers that the fix might be ready
@@ -154,41 +154,46 @@ as follows when the review process ends:
 
 .. code-block:: none
 
-    <commit1> Do something
-    <commit2> Do something else
-    <commit3> [Review] Do something
-    <commit4> [Review] Do something
+    <sha1-commit4> [Review] Do something
+    <sha1-commit3> [Review] Do something
+    <sha1-commit2> Do something else
+    <sha1-commit1> Do something
 
 Then you would do:
 
 .. code-block:: bash
 
-    $ git rebase -i <commit1>^
+    $ git rebase -i <sha1-commit1>^
 
 Edit the commit script so it looks like so:
 
 .. code-block:: none
 
-    pick <commit1> Do something
-    squash <commit3> [Review] Do something
-    squash <commit4> [Review] Do something
-    pick <commit2> Do something else
+    pick <sha1-commit1> Do something
+    squash <sha1-commit3> [Review] Do something
+    squash <sha1-commit4> [Review] Do something
+    pick <sha1-commit2> Do something else
 
 Add the proper tags (``Acked-by: ...``, ``Reviewed-by: ...``, ``Tested-by:
-...``) to the commit message(s), as provided by the people who reviewed and/or
-tested the patches.
+...``) to the commit message(s) for each and every commit as provided by the
+people who reviewed and/or tested the patches.
+
+.. hint::
+
+    ``git commit --fixup=<sha1-of-commit-to-fix>`` and later on ``git rebase -i
+    --autosquash <sha1-of-first-commit-in-patch-serie>^1`` is pretty convenient
+    to use when adding review patches and doing the final squash operation.
 
 Once ``rebase -i`` is done, you need to force-push (``-f``) to your GitHub
 branch in order to update the pull request page.
 
 .. code-block:: bash
 
-    $ git push -f
+    $ git push -f <my-remote> <my-branch>
 
-At this point, it is the project maintainer's job to apply your patches to the
-master branch.
+After completing this it is the project maintainers job to apply your patches to
+the master branch.
 
-.. _core team: https://github.com/orgs/OP-TEE/teams/linaro/members
 .. _fork a repo: https://help.github.com/articles/fork-a-repo
 .. _GitHub: https://github.com
 .. _Connecting to GitHub with SSH: https://help.github.com/articles/connecting-to-github-with-ssh

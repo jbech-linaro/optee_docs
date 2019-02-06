@@ -1,13 +1,11 @@
 OP-TEE Documentation
 ====================
-OP-TEE is yada yada
-
+This is the official location for OP-TEE documentation.
 
 .. toctree::
    :maxdepth: 2
 
    general/index
-
 
 .. toctree::
    :maxdepth: 2

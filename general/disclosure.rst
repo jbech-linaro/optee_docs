@@ -4,9 +4,9 @@
 Disclosure policy
 =================
 When a vulnerability has been reported (see :ref:`vulnerability_reporting`) to
-the `core team`_, it is up to them to implement mitigations and fixes as well as
-report back to stakeholders in a responsible way. This page describes the
-responsible disclosure policy that applies to the OP-TEE project.
+the :ref:`core_team`, it is up to them to implement mitigations and fixes as
+well as report back to stakeholders in a responsible way. This page describes
+the responsible disclosure policy that applies to the OP-TEE project.
 
 .. note::
     The "`core team`_" in Linaro (who owns the OP-TEE project) consists of
@@ -22,27 +22,28 @@ write rules that you can follow to 100%, since depending on the type of security
 issues being dealt with it might or might not be possible for the core team and
 Linaro to re-distribute the information right away.
 
-An example of when we couldn't follow our rules and disclosure policy was when
-we got informed (under NDA) about the Spectre and Meltdown issues (this was
+As an example of when we couldn't follow our rules and disclosure policy was
+when we got informed (under NDA) about the Spectre and Meltdown issues (this was
 before it was public knowledge). That was considered so sensitive that we
-weren't even allowed to share or discuss this outside Linaro (employees).
-
-But in general, we strive and try to do our best to follow the rules etc that
-have been defined on this particular page.
+weren't even allowed to share or discuss this outside Linaro (employees). But in
+general, we strive and try to do our best to follow the rules etc that have been
+defined on this particular page.
 
 Receiving information
 ~~~~~~~~~~~~~~~~~~~~~
 The one receiving information about and fixes related to OP-TEE security
 vulnerabilities must follow these rules:
 
-    1. The receiver of vulnerability information and/or security fixes shared by
-       the core team and Linaro are **not allowed** to share, re-distribute or
-       otherwise spread knowledge about the issues and security fixes
-       outside their own company until the disclosure deadline has passed and
-       the information is publicly available.
+    1. The **receiver** of vulnerability information and/or security fixes
+       shared by the core team and Linaro are **not allowed** to share,
+       re-distribute or otherwise spread knowledge about the issues and security
+       fixes outside their own company until the disclosure deadline has passed
+       and the information is publicly available.
 
-        1.1. If the receiver still wants to share it with other people/companies
-        he must first get approval from the core team and Linaro to do so.
+       .. note::
+
+        If the receiver still insists to share it with other people/companies he
+        must first get approval from the core team and Linaro to do so.
 
 .. _reporting_issues:
 
@@ -52,9 +53,9 @@ The one reporting security vulnerabilities to the core team and Linaro are asked
 to do it under the conditions mentioned below. It might seem like a long list,
 but we hope that it won't scare people away from reporting issues. It's mostly
 common sense and also aims to rule out questions that otherwise might come to
-mind. In short it by default gives the core team and Linaro the power to decide
-what to do with the reported issue if nothing else has been agreed between them
-and the reporter.
+mind. In short, the rules by default gives the core team and Linaro the power to
+decide what to do with the reported issue if nothing else has been agreed
+between them and the reporter.
 
     1. If nothing else has been agreed between the reporter and the core team
        and Linaro, then the rules and information as stated on this page
@@ -98,7 +99,7 @@ only be added to that list after first talking to the core team. In short what
 is required to be added to that list is:
 
     - A justification of why you need to know about security issues and should
-      have security fixes before they are going public.
+      have access to security fixes before they are going public.
 
     - A company email address (we do not accept gmail, yahoo and similar
       addresses).

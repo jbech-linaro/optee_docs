@@ -1,18 +1,22 @@
+.. todo::
+
+    Joakim: Feels like this page is a bit malplaced in the structure. Maybe we
+    should create a separate "main-section" for this?
 
 .. _platforms_supported:
 
+===================
 Platforms supported
 ===================
 Several platforms are supported. In order to manage slight differences between
 platforms, a ``PLATFORM_FLAVOR`` flag has been introduced. The ``PLATFORM`` and
 ``PLATFORM_FLAVOR`` flags define the whole configuration for a chip the where
 the Trusted OS runs. Note that there is also a composite form which makes it
-possible to append ``PLATFORM_FLAVOR`` directly, by adding a dash in-between
-the names. The composite form is shown below for the different boards. For more
+possible to append ``PLATFORM_FLAVOR`` directly, by adding a dash in-between the
+names. The composite form is shown below for the different boards. For more
 specific details about build flags etc, please read
 :ref:`configuration_and_flags`. Some platforms have different sub-maintainers,
-please refer to the file MAINTAINERS_ for contact details for various
-platforms.
+please refer to the file MAINTAINERS_ for contact details for various platforms.
 
 .. Please keep this list sorted in alphabetic order
 
