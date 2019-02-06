@@ -1,3 +1,8 @@
+.. todo::
+
+    Joakim: Question is whether this should be moved under the "optee_os"
+    specific page instead?
+
 .. _file_structure:
 
 File structure
@@ -8,6 +13,7 @@ Top level directories
 ^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Top level directories
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -38,6 +44,7 @@ Top level directories
 ^^^^^
 .. list-table:: Structure of /core
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -58,6 +65,7 @@ Top level directories
 ^^^^^^^^^^
 .. list-table:: Structure of /core/arch
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -73,6 +81,7 @@ Top level directories
 ^^^^^^^^^^^^^^
 .. list-table:: Structure of /core/arch/arm
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -100,6 +109,7 @@ Top level directories
 ^^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Structure of /core/arch/arm/include
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -123,6 +133,7 @@ Top level directories
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Structure of /core/lib/lib{crypto,sla}
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
@@ -137,6 +148,7 @@ Top level directories
 ^^^^^^^^^^^^^
 .. list-table:: Structure of /lib/libutils
     :header-rows: 1
+    :widths: 1 5
 
     * - Directory
       - Description
