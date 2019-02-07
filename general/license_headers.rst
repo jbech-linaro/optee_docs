@@ -20,6 +20,7 @@ New source files
     - **Rule 1.2** The SPDX license identifier shall be added as a comment line.
       It shall be the first possible line in the file which can contain a
       comment. The comment style shall depend on the file type:
+
         - **Rule 1.2.1** C source: ``// SPDX-License-Identifier: <expression>``
         - **Rule 1.2.2** C header: ``/* SPDX-License-Identifier: <expression> */``
         - **Rule 1.2.3** Assembly: ``/* SPDX-License-Identifier: <expression> */``

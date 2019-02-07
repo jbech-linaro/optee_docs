@@ -1,5 +1,6 @@
 .. _trusted_applications:
 
+====================
 Trusted Applications
 ====================
 There are two ways to implement Trusted Applications (TAs), Pseudo TAs and user
@@ -64,8 +65,7 @@ The so-called early TAs are virtually identical to the REE FS TAs, but instead
 of being loaded from the Normal World file system, they are linked into a
 special data section in the TEE core blob. Therefore, they are available even
 before ``tee-supplicant`` and the REE's filesystems have come up. Please find
-more details in the `early TA commit
-<https://github.com/OP-TEE/optee_os/commit/d0c636148b3a>`_.
+more details in the `early TA commit`_.
 
 .. _ree_fs_ta:
 
@@ -79,7 +79,7 @@ signed with the key from the build of the original OP-TEE core blob.
 Because the TAs are signed, they are able to be stored in the untrusted REE
 filesystem, and ``tee-supplicant`` will take care of passing them to be checked
 and loaded by the Secure World OP-TEE core. Note that this type of TA isn't
-encrypted. 
+encrypted.
 
 .. _secure_storage_ta:
 
@@ -99,3 +99,4 @@ with the command:
     $ xtest --install-ta
 
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+.. _early TA commit: https://github.com/OP-TEE/optee_os/commit/d0c636148b3a

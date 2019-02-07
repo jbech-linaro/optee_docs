@@ -1,5 +1,6 @@
 .. _libraries:
 
+=========
 Libraries
 =========
 
@@ -7,8 +8,8 @@ Libraries
 
 libutee
 ^^^^^^^
-The :ref:`tee_internal_core_api` describes services that are provided to
-Trusted Applications. **libutee** is a library that implements this API.
+The :ref:`tee_internal_core_api` describes services that are provided to Trusted
+Applications. **libutee** is a library that implements this API.
 
 libutee is a static library the Trusted Applications shall statically link
 against. Trusted Applications do execute in non-privileged secure userspace and

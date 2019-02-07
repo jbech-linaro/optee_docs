@@ -1,3 +1,5 @@
+.. _secure_boot:
+
 ===========
 Secure boot
 ===========

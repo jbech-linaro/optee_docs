@@ -743,3 +743,4 @@ The following entries shall be added to **Table 6-11**:
 .. _RFC 5869: https://tools.ietf.org/html/rfc5869
 .. _Specification: https://globalplatform.org/specs-library/?filter-committee=tee
 .. _SP 800-56A: http://csrc.nist.gov/publications/nistpubs/800-56A/SP800-56A_Revision1_Mar08-2007.pdf
+.. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier

@@ -24,12 +24,12 @@ There are currently two secure storage implementations in OP-TEE:
       partition of an eMMC device, and is enabled by setting ``CFG_RPMB_FS=y``.
       It is described in [secure_storage_rpmb.md](secure_storage_rpmb.md).
 
-It is possible to use the normal world file systems and the RPMB
-implementations simultaneously. For this, two OP-TEE specific storage
-identifiers have been defined: ``TEE_STORAGE_PRIVATE_REE`` and
-``TEE_STORAGE_PRIVATE_RPMB``. Depending on the compile-time configuration, one
-or several values may be used. The value ``TEE_STORAGE_PRIVATE`` selects the
-REE FS when available, otherwise the RPMB FS (in this order).
+It is possible to use the normal world file systems and the RPMB implementations
+simultaneously. For this, two OP-TEE specific storage identifiers have been
+defined: ``TEE_STORAGE_PRIVATE_REE`` and ``TEE_STORAGE_PRIVATE_RPMB``. Depending
+on the compile-time configuration, one or several values may be used. The value
+``TEE_STORAGE_PRIVATE`` selects the REE FS when available, otherwise the RPMB FS
+(in this order).
 
 REE FS Secure Storage
 ^^^^^^^^^^^^^^^^^^^^^
@@ -42,6 +42,7 @@ REE FS Secure Storage
 
 .. list-table:: Secure storage files
     :header-rows: 1
+    :widths: 1 6
 
     * - Source file
       - Purpose
@@ -68,20 +69,19 @@ write data to a persistent object, a corresponding syscall implemented in TEE
 Trusted Storage Service will be called, which in turn will invoke a series of
 TEE file operations to store the data. TEE file system will then encrypt the
 data and send REE file operation commands and the encrypted data to TEE
-supplicant by a series of RPC messages. TEE supplicant will receive the
-messages and store the encrypted data accordingly to the Linux file system.
-Reading files are handled in a similar manner.
+supplicant by a series of RPC messages. TEE supplicant will receive the messages
+and store the encrypted data accordingly to the Linux file system. Reading files
+are handled in a similar manner.
 
 GlobalPlatform Trusted Storage Requirement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Below is an excerpt from the specification, listing the most vital
-requirements:
+Below is an excerpt from the specification, listing the most vital requirements:
 
 .. code-block:: none
 
     1. The Trusted Storage may be backed by non-secure resources as long as
-       suitable cryptographic protection is applied, which MUST be as
-       strong as the means used to protect the TEE code and data itself.
+       suitable cryptographic protection is applied, which MUST be as strong as
+       the means used to protect the TEE code and data itself.
 
     2. The Trusted Storage MUST be bound to a particular device, which means
        that it MUST be accessible or modifiable only by authorized TAs
@@ -109,35 +109,35 @@ protection against rollback, and the protection level is set to 0.
 TEE File Structure in Linux File System
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 OP-TEE by default uses ``/data/tee/`` as the secure storage space in the Linux
-file system. Each persistent object is assigned an internal identifier. It is
-an integer which is visible in the Linux file system as ``/data/tee/<file
+file system. Each persistent object is assigned an internal identifier. It is an
+integer which is visible in the Linux file system as ``/data/tee/<file
 number>``.
 
 A directory file, ``/data/tee/dirf.db``, lists all the objects that are in the
-secure storage. All normal world files are integrity protected and encrypted,
-as described below.
+secure storage. All normal world files are integrity protected and encrypted, as
+described below.
 
 Key Manager
 ^^^^^^^^^^^
 Key manager is an component in TEE file system, and is responsible for handling
 data encryption and decryption and also management of the sensitive key
 materials. There are three types of keys used by the key manager: the Secure
-Storage Key (*SSK*), the TA Storage Key (*TSK*) and the File Encryption Key
-(*FEK*).
+Storage Key (`SSK`), the TA Storage Key (`TSK`) and the File Encryption Key
+(`FEK`).
 
 Secure Storage Key (SSK)
 ~~~~~~~~~~~~~~~~~~~~~~~~
-SSK is a per-device key and is generated and stored in secure memory when
-OP-TEE is booting. SSK is used to derive the TA Storage Key (TSK).
+SSK is a per-device key and is generated and stored in secure memory when OP-TEE
+is booting. SSK is used to derive the TA Storage Key (TSK).
 
 SSK is derived by
 
     SSK = HMAC\ :sub:`SHA256` (HUK, Chip ID || "static string")
 
-The functions to get Hardware Unique Key (HUK) and chip ID depend on platform
-implementation. Currently, in OP-TEE OS we only have a per-device key, SSK,
-which is used for secure storage subsystem, but, for the future we might need
-to create different per-device keys for different subsystems using the same
+The functions to get :ref:`hardware_unique_key` (HUK) and chip ID depends on the
+platform implementation. Currently, in OP-TEE OS we only have a per-device key,
+SSK, which is used for secure storage subsystem, but, for the future we might
+need to create different per-device keys for different subsystems using the same
 algorithm as we generate the SSK; An easy way to generate different per-device
 keys for different subsystems is using different static strings to generate the
 keys.
@@ -155,9 +155,9 @@ TSK is derived by:
 File Encryption Key (FEK)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 When a new TEE file is created, key manager will generate a new FEK by PRNG
-(pesudo random number generator) for the TEE file and store the encrypted FEK
-in meta file. FEK is used for encrypting/decrypting the TEE file information
-stored in meta file or the data stored in block file.
+(pesudo random number generator) for the TEE file and store the encrypted FEK in
+meta file. FEK is used for encrypting/decrypting the TEE file information stored
+in meta file or the data stored in block file.
 
 Hash Tree
 ^^^^^^^^^
@@ -234,9 +234,9 @@ RPMB Secure Storage
 ^^^^^^^^^^^^^^^^^^^
 This document describes the RPMB secure storage implementation in OP-TEE, which
 is enabled by setting ``CFG_RPMB_FS=y``. Trusted Applications may use this
-implementation by passing a storage ID equal to ``TEE_STORAGE_PRIVATE_RPMB``,
-or ``TEE_STORAGE_PRIVATE`` if ``CFG_REE_FS`` is disabled. For details about
-RPMB, please refer to the JEDEC eMMC specification (JESD84-B51).
+implementation by passing a storage ID equal to ``TEE_STORAGE_PRIVATE_RPMB``, or
+``TEE_STORAGE_PRIVATE`` if ``CFG_REE_FS`` is disabled. For details about RPMB,
+please refer to the JEDEC eMMC specification (JESD84-B51).
 
 The architecture is depicted below.
 
@@ -247,8 +247,8 @@ The architecture is depicted below.
     U        tee-supplicant           :        Trusted application
     S           (rpmb.c)              :        (secure storage API)
     E         ^          ^            :                  ^
-    R         |          |            :~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
-    ~~~~~~~ ioctl ~~~~~~~|~~~~~~~~~~~~:                  v
+    R         |          |            :                  |
+    ~~~~~~~ ioctl ~~~~~~~|~~~~~~~~~~~~:~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
     K         |          |            :               OP-TEE
     E         v          v            :         (tee_svc_storage.c)
     R  MMC/SD subsys.  OP-TEE driver  : (tee_rpmb_fs.c, tee_fs_key_manager.c)
@@ -268,7 +268,7 @@ The Secure Storage API
 ~~~~~~~~~~~~~~~~~~~~~~
 This part is common with the REE-based filesystem. The interface between the
 system calls in `core/tee/tee_svc_storage.c`_ and the RPMB filesystem is the
-*tee_file_operations*, namely ``struct tee_file_ops``.
+`tee_file_operations`, namely ``struct tee_file_ops``.
 
 The RPMB filesystem
 ~~~~~~~~~~~~~~~~~~~
@@ -280,36 +280,35 @@ partition is divided in three parts:
 
     - At offset 512 is the File Allocation Table (FAT). It is an array of
       ``struct rpmb_fat_entry`` elements, one per file. The FAT grows
-      dynamically as files are added to the filesystem. Among other things,
-      each entry has the start address for the file data, its size, and the
-      filename.
+      dynamically as files are added to the filesystem. Among other things, each
+      entry has the start address for the file data, its size, and the filename.
 
-    - Starting from the end of the RPMB partition and extending downwards is
-      the file data area.
+    - Starting from the end of the RPMB partition and extending downwards is the
+      file data area.
 
 Space in the partition is allocated by the general-purpose allocator functions,
-``tee_mm_alloc()`` and ``tee_mm_alloc2()``.
+``tee_mm_alloc(...)`` and ``tee_mm_alloc2(...)``.
 
 All file operations are atomic. This is achieved thanks to the following
 properties:
 
-    - Writing one single block of data to the RPMB partition is guaranteed to
-      be atomic by the eMMC specification.
+    - Writing one single block of data to the RPMB partition is guaranteed to be
+      atomic by the eMMC specification.
 
     - The FAT block for the modified file is always updated last, after data
       have been written successfully.
 
-    - Updates to file content is done in-place only if the data do not span
-      more than the "reliable write block count" blocks. Otherwise, or if the
-      file needs to be extended, a new file is created.
+    - Updates to file content is done in-place only if the data do not span more
+      than the "reliable write block count" blocks. Otherwise, or if the file
+      needs to be extended, a new file is created.
 
 Device access
 ~~~~~~~~~~~~~
 There is no eMMC controller driver in OP-TEE. The device operations all have to
 go through the normal world. They are handled by the ``tee-supplicant`` process
-which further relies on the kernel's ``ioctl()`` interface to access the
-device. ``tee-supplicant`` also has an emulation mode which implements a
-virtual RPMB device for test purposes.
+which further relies on the kernel's ``ioctl()`` interface to access the device.
+``tee-supplicant`` also has an emulation mode which implements a virtual RPMB
+device for test purposes.
 
 RPMB operations are the following:
     - Reading device information (partition size, reliable write block count).
@@ -330,7 +329,7 @@ RPMB operations are the following:
 
 RPMB operations are initiated on request from the FS layer. Memory buffers for
 requests and responses are allocated in shared memory using
-``thread_optee_rpc_alloc_payload()``. Buffers are passed to the normal world in
+``thread_rpc_alloc_payload(...)``. Buffers are passed to the normal world in
 a ``TEE_RPC_RPMB_CMD`` message, thanks to the ``thread_rpc_cmd()`` function.
 Most RPMB requests and responses use the data frame format defined by the JEDEC
 eMMC specification. HMAC authentication is implemented here also.
@@ -343,9 +342,9 @@ Chaining (CBC) mode with Encrypted Salt-Sector Initialization Vector (ESSIV),
 see CBC-ESSIV_ for details.
 
     - During OP-TEE initialization, a 128-bit AES Secure Storage Key (SSK) is
-      derived from a Hardware Unique Key (HUK). It is kept in secure memory and
-      never written to disk. A Trusted Application Storage Key is derived from
-      the SSK and the TA UUID.
+      derived from a :ref:`hardware_unique_key` (HUK). It is kept in secure
+      memory and never written to disk. A Trusted Application Storage Key is
+      derived from the SSK and the TA UUID.
 
     - For each file, a 128-bit encrypted File Encryption Key (FEK) is randomly
       generated when the file is created, encrypted with the TSK and stored in
@@ -365,8 +364,8 @@ see CBC-ESSIV_ for details.
         Decrypted block = AES-CBC-Decrypt(FEK, IV, encrypted block data);
 
 
-SSK, TSK and FEK handling is common with the REE-based secure storage, while
-the AES CBC block encryption is used only for RPMB (the REE implementation uses
+SSK, TSK and FEK handling is common with the REE-based secure storage, while the
+AES CBC block encryption is used only for RPMB (the REE implementation uses
 GCM). The FAT is not encrypted.
 
 REE FS hash state
@@ -383,7 +382,7 @@ Important caveats
     platforms, a constant key is used, resulting in no protection against
     decryption, or Secure Storage duplication to other devices. This is because
     information about how to retrieve key data from the SoC is considered
-    sensitive by the vendors and it is not freely available.
+    sensitive by the vendors and it is not publicly available.
 
     In OP-TEE, there are APIs for reading keys generically from
     One-Time-Programmable (OTP) memory. But there are no existing platform
