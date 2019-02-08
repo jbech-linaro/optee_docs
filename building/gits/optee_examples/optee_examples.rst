@@ -35,6 +35,8 @@ Runs an AES encryption and decryption from a TA using the GlobalPlatform TEE
 Internal Core API. Non secure test application provides the key, initial vector
 and ciphered data.
 
+.. _hello_world:
+
 hello_world
 ^^^^^^^^^^^
 

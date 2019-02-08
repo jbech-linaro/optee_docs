@@ -20,3 +20,4 @@ OP-TEE developer setup. So a first place to start looking is probably at the
    gits/index
    prerequisites
    toolchains
+   trusted_applications
