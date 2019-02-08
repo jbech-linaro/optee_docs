@@ -31,7 +31,8 @@ Build instructions
 You can build the code in this git only or build it as part of the entire
 system, i.e. as a part of a full OP-TEE developer setup. For the latter, please
 refer to instructions at the :ref:`build` page. For standalone builds we
-currently support build with both CMake as well as with regular GNU Makefiles.
+currently support building with both CMake as well as with regular GNU
+Makefiles.
 
 Configure the toolchain
 ~~~~~~~~~~~~~~~~~~~~~~~

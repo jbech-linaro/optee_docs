@@ -19,3 +19,4 @@ OP-TEE developer setup. So a first place to start looking is probably at the
    linux/tee_framework
    gits/index
    prerequisites
+   toolchains
