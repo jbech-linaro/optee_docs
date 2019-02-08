@@ -1,3 +1,4 @@
+=============
 Build and run
 =============
 
@@ -10,11 +11,11 @@ OP-TEE developer setup. So a first place to start looking is probably at the
 ":ref:`build`" page to get started.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
+   aosp/aosp
    build_general
-   prerequisites
-   gits/index
    devices/index
    linux/tee_framework
-   aosp/aosp
+   gits/index
+   prerequisites
