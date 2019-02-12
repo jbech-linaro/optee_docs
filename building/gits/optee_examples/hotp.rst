@@ -51,7 +51,7 @@ generating one time passwords) and use the TEE as a validating service to open
 up other secure services.
 
 .. _HMAC: https://en.wikipedia.org/wiki/Hash-based_message_authentication_code
-.. _RFC4226_: https://www.ietf.org/rfc/rfc4226.txt
+.. _RFC4226: https://www.ietf.org/rfc/rfc4226.txt
 .. _security token: https://en.wikipedia.org/wiki/Security_token
 .. _two factor authentication: https://en.wikipedia.org/wiki/Multi-factor_authentication
 
