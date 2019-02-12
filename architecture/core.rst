@@ -10,6 +10,7 @@ Interrupt handling
 ******************
 .. include:: interrupts.rst
 
+----
 
 .. _memory_objects:
 
@@ -39,6 +40,7 @@ tables etc. There are different kinds of MOBJs describing:
         - makes ``mobj_is_paged(...)`` and ``mobj_is_secure(...)`` return true
           if supplied as argument.
 
+----
 
 .. _mmu:
 
@@ -129,6 +131,7 @@ resumes execution in secure world.
     Joakim: Jens? Didn't you do some tweaks here already? I.e., "room for
     improvements" above?
 
+----
 
 .. _pager:
 
@@ -314,8 +317,8 @@ the "init" area. The global variable ``tee_mm_vcore`` describes the virtual
 memory range that is covered by the level 2 translation table supplied to
 ``tee_pager_init(...)``.
 
-**Assign pageable areas**
-
+Assign pageable areas
+---------------------
 A virtual memory range to be handled by the pager is registered with a call to
 ``tee_pager_add_core_area()``.
 
@@ -330,8 +333,8 @@ which takes a pointer to ``tee_mm_entry_t`` to tell the range, flags to tell how
 memory should be mapped (readonly, execute etc), and pointers to backing store
 and hashes of the pages.
 
-**Assign physical pages**
-
+Assign physical pages
+---------------------
 Physical SRAM pages are supplied by calling ``tee_pager_add_pages(...)``
 
 .. code-block:: c
@@ -372,6 +375,7 @@ needed when populating the TA. When the TA is fully populated and relocated
 ``tee_pager_set_uta_area_attr(...)`` changes the mapping of the area to strict
 permissions used when the TA is running.
 
+----
 
 .. _stacks:
 
@@ -395,43 +399,42 @@ Different stacks are used during different stages. The stacks are:
     - **Thread stack** (large ~8KB), not bound to the CPU instead used by the
       current thread/task. Interrupts are usually enabled when using this stack.
 
-**Notes for Armv7-A/AArch32:**
+Notes for Armv7-A/AArch32
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 5
 
-.. list-table:: Armv7-A / AArch32
-    :header-rows: 1
-    :widths: 1 5
+        * - Stack
+          - Comment
 
-    * - Stack
-      - Comment
+        * - Temp
+          - Assigned to ``SP_SVC`` during entry/exit, always assigned to
+            ``SP_IRQ`` and ``SP_FIQ``
 
-    * - Temp
-      - Assigned to ``SP_SVC`` during entry/exit, always assigned to ``SP_IRQ`` and ``SP_FIQ``
+        * - Abort
+          - Always assigned to ``SP_ABT``
 
-    * - Abort
-      - Always assigned to ``SP_ABT``
+        * - Thread
+          - Assigned to ``SP_SVC`` while a thread is active
 
-    * - Thread
-      - Assigned to ``SP_SVC`` while a thread is active
-
-**Notes for AArch64:**
-
-There are only two stack pointers, ``SP_EL1`` and ``SP_EL0``, available for
-OP-TEE in AArch64. When an exception is received stack pointer is always
-``SP_EL1`` which is used temporarily while assigning an appropriate stack
-pointer for ``SP_EL0``. ``SP_EL1`` is always assigned the value of
-``thread_core_local[cpu_id]``. This structure has some spare space for temporary
-storage of registers and also keeps the relevant stack pointers. In general when
-we talk about assigning a stack pointer to the CPU below we mean ``SP_EL0``.
+Notes for AArch64
+    There are only two stack pointers, ``SP_EL1`` and ``SP_EL0``, available for
+    OP-TEE in AArch64. When an exception is received stack pointer is always
+    ``SP_EL1`` which is used temporarily while assigning an appropriate stack
+    pointer for ``SP_EL0``. ``SP_EL1`` is always assigned the value of
+    ``thread_core_local[cpu_id]``. This structure has some spare space for
+    temporary storage of registers and also keeps the relevant stack pointers.
+    In general when we talk about assigning a stack pointer to the CPU below we
+    mean ``SP_EL0``.
 
 Boot
 ====
 During early boot the CPU is configured with the temp stack which is used until
 OP-TEE exits to normal world the first time.
 
-**Notes for AArch64:**
-
-``SPSEL`` is always ``0`` on entry/exit to have ``SP_EL0`` acting as stack
-pointer.
+Notes for AArch64
+    ``SPSEL`` is always ``0`` on entry/exit to have ``SP_EL0`` acting as stack
+    pointer.
 
 Normal entry
 ============
@@ -466,15 +469,15 @@ is resumed in the same way though. For Arm GICv3 mode, foreign interrupt is sent
 as FIQ which could be handled by either secure world (EL3 in AArch64) or normal
 world. This mode is not supported yet.
 
-**Notes for Armv7-A/AArch32:**
+Notes for Armv7-A/AArch32
+    SP_IRQ is initialized to temp stack instead of a separate stack. Prior to
+    exiting to normal world CPU state is changed to SVC and temp stack is
+    selected.
 
-SP_IRQ is initialized to temp stack instead of a separate stack. Prior to
-exiting to normal world CPU state is changed to SVC and temp stack is selected.
-
-**Notes for AArch64:**
-
-``SP_EL0`` is assigned temp stack and is selected during IRQ processing. The
-original ``SP_EL0`` is saved in the thread context to be restored when resuming.
+Notes for AArch64
+    ``SP_EL0`` is assigned temp stack and is selected during IRQ processing. The
+    original ``SP_EL0`` is saved in the thread context to be restored when
+    resuming.
 
 Resume entry
 ============
@@ -487,19 +490,18 @@ Syscall
 =======
 Syscall's are executed using the thread stack.
 
-**Notes for Armv7-A/AArch32:**
+Notes for Armv7-A/AArch32
+    Nothing special ``SP_SVC`` is already set with thread stack.
 
-Nothing special ``SP_SVC`` is already set with thread stack.
+Notes for syscall AArch64
+    Early in the exception processing the original ``SP_EL0`` is saved in
+    ``struct thread_svc_regs`` in case the TA is executed in AArch64. Current
+    thread stack is assigned to ``SP_EL0`` which is then selected. When
+    returning ``SP_EL0`` is assigned what is in ``struct thread_svc_regs``. This
+    allows ``tee_svc_sys_return_helper(...)`` having the syscall exception
+    handler return directly to ``thread_unwind_user_mode(...)``.
 
-**Notes for syscall AArch64:**
-
-Early in the exception processing the original ``SP_EL0`` is saved in ``struct
-thread_svc_regs`` in case the TA is executed in AArch64. Current thread stack is
-assigned to ``SP_EL0`` which is then selected. When returning ``SP_EL0`` is
-assigned what is in ``struct thread_svc_regs``. This allows
-``tee_svc_sys_return_helper(...)`` having the syscall exception handler return
-directly to ``thread_unwind_user_mode(...)``.
-
+----
 
 .. _shared_memory:
 
@@ -556,52 +558,51 @@ buffers references.
 
 Using shared memory
 ===================
-**From the Client Application**
+From the Client Application
+    The client application can ask for shared memory allocation using the
+    GlobalPlatform Client API function ``TEEC_AllocateSharedMemory(...)``. The
+    client application can also provide shared memory through the GlobalPlatform
+    Client API function ``TEEC_RegisterSharedMemory(...)``. In such a case, the
+    provided memory must be physically contiguous, since OP-TEE core, who does
+    not handle scatter-gather memory, is able to use the provided range of
+    memory addresses. Note that the reference count of a shared memory chunk is
+    incremented when shared memory is registered, and initialized to 1 on
+    allocation.
 
-The client application can ask for shared memory allocation using the
-GlobalPlatform Client API function ``TEEC_AllocateSharedMemory(...)``. The
-client application can also provide shared memory through the GlobalPlatform
-Client API function ``TEEC_RegisterSharedMemory(...)``. In such a case, the
-provided memory must be physically contiguous, since OP-TEE core, who does not
-handle scatter-gather memory, is able to use the provided range of memory
-addresses. Note that the reference count of a shared memory chunk is incremented
-when shared memory is registered, and initialized to 1 on allocation.
+From the Linux Driver
+    Occasionally the Linux kernel driver needs to allocate shared memory for the
+    communication with secure world, for example when using buffers of type
+    ``TEEC_TempMemoryReference``.
 
-**From the Linux Driver**
+From OP-TEE core
+    In case OP-TEE core needs information from TEE supplicant (dynamic TA
+    loading, REE time request,...), shared memory must be allocated. Allocation
+    depends on the use case. OP-TEE core asks for the following shared memory
+    allocation:
 
-Occasionally the Linux kernel driver needs to allocate shared memory for the
-communication with secure world, for example when using buffers of type
-``TEEC_TempMemoryReference``.
+        - ``optee_msg_arg`` structure, used to pass the arguments to the
+          non-secure world, where the allocation will be done by sending a
+          ``OPTEE_SMC_RPC_FUNC_ALLOC`` message.
 
-**From OP-TEE core**
+        - In some cases, a payload might be needed for storing the result from
+          TEE supplicant, for example when loading a Trusted Application. This
+          type of allocation will be done by sending the message
+          ``OPTEE_MSG_RPC_CMD_SHM_ALLOC(OPTEE_MSG_RPC_SHM_TYPE_APPL,...)``,
+          which then will return:
 
-In case OP-TEE core needs information from TEE supplicant (dynamic TA loading,
-REE time request,...), shared memory must be allocated. Allocation depends on
-the use case. OP-TEE core asks for the following shared memory allocation:
+            - the physical address of the shared memory
+            - a handle to the memory, that later on will be used later on when
+              freeing this memory.
 
-    - ``optee_msg_arg`` structure, used to pass the arguments to the non-secure
-      world, where the allocation will be done by sending a
-      ``OPTEE_SMC_RPC_FUNC_ALLOC`` message.
+From TEE Supplicant
+    TEE supplicant is also working with shared memory, used to exchange data
+    between normal and secure worlds. TEE supplicant receives a memory address
+    from the OP-TEE core, used to store the data. This is for example the case
+    when a Trusted Application is loaded. In this case, TEE supplicant must
+    register the provided shared memory in the same way a client application
+    would do, involving the Linux driver.
 
-    - In some cases, a payload might be needed for storing the result from TEE
-      supplicant, for example when loading a Trusted Application. This type of
-      allocation will be done by sending the message
-      ``OPTEE_MSG_RPC_CMD_SHM_ALLOC(OPTEE_MSG_RPC_SHM_TYPE_APPL,...)``, which
-      then will return:
-
-        - the physical address of the shared memory
-        - a handle to the memory, that later on will be used later on when
-          freeing this memory.
-
-**From TEE Supplicant**
-
-TEE supplicant is also working with shared memory, used to exchange data between
-normal and secure worlds. TEE supplicant receives a memory address from the
-OP-TEE core, used to store the data. This is for example the case when a Trusted
-Application is loaded. In this case, TEE supplicant must register the provided
-shared memory in the same way a client application would do, involving the Linux
-driver.
-
+----
 
 .. _smc:
 
@@ -629,6 +630,7 @@ information.  Parameters for the SMC are passed in registers 1 to 7, register 0
 holds the SMC id which among other things tells whether it is a standard or a
 fast call.
 
+----
 
 .. _thread_handling:
 
@@ -647,96 +649,95 @@ Synchronization primitives
 OP-TEE has three primitives for synchronization of threads and CPUs:
 *spin-lock*, *mutex*, and *condvar*.
 
-**Spin-lock**
+Spin-lock
+    A spin-lock is represented as an ``unsigned int``. This is the most
+    primitive lock. Interrupts should be disabled before attempting to take a
+    spin-lock and should remain disabled until the lock is released. A spin-lock
+    is initialized with ``SPINLOCK_UNLOCK``.
 
-A spin-lock is represented as an ``unsigned int``. This is the most primitive
-lock. Interrupts should be disabled before attempting to take a spin-lock and
-should remain disabled until the lock is released. A spin-lock is initialized
-with ``SPINLOCK_UNLOCK``.
+    .. list-table:: Spin lock functions
+        :header-rows: 1
+        :widths: 1 5
 
-.. list-table:: Spin lock functions
-    :header-rows: 1
-    :widths: 1 5
+        * - Function
+          - Purpose
 
-    * - Function
-      - Purpose
+        * - ``cpu_spin_lock(...)``
+          - Locks a spin-lock
 
-    * - ``cpu_spin_lock(...)``
-      - Locks a spin-lock
+        * - ``cpu_spin_trylock(...)``
+          - Locks a spin-lock if unlocked and returns ``0`` else the spin-lock
+            is unchanged and the function returns ``!0``
 
-    * - ``cpu_spin_trylock(...)``
-      - Locks a spin-lock if unlocked and returns ``0`` else the spin-lock is
-        unchanged and the function returns ``!0``
+        * - ``cpu_spin_unlock(...)``
+          - Unlocks a spin-lock
 
-    * - ``cpu_spin_unlock(...)``
-      - Unlocks a spin-lock
+Mutex
+    A mutex is represented by ``struct mutex``. A mutex can be locked and
+    unlocked with interrupts enabled or disabled, but only from a normal thread.
+    A mutex cannot be used in an interrupt handler, abort handler or before a
+    thread has been selected for the CPU. A mutex is initialized with either
+    ``MUTEX_INITIALIZER`` or ``mutex_init(...)``.
 
-**Mutex**
+    .. list-table:: Mutex functions
+        :header-rows: 1
+        :widths: 1 5
 
-A mutex is represented by ``struct mutex``. A mutex can be locked and unlocked
-with interrupts enabled or disabled, but only from a normal thread. A mutex
-cannot be used in an interrupt handler, abort handler or before a thread has
-been selected for the CPU. A mutex is initialized with either
-``MUTEX_INITIALIZER`` or ``mutex_init(...)``.
+        * - Function
+          - Purpose
 
-.. list-table:: Mutex functions
-    :header-rows: 1
-    :widths: 1 5
+        * - ``mutex_lock(...)``
+          - Locks a mutex. If the mutex is unlocked this is a fast operation,
+            else the function issues an RPC to wait in normal world.
 
-    * - Function
-      - Purpose
+        * - ``mutex_unlock(...)``
+          - Unlocks a mutex. If there is no waiters this is a fast operation,
+            else the function issues an RPC to wake up a waiter in normal world.
 
-    * - ``mutex_lock(...)``
-      - Locks a mutex. If the mutex is unlocked this is a fast operation, else
-        the function issues an RPC to wait in normal world.
+        * - ``mutex_trylock(...)``
+          - Locks a mutex if unlocked and returns ``true`` else the mutex is
+            unchanged and the function returns ``false``.
 
-    * - ``mutex_unlock(...)``
-      - Unlocks a mutex. If there is no waiters this is a fast operation, else
-        the function issues an RPC to wake up a waiter in normal world.
+        * - ``mutex_destroy(...)``
+          - Asserts that the mutex is unlocked and there is no waiters, after
+            this the memory used by the mutex can be freed.
 
-    * - ``mutex_trylock(...)``
-      - Locks a mutex if unlocked and returns ``true`` else the mutex is
-        unchanged and the function returns ``false``.
+    When a mutex is locked it is owned by the thread calling ``mutex_lock(...)``
+    or ``mutex_trylock(...)``, the mutex may only be unlocked by the thread
+    owning the mutex. A thread should not exit to TA user space when holding a
+    mutex.
 
-    * - ``mutex_destroy(...)``
-      - Asserts that the mutex is unlocked and there is no waiters, after this
-        the memory used by the mutex can be freed.
+Condvar
+    A condvar is represented by ``struct condvar``. A condvar is similar to a
+    ``pthread_condvar_t`` in the pthreads standard, only less advanced.
+    Condition variables are used to wait for some condition to be fulfilled and
+    are always used together a mutex. Once a condition variable has been used
+    together with a certain mutex, it must only be used with that mutex until
+    destroyed. A condvar is initialized with ``CONDVAR_INITIALIZER`` or
+    ``condvar_init(...)``.
 
-When a mutex is locked it is owned by the thread calling ``mutex_lock(...)`` or
-``mutex_trylock(...)``, the mutex may only be unlocked by the thread owning the
-mutex. A thread should not exit to TA user space when holding a mutex.
+    .. list-table:: Condvar functions
+        :header-rows: 1
+        :widths: 1 5
 
-**Condvar**
+        * - Function
+          - Purpose
 
-A condvar is represented by ``struct condvar``. A condvar is similar to a
-``pthread_condvar_t`` in the pthreads standard, only less advanced. Condition
-variables are used to wait for some condition to be fulfilled and are always
-used together a mutex. Once a condition variable has been used together with a
-certain mutex, it must only be used with that mutex until destroyed. A condvar
-is initialized with ``CONDVAR_INITIALIZER`` or ``condvar_init(...)``.
+        * - ``condvar_wait(...)``
+          - Atomically unlocks the supplied mutex and waits in normal world via
+            an RPC for the condition variable to be signaled, when the function
+            returns the mutex is locked again.
 
-.. list-table:: Condvar functions
-    :header-rows: 1
-    :widths: 1 5
+        * - ``condvar_signal(...)``
+          - Wakes up one waiter of the condition variable (waiting in
+            ``condvar_wait(...)``).
 
-    * - Function
-      - Purpose
+        * - ``condvar_broadcast(...)``
+          - Wake up all waiters of the condition variable.
 
-    * - ``condvar_wait(...)``
-      - Atomically unlocks the supplied mutex and waits in normal world via an
-        RPC for the condition variable to be signaled, when the function returns
-        the mutex is locked again.
-
-    * - ``condvar_signal(...)``
-      - Wakes up one waiter of the condition variable (waiting in
-        ``condvar_wait(...)``).
-
-    * - ``condvar_broadcast(...)``
-      - Wake up all waiters of the condition variable.
-
-The caller of ``condvar_signal(...)`` or ``condvar_broadcast(...)`` should hold
-the mutex associated with the condition variable to guarantee that a waiter does
-not miss the signal.
+    The caller of ``condvar_signal(...)`` or ``condvar_broadcast(...)`` should
+    hold the mutex associated with the condition variable to guarantee that a
+    waiter does not miss the signal.
 
 .. _optee_smc.h: https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/sm/optee_smc.h
 .. _optee_msg.h: https://github.com/OP-TEE/optee_os/blob/master/core/include/optee_msg.h

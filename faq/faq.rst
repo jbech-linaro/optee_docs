@@ -4,6 +4,10 @@
 Frequently Asked Questions
 ##########################
 
+.. contents:: Table of Contents
+
+----
+
 Abbreviations
 *************
 :OP-TEE: Open Portable TEE

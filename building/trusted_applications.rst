@@ -61,37 +61,30 @@ The main TA-devkit make file is located in in :ref:`optee_os` at
 
 The make file expects a couple of configuration variables:
 
-    - **TA_DEV_KIT_DIR**
+TA_DEV_KIT_DIR
+    Base directory of the TA-devkit. Used the TA-devkit itself to locate its tools.
 
-      - Base directory of the TA-devkit. Used the TA-devkit itself to locate its
-        tools.
+BINARY and LIBNAME
+    These are exclusive, meaning that you cannot use both at the same time. If
+    building a TA, ``BINARY`` shall provide the TA filename used to load the TA.
+    The built and signed TA binary file will be named ``${BINARY}.ta``. In
+    native OP-TEE, it is the TA UUID, used by tee-supplicant to identify TAs. If
+    one is building a static library (that will be later linked by a TA), then
+    ``LIBNAME`` shall provide the name of the library. The generated library
+    binary file will be named ``lib${LIBNAME}.a``
 
-    - **BINARY** and **LIBNAME**
-
-      - These are exclusive, meaning that you cannot use both at the same time.
-        If building a TA, ``BINARY`` shall provide the TA filename used to load
-        the TA. The built and signed TA binary file will be named
-        ``${BINARY}.ta``. In native OP-TEE, it is the TA UUID, used by
-        tee-supplicant to identify TAs. If one is building a static library
-        (that will be later linked by a TA), then ``LIBNAME`` shall provide the
-        name of the library. The generated library binary file will be named
-        ``lib${LIBNAME}.a``
-
-    - **CROSS_COMPILE** and **CROSS_COMPILE32**
-
-      - Cross compiler for the TA or the library source files.
-        ``CROSS_COMPILE32`` is optional. It allows to target AArch32 builds on
-        AArch64 capable systems. On AArch32 systems, ``CROSS_COMPILE32``
-        defaults to ``CROSS_COMPILE``.
+CROSS_COMPILE and CROSS_COMPILE32
+    Cross compiler for the TA or the library source files. ``CROSS_COMPILE32``
+    is optional. It allows to target AArch32 builds on AArch64 capable systems.
+    On AArch32 systems, ``CROSS_COMPILE32`` defaults to ``CROSS_COMPILE``.
 
 Optional variables
 ==================
 Some optional configuration variables can be supported, for example:
 
-    - **O**
-
-      - Base directory for build objects filetree. If not set, TA-devkit
-        defaults to **./out** from the TA source tree base directory.
+O
+    Base directory for build objects filetree. If not set, TA-devkit defaults to
+    **./out** from the TA source tree base directory.
 
 Example Makefile
 ================

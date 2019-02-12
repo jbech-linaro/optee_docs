@@ -7,5 +7,3 @@ Debugging techniques
    abort_dumps
    benchmark
    gprof
-   gdb
-   jtag
