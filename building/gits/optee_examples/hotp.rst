@@ -7,7 +7,7 @@ here we are showing how one could leverage OP-TEE for generating such HMAC based
 One Time Passwords in a secure manner.
 
 Client (OP-TEE) / Server solution
-=================================
+---------------------------------
 The most common way of using HOTP is in a client/server setup, where the client
 needs to authenticate itself to be able to get access to some resources on the
 server. In those cases the server will ask for an One Time Password, the client
@@ -39,11 +39,11 @@ implementing the look-ahead synchronization window ('``s``') nor do we have to
 think about adding throttling (which prevents/slows down brute force attacks).
 
 Sequence diagram - Client / Server
-==================================
+----------------------------------
 .. figure:: ../../../images/hotp/sequence_diagram_01.png
 
 Client / Server (OP-TEE)?
-=========================
+-------------------------
 Even though the current implementation works as a HOTP client, there is nothing
 saying that the implementation cannot be updated to also work as the validating
 server. One could for example have a simple device (a [security token] only
