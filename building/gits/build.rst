@@ -394,6 +394,11 @@ this:
     0 test case was skipped
     TEE test application done!
 
+.. hint::
+
+    For other ways to run xtest, please refer to the ":ref:`optee_test_run_xtest`"
+    page at :ref:`optee_test`.
+
 .. _tips_and_tricks:
 
 Tips and Tricks

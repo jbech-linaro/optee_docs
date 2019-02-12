@@ -83,6 +83,7 @@ It makes use of the following environment variable:
       build relies on ``CFG_ARM32_core=y`` from OP-TEE core build to assume
       applications are in 32 bits mode, Otherwise, 64 bits mode is assumed.
 
+.. _optee_test_run_xtest:
 
 Run xtest
 *********
