@@ -4,12 +4,99 @@
 optee_os
 ########
 
+git location
+************
+https://github.com/OP-TEE/optee_os
+
+License
+*******
+.. todo::
+
+    Joakim: Necessary to state that here? Changing the "License headers" page to
+    instead become a "License" page and add addtional sections.
+
+The TEE core of optee_os is provided under the `BSD 2-Clause`_ license. But
+there are also other software such as libraries included in optee_os. This
+"other" software will have different licenses that are compatible with BSD
+2-Clause (i.e., non-contaminating licenses unlike GPL-v2 for example).
+
 .. _optee_os_build_system:
+
+Build instructions
+******************
+You can build the code in this git only or build it as part of the entire
+system, i.e. as a part of a full OP-TEE developer setup. For the latter, please
+refer to instructions at the :ref:`build` page. For standalone builds optee_os
+uses only regular GNU Makefiles (i.e. **no** CMake support here unlike the other
+OP-TEE gits).
+
+Configure the toolchain
+=======================
+First step is to download and configure a toolchain, see the :ref:`toolchains`
+page for instructions.
+
+Clone optee_os
+==============
+.. code-block:: bash
+
+    $ git clone https://github.com/OP-TEE/optee_os
+    $ cd optee_os
+
+Build using GNU Make
+====================
+Since optee_os supports many devices and configurations it's impossible to give
+a examples to all variants. But below is how you for example would build for
+QEMU running Armv7-A (AArch32), with debugging enabled and the benchmark
+framework disabled and will put all built files in a folder name `out/arm` in
+the root of the git.
+
+.. code-block:: bash
+    :linenos:
+
+    $ make \
+        CFG_TEE_BENCHMARK=n \
+        CFG_TEE_CORE_LOG_LEVEL=3 \
+        CROSS_COMPILE=arm-linux-gnueabihf- \
+        CROSS_COMPILE_core=arm-linux-gnueabihf- \
+        CROSS_COMPILE_ta_arm32=arm-linux-gnueabihf- \
+        CROSS_COMPILE_ta_arm64=aarch64-linux-gnu- \
+        DEBUG=1 \
+        O=out/arm \
+        PLATFORM=vexpress-qemu_virt 
+
+The same for an QEMU Armv8-A (AArch64) would look like this:
+
+.. code-block:: bash
+    :linenos:
+    :emphasize-lines: 1,3,4,11
+
+    $ make \
+        CFG_ARM64_core=y \
+        CFG_TEE_BENCHMARK=n \
+        CFG_TEE_CORE_LOG_LEVEL=3 \
+        CROSS_COMPILE=aarch64-linux-gnu- \
+        CROSS_COMPILE_core=aarch64-linux-gnu- \
+        CROSS_COMPILE_ta_arm32=arm-linux-gnueabihf- \
+        CROSS_COMPILE_ta_arm64=aarch64-linux-gnu- \
+        DEBUG=1 \
+        O=out/arm \
+        PLATFORM=vexpress-qemu_armv8a
+
+.. hint::
+
+    To be able to see all commands when building you could build with:
+
+    .. code-block:: bash
+
+        $ make V=1
+
+Coding standards
+****************
+See :ref:`coding_standards`.
 
 Build system
 ************
-The OP-TEE build system is based on both GNU make and CMake (Linux user space
-applications). optee_os consists of a main ``Makefile`` in the root of the
+The build system in optee_os consists of a main ``Makefile`` in the root of the
 project together with ``sub.mk`` files in all source directories. In addition,
 some supporting files are used to recursively process all ``sub.mk`` files and
 generate the build rules.
@@ -63,12 +150,12 @@ generate the build rules.
 invocation of make itself.
 
 Choosing the build target
-*************************
+=========================
 The target architecture, platform and build directory may be selected by setting
 environment or make variables (``VAR=value make`` or ``make VAR=value``).
 
 ARCH - CPU architecture
-=======================
+-----------------------
 ``$(ARCH)`` is the CPU architecture to be built. Currently, the only supported
 value is ``arm`` for 32-bit or 64-bit Armv7-A or Armv8-A. Please note that
 contrary to the Linux kernel, ``$(ARCH)`` should **not** be set to ``arm64`` for
@@ -83,7 +170,7 @@ Architecture-specific source code belongs to sub-directories that follow the
 ``lib/libutee/arch/arm`` and so on.
 
 CROSS_COMPILE
-=============
+-------------
 ``$(CROSS_COMPILE)`` is the prefix used to invoke the (32-bit) cross-compiler
 toolchain. The default value is ``arm-linux-gnueabihf-``. This is the variable
 you want to change in case you want to use ccache_ to speed you recompilations:
@@ -127,7 +214,7 @@ Examples:
 .. _platform_flavor:
 
 PLATFORM / PLATFORM_FLAVOR
-==========================
+--------------------------
 A `platform` is a family of closely related hardware configurations. A platform
 `flavor` is a variant of such configurations. When used together they define the
 target hardware on which OP-TEE will be run.
@@ -146,7 +233,7 @@ Platform-specific source code belongs to ``core/arch/$(ARCH)/plat-$(PLATFORM)``,
 for instance: ``core/arch/arm/plat-vexpress`` or ``core/arch/arm/plat-stm``.
 
 O - output directory
-====================
+--------------------
 All output files go into a platform-specific build directory, which is by
 default ``out/$(ARCH)-plat-$(PLATFORM)``.
 
@@ -190,7 +277,7 @@ the TEE Core: ``$(O)/include/generated/conf.h`` (see below).
 .. _configuration_and_flags:
 
 Configuration and flags
-***********************
+=======================
 The following variables are defined in ``core/arch/$(ARCH)/$(ARCH).mk``:
 
     - ``$(core-platform-aflags)``, ``$(core-platform-cflags)`` and
@@ -215,13 +302,13 @@ The following variables are defined in ``core/arch/$(ARCH)/$(ARCH).mk``:
       added to the TEE Core.
 
 Linker scripts
-**************
+==============
 The file ``core/arch/$(ARCH)/plat-$(PLATFORM)/link.mk`` contains the rules to
 link the TEE Core and perform any related tasks, such as running ``objdump`` to
 produce a dump file. ``link.mk`` adds files to the ``all:`` target.
 
 Source files
-************
+============
 Each directory that contains source files has a file called ``sub.mk``. This
 makefile defines the source files that should be included in the build, as well
 as any subdirectories that should be processed, too. For example:
@@ -251,7 +338,7 @@ In addition to source files, ``sub.mk`` may define compiler flags, include
 directories and/or configuration variables as explained below.
 
 Compiler flags
-**************
+==============
 Default compiler flags are defined in ``mk/compile.mk``. Note that
 platform-specific flags must not appear in this file which is common to all
 platforms.
@@ -286,7 +373,7 @@ affect all the source files that belong to the library: ``cppflags-lib-y`` and
 ``cflags-lib-y``.
 
 Include directories
-*******************
+===================
 Include directories may be added to ``global-incdirs-y``, in which case they
 will be accessible from all the source files and will be copied to
 ``export-ta_arm{32,64}/include`` and ``export-ta_arm{32,64}/host_include``.
@@ -297,7 +384,7 @@ additional directories that will be used for that library only.
 .. _configuration_variables:
 
 Configuration variables
-***********************
+=======================
 Some features may be enabled, disabled or otherwise controlled at compile time
 through makefile variables. Default values are normally provided in makefiles
 with the ``?=`` operator so that their value may be easily overridden by
@@ -322,7 +409,7 @@ Depending on their value, variables may be considered either boolean or
 non-boolean, which affects how they are translated into ``conf.h``.
 
 Boolean configuration variables
-===============================
+-------------------------------
 When a configuration variable controls the presence or absence of a feature,
 ``y`` means **enabled**, while ``n``, empty value or an undefined variable means
 **disabled**. For instance, the following commands are equivalent and would
@@ -373,7 +460,7 @@ to use constructs like:
     #endif
 
 Non-boolean configuration variables
-===================================
+-----------------------------------
 Configuration variables that are not recognized as booleans are simply output
 unchanged into `<generated/conf.h>`. For instance:
 
@@ -388,9 +475,10 @@ unchanged into `<generated/conf.h>`. For instance:
     #define CFG_TEE_CORE_LOG_LEVEL 4 /* '4' */
 
 Configuration dependencies
-==========================
+--------------------------
 Some combinations of configuration variables may not be valid. This should be
 dealt with by custom checks in makefiles. ``mk/checkconf.h`` provides functions
 to help detect and deal with such situations.
 
+.. _BSD 2-Clause: http://opensource.org/licenses/BSD-2-Clause
 .. _ccache: https://ccache.samba.org/
