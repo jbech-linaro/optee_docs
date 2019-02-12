@@ -106,6 +106,8 @@ A typical Makefile for a TA looks something like this
     # Source the TA-devkit make file
     include $(TA_DEV_KIT_DIR)/mk/ta_dev_kit.mk
 
+.. _build_trusted_applications_submk:
+
 sub.mk directives
 =================
 The make file expects that current directory contains a file ``sub.mk`` that is

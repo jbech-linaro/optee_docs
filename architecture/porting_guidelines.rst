@@ -375,6 +375,8 @@ memory using TZASC (see plat_arm_security_setup_ in TF-A). The takeaway here is
 that you must make sure that you have configured whatever memory firewall your
 device has such that it has a secure and a non-secure memory area.
 
+.. _core_pub_priv_keypair:
+
 Trusted Application private/public keypair
 ******************************************
 By default all Trusted Applications (TA's) are signed with the pre-generated

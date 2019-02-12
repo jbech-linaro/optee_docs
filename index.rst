@@ -25,4 +25,4 @@ This is the official location for OP-TEE documentation.
 .. toctree::
    :maxdepth: 2
 
-   faq/index
+   faq/faq
