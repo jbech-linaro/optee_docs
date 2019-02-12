@@ -14,7 +14,6 @@ OP-TEE developer setup. So a first place to start looking is probably at the
    :maxdepth: 2
 
    aosp/aosp
-   build_general
    devices/index
    linux/tee_framework
    gits/index
