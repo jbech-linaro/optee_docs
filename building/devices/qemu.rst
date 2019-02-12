@@ -3,20 +3,20 @@ QEMU v8 (Armv8-A).
 
 .. _qemu_v7:
 
-=======
+#######
 QEMU v7
-=======
+#######
 The instructions here will tell how to run OP-TEE using QEMU for Armv7-A.
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 As long as you pick the v7 manifest, i.e.,  ``default.xml`` the
 ":ref:`get_and_build_the_solution`" tells all you need to know to build and boot
 up QEMU v7.
 
 
 Consoles
-^^^^^^^^
+********
 After running ``make run`` you will end up in the QEMU console and it will also
 spawn two UART consoles. One console containing the UART for secure world and
 one console containing the UART for normal world. You will see that it stops
@@ -27,7 +27,7 @@ waiting for input on the QEMU console. To continue, do:
     (qemu) c
 
 Host-Guest folder sharing
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 You can use the VirtFS QEMU feature to avoid changing rootfs CPIO archive every
 time you need to add additional files or modify existing files. To do this, you
 share a folder between the guest and host operating systems. To enable and use
@@ -60,7 +60,7 @@ this from QEMU NW/UART.
     # mount -t 9p -o trans=virtio host /mnt/host
 
 Networking
-^^^^^^^^^^
+**********
 After booting QEMU, ``eth0`` will automatically receive an IP address from
 QEMU via DHCP using the SLiRP user networking feature. QEMU will act as a
 gateway to the host network `SLiRP`_.
@@ -69,7 +69,7 @@ Please note that ICMP won't work in the guest unless additional configuration is
 made, so the ``ping`` utility won't work.
 
 GDB - Normal world
-^^^^^^^^^^^^^^^^^^
+******************
 If you need to debug a client application, using GDB in a remote debugging
 configuration may be useful. Remote debugging means ``gdb`` runs on your PC,
 where it can access the source code, while the program being debugged runs on
@@ -118,13 +118,13 @@ Now GDB is connected to the remote application. You may use GDB normally.
 
 .. _qemu_v8:
 
-=======
+#######
 QEMU v8
-=======
+#######
 The instructions here will tell how to run OP-TEE using QEMU for Armv7-A.
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 As long as you pick the v8 manifest, i.e.,  ``qemu_v8.xml`` the
 ":ref:`get_and_build_the_solution`" tells all you need to know to build and boot
 up QEMU v8.

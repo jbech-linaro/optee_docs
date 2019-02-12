@@ -1,15 +1,15 @@
 .. _build_trusted_applications:
 
-====================
+####################
 Trusted Applications
-====================
+####################
 This document tells how to implement a Trusted Application for OP-TEE, using
 OP-TEE's so called `TA-devkit` to both build and sign the Trusted Application
 binary. In this document, a `Trusted Application` running in the OP-TEE os is
 referred to as a `TA`.
 
 TA Mandatory files
-^^^^^^^^^^^^^^^^^^
+******************
 The Makefile for a Trusted Application must be written to rely on OP-TEE
 TA-devkit resources in order to successfully build the target application.
 TA-devkit is built when one builds :ref:`optee_os`.
@@ -35,7 +35,7 @@ To build a TA, one must provide:
       ``TA_InvokeCommandEntryPoint()``
 
 TA file layout example
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 As an example, :ref:`hello_world` looks like this:
 
 .. code-block:: none
@@ -52,9 +52,9 @@ As an example, :ref:`hello_world` looks like this:
         └── user_ta_header_defines.h  TA_UUID, TA_FLAGS, TA_DATA/STACK_SIZE, ...
 
 TA Makefile Basics
-^^^^^^^^^^^^^^^^^^
+******************
 Required variables
-~~~~~~~~~~~~~~~~~~
+==================
 The main TA-devkit make file is located in in :ref:`optee_os` at
 ``ta/mk/ta_dev_kit.mk``. The make file supports make targets such as ``all`` and
 ``clean`` to build a TA or a library and clean the built objects.
@@ -85,7 +85,7 @@ The make file expects a couple of configuration variables:
         defaults to ``CROSS_COMPILE``.
 
 Optional variables
-~~~~~~~~~~~~~~~~~~
+==================
 Some optional configuration variables can be supported, for example:
 
     - **O**
@@ -94,7 +94,7 @@ Some optional configuration variables can be supported, for example:
         defaults to **./out** from the TA source tree base directory.
 
 Example Makefile
-~~~~~~~~~~~~~~~~
+================
 A typical Makefile for a TA looks something like this
 
 .. code-block:: Makefile
@@ -107,7 +107,7 @@ A typical Makefile for a TA looks something like this
     include $(TA_DEV_KIT_DIR)/mk/ta_dev_kit.mk
 
 sub.mk directives
-~~~~~~~~~~~~~~~~~
+=================
 The make file expects that current directory contains a file ``sub.mk`` that is
 the entry point for listing the source files to build and other specific build
 directives. Here are a couple of examples of directives one can implement in a
@@ -141,7 +141,7 @@ sub.mk make file:
     libdeps += path/to/greatlib/libgreatlib.a
 
 Android Build Environment
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 .. todo::
 
     Joakim: Move this to the AOSP page?
@@ -168,7 +168,7 @@ A typical ``Android.mk`` file for a TA looks like this (``Android.mk`` for
     include $(OPTEE_OS_DIR)/mk/aosp_optee.mk
 
 TA Mandatory Entry Points
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 A TA must implement a couple of mandatory entry points, these are:
 
 .. code-block:: c
@@ -220,7 +220,7 @@ A TA must implement a couple of mandatory entry points, these are:
 .. _build_ta_properties:
 
 TA Properties
-^^^^^^^^^^^^^
+*************
 Trusted Application properties shall be defined in a header file named
 ``user_ta_header_defines.h``, which should contain:
 
@@ -235,7 +235,7 @@ Refer to :ref:`ta_properties` to understand how to configure these macros.
 .. _user_ta_header_defines_h:
 
 Example of a property header file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=================================
 
 .. code-block:: c
 
@@ -264,7 +264,7 @@ Example of a property header file
     define extra properties of the TA.
 
 Checking TA parameters
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
 GlobalPlatforms TEE Client APIs ``TEEC_InvokeCommand()`` and
 ``TEE_OpenSession()`` allow clients to invoke a TA with some invocation
 parameters: values or references to memory buffers. It is mandatory that TA's

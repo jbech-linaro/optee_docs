@@ -1,24 +1,24 @@
 .. _manifest:
 
-========
+########
 manifest
-========
+########
 This page contains a couple of guidelines and rules that we want to try to
 follow when it comes to managing the manifests.
 
 git location
-^^^^^^^^^^^^
+************
 https://github.com/OP-TEE/manifest
 
 Remotes
-^^^^^^^
+*******
 Since most of our projects can be found on GitHub, we are using that as the main
 remote. If you need to include other remotes for some reason, then that is OK,
 but please double check of there is any **maintained** (and preferably official)
 mirror for the project at GitHub before adding a new remote.
 
 Sections
-^^^^^^^^
+********
 To have some kind of structure of the files, we have split them up in three
 sections, one for pure OP-TEE gits, one for OP-TEE supporting gits found at
 `linaro-swg`_ and then a third, ``misc`` section where everything else can be
@@ -39,7 +39,7 @@ for clarity):
     </manifest>
 
 Project XML elements
-^^^^^^^^^^^^^^^^^^^^
+********************
 All ``<projects ... >`` lines should be on the format as shown below with the
 attributes in this order. The reason for this is to have it uniformly done
 across all manifests and that it will make it easier when comparing various
@@ -52,25 +52,25 @@ The only exception is ``revision`` which does not have to be stated if it is
         <project path="name_and_path_on_disk" name="upstream_name.git" revision="git_revsion" />
 
 Alphabetic order
-^^^^^^^^^^^^^^^^
+****************
 Within each of the three sections, all ``<project ... >`` lines **shall** be
 sorted in alphabetic order (this is again for making it easier to diff
 manifests). The only expection here is ``build.git`` which uses the ``linkfile``
 element. Having that at the end makes it look cleaner.
 
 Additional XML attributes
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 If you are using another remote than the default, then that should come
 **after** the ``revision`` attribute (this is true for all attributes other than
 the ``path``, ``name`` and ``revision``).
 
 Alignment of XML attributes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***************************
 The three mandatory XML attributes ``path``, ``name`` and ``revision`` should be
 column aligned. Alignment of additional XML attributes are optional.
 
 When to use clone-depth="1"?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+****************************
 With ``clone-depth="1"`` you are telling ``repo`` and ``git`` that you only want
 a certain commit and not the entire git log history. You can only use this under
 two conditions and that is when ``revision`` is either a branch or a tag. Pure
@@ -80,11 +80,11 @@ in some cases. So, the rules are, if you use either
 shall add ``clone-depth="1"`` right after the ``revision`` attribute.
 
 Spaces or tabs?
-^^^^^^^^^^^^^^^
+***************
 **Only** use spaces!
 
 Example
-^^^^^^^
+*******
 Here is an example showing the basis for an OP-TEE manifest. The names are
 fictive etc, but it describes everything said above.
 

@@ -1,19 +1,19 @@
 .. _juno:
 
-====
+####
 Juno
-====
+####
 The instructions here will tell how to run OP-TEE on the Juno board. The
 instructions has been tested and verified on the ``Juno r0`` revision (see `Juno
 revisions`_ for more details).
 
 Regular build
-^^^^^^^^^^^^^
+*************
 First step is to start out by following the instructions in the
 :ref:`get_and_build_the_solution` as described in :ref:`build`.
 
 Deploy files on the device
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+**************************
 Enter the firmware console on the Juno board and press **enter** to stop the
 auto boot.
 
@@ -55,7 +55,7 @@ Once all binaries have been transferred, reboot the board:
     Cmd> reboot
 
 Update the flash layout
-^^^^^^^^^^^^^^^^^^^^^^^
+***********************
 The flash layout for Juno may need to be updated for the flashing above to work.
 If flashing fails or if TF-A refuses to boot due to wrong version of the ``SCP``
 binary, then the flash(-layout) needs to be updated. To update the flash please
@@ -64,7 +64,7 @@ zips under "Development boards / Juno / Prebuilt configurations" and flash it as
 described at `Run the Arm Platforms deliverables on Juno`_.
 
 GlobalPlatform testsuite support
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+********************************
 .. note::
 
     Depending on the Juno pre-built configuration, the built ``ramdisk.img`` size
@@ -75,7 +75,7 @@ GlobalPlatform testsuite support
     flash and its layout".
 
 Example
-~~~~~~~
+=======
 Example with ``juno-latest-busybox-uboot.zip``. The current ``ramdisk.img`` size
 with GlobalPlatform testsuite is 8.6 MBytes and that is too big to fit in the
 default configuration, therefore we need to make adjustments to the flash
@@ -107,7 +107,7 @@ to extending the *Image Flash Address* to 16MB
     NOR4ENTRY: 00000000              ;Image Entry Point
 
 GCC > 5.x support
-^^^^^^^^^^^^^^^^^
+*****************
 
 .. note::
     In case you are using the **latest version** of the OP-TEE Arm Juno build

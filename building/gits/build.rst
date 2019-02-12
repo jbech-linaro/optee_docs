@@ -1,8 +1,8 @@
 .. _build:
 
-=====
+#####
 build
-=====
+#####
 Why this particular git? As it turns out it's totally possible to put together
 everything on your own. You can build all the individual components, os, client,
 xtest, Linux kernel, TF-A, TianoCore, QEMU, Buildroot_ etc and put all the
@@ -19,12 +19,12 @@ document.
 
 
 git location
-^^^^^^^^^^^^
+************
 https://github.com/OP-TEE/build
 
 
 Why repo?
-^^^^^^^^^
+*********
 We discussed alternatives, initially we started out with having a simple
 shell-script, that worked to start with, but after getting more gits in use and
 support for more devices it started to be difficult to maintain. In the end we
@@ -40,7 +40,7 @@ day work with commits, branches etc we tend to use git commands directly.
 .. _root_fs:
 
 Root filesystem
-^^^^^^^^^^^^^^^
+***************
 The rootfs in the builds that we cover here are as small as possible and is
 based on a stripped down Buildroot_ configuration adding just enough in the
 rootfs such that one can:
@@ -61,7 +61,7 @@ rootfs such that one can:
 
 
 How do I build using AOSP / OpenEmbedded?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*****************************************
 For guides how to build AOSP, please refer to our :ref:`aosp` page. For
 OpenEmbedded we have no guide ready, however there are teams in Linaro who are
 building OP-TEE using OpenEmbedded. If you want to get in contact with them,
@@ -69,7 +69,7 @@ please reach out to us (see :ref:`contact`).
 
 
 Platforms supported by build.git
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+********************************
 Below is a table showing the platforms supported by build.git. OP-TEE as such
 supports many more platforms, but since quite a few of the other platforms are
 maintained by people outside Linaro or are using a special setup, we encourage
@@ -134,11 +134,11 @@ related questions etc. Please see the MAINTAINERS_ file for contact information.
 
 
 Manifests
-^^^^^^^^^
+*********
 .. _current_version:
 
 Current version
-~~~~~~~~~~~~~~~
+===============
 Here is a list of manifests for the devices currently supported in
 ``build.git``. With these you will get a setup containing the all necessary
 software components to run OP-TEE on the chosen device. Beware that this will
@@ -175,7 +175,7 @@ gits, then please refer to the next section instead.
 +----------------+------------------+----------------------+
 
 Stable releases
-~~~~~~~~~~~~~~~
+===============
 Starting from OP-TEE ``v3.1`` you can check out stable releases by using the
 same manifests as for current version above, but with the difference that **you
 also need to specify a branch** where the name corresponds to the release
@@ -192,7 +192,7 @@ instead of what is mentioned further down in section
     ...
 
 Stable releases prior to OP-TEE v3.1 (v1.0.0 to v3.0.0)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=======================================================
 Before OP-TEE ``v3.1`` we used to have separate xml-manifest files for the
 stable builds. If you for some reason need an older stable release, then you can
 use the ``xyz_stable.xml`` file corresponding to your device. The way to init
@@ -246,7 +246,7 @@ supported by older releases:
 
 
 Get and build the solution
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+**************************
 Below we will describe the general way of how to get the source, build the
 solution and how to run xtest on the device. For device specific instructions,
 please see the links in the table in the ":ref:`current_version`" section.
@@ -254,14 +254,14 @@ please see the links in the table in the ":ref:`current_version`" section.
 .. _build_prerequisites:
 
 Step 1 - Prerequisites
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 Install prerequisites according to the :ref:`prerequisites` page.
 
 
 .. _build_install_repo:
 
 Step 2 - Install Android repo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================
 Note that here you don't install a huge SDK, it's simply a Python script that
 you download and put in your ``$PATH``, that's it. Exactly how to "install"
 repo, can be found at the Google repo_ pages, so follow those instructions
@@ -271,7 +271,7 @@ before continuing.
 .. _build_get_the_source:
 
 Step 3 - Get the source code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 Choose the manifest corresponding to the platform you intend to use (see the
 table in section ":ref:`current_version`". For example, if you intend to use
 Raspberry Pi3, then at line 3 below, ``${TARGET}.xml`` shall be ``rpi3.xml``.
@@ -297,7 +297,7 @@ OP-TEE developer setup.
 .. _build_get_toolchains:
 
 Step 4 - Get the toolchains
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 In OP-TEE we're using different toolchains for different targets (depends on
 ARMv7-A ARMv8-A 64/32bit solutions). In any case start by downloading the
 toolchains by:
@@ -311,7 +311,7 @@ toolchains by:
 .. _build_make:
 
 Step 5 - Build the solution
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 We've configured our repo manifests, so that repo will always automatically
 symlink the ``Makefile`` to the correct device specific makefile, that means
 that you simply start the build by running (still in ``<optee-project>/build``)
@@ -335,7 +335,7 @@ enabling ccache_ (again see :ref:`tips_and_tricks`).
 .. _build_flash:
 
 Step 6 - Flash the device
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 On **non-emulated** solutions (this means that you shouldn't do this step when
 you are running QEMU-v7/v8 and FVP), you will need to flash the software in some
 way. We've tried to "hide" that under the following make target:
@@ -348,14 +348,14 @@ But, since some devices are trickier to flash than others, please see the
 :ref:`device_specific`. See this just as a general instruction.
 
 Step 7 - Boot up the device
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 This is device specific (see :ref:`device_specific`).
 
 
 .. _build_tee_supplicant:
 
 Step 8 - Load tee-supplicant
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 On **most** solutions tee-supplicant is already running (check by running ``$ ps
 aux | grep tee-supplicant``) on others not. If it's **not** running, then start
 it by running:
@@ -372,7 +372,7 @@ it by running:
 .. _build_run_xtest:
 
 Step 9 - Run xtest
-~~~~~~~~~~~~~~~~~~
+==================
 The entire xtest test suite has been deployed when you we're making the builds
 in previous steps, i.e, in general there is no need to copy any binaries
 manually. Everything has been put into the :ref:`root_fs` automatically. So, to
@@ -397,9 +397,9 @@ this:
 .. _tips_and_tricks:
 
 Tips and Tricks
-^^^^^^^^^^^^^^^
+***************
 Reference existing project to speed up repo sync
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================================
 Doing a ``repo init``, ``repo sync`` from scratch can take a fair amount of
 time. The main reason for that is simply because of the size of some of the gits
 we are using, like for the Linux kernel and EDK2. With repo you can reference an
@@ -432,7 +432,7 @@ ignore step '2', then you will **still** get the latest from official git trees,
 since repo will also check for updates that aren't at the local reference.
 
 Use ccache
-~~~~~~~~~~
+==========
 ccache_ is a tool that caches build object-files etc locally on the disc and can
 speed up build time significantly in subsequent builds. On Debian-based systems
 (Ubuntu, Mint etc) you simply install it by running:

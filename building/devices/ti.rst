@@ -1,8 +1,8 @@
 .. _ti:
 
-======================
+######################
 Texas Instruments SoCs
-======================
+######################
 The instructions here will tell how to run OP-TEE on Texas Instruments devices.
 Secure TI devices require a boot image that is authenticated by ROM code to
 function. Without this, even JTAG remains locked. In order to create a valid
@@ -23,15 +23,15 @@ package is viewable and downloadable. Contact TI, either online or by way of a
 local TI representative, to request access.
 
 Regular build
-^^^^^^^^^^^^^
+*************
 Start out by following the :ref:`get_and_build_the_solution` as described in
 :ref:`build`. Stop before the section on flashing the device, this is currently
 not supported automatically.
 
 Booting the device
-^^^^^^^^^^^^^^^^^^
+******************
 SD Card boot
-~~~~~~~~~~~~
+============
 Create two partitions on an SD card, ``boot`` of type ``FAT16`` and ``rootfs``
 of type ``EXT4``. To prevent accidental data loss we do not attempt this
 automatically (the RPI3 :ref:`rpi3_build_instructions` use a similar SD card

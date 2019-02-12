@@ -1,20 +1,20 @@
 .. _core:
 
-====
+####
 Core
-====
+####
 
 .. _interrupt_handling:
 
 Interrupt handling
-^^^^^^^^^^^^^^^^^^
+******************
 .. include:: interrupts.rst
 
 
 .. _memory_objects:
 
 Memory objects
-^^^^^^^^^^^^^^
+**************
 A memory object, **MOBJ**, describes a piece of memory. The interface provided
 is mostly abstract when it comes to using the MOBJ to populate translation
 tables etc. There are different kinds of MOBJs describing:
@@ -43,9 +43,9 @@ tables etc. There are different kinds of MOBJs describing:
 .. _mmu:
 
 MMU
-^^^
+***
 Translation tables
-~~~~~~~~~~~~~~~~~~
+==================
 OP-TEE uses several L1 translation tables, one large spanning 4 GiB and two or
 more small tables spanning 32 MiB. The large translation table handles kernel
 mode mapping and matches all addresses not covered by the small translation
@@ -103,7 +103,7 @@ context is activated.
 
 
 Switching to user mode
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 This section only applies with following configuration flags:
 
     - ``CFG_WITH_LPAE=n``
@@ -115,7 +115,7 @@ transitioning to user mode. When returning back to kernel mode the original L1
 translation table is restored in TTBR1.
 
 Switching to normal world
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 When switching to normal world either via a foreign interrupt (see
 :ref:`native_foreign_irqs` or RPC there is a chance that secure world will
 resume execution on a different CPU. This means that the new CPU need to be
@@ -133,7 +133,7 @@ resumes execution in secure world.
 .. _pager:
 
 Pager
-^^^^^
+*****
 OP-TEE currently requires >256 KiB RAM for OP-TEE kernel memory. This is not a
 problem if OP-TEE uses TrustZone protected DDR, but for security reasons OP-TEE
 may need to use TrustZone protected SRAM instead. The amount of available SRAM
@@ -144,20 +144,20 @@ a capable TEE solution in SRAM. The pager provides a solution to this by demand
 paging parts of OP-TEE using virtual memory.
 
 Secure memory
-~~~~~~~~~~~~~
+=============
 TrustZone protected SRAM is generally considered more secure than TrustZone
 protected DRAM as there is usually more attack vectors on DRAM. The attack
 vectors are hardware dependent and can be different for different platforms.
 
 Backing store
-~~~~~~~~~~~~~
+=============
 TrustZone protected DRAM or in some cases non-secure DRAM is used as backing
 store. The data in the backing store is integrity protected with one hash
 (SHA-256) per page (4KiB). Readonly pages are not encrypted since the OP-TEE
 binary itself is not encrypted.
 
 Partitioning of memory
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 The code that handles demand paging must always be available as it would
 otherwise lead to deadlock. The virtual memory is partitioned as:
 
@@ -204,7 +204,7 @@ final link script. The process is repeated for init text and rodata. What is
 not "unpaged" or "init" becomes "paged".
 
 Partitioning of the binary
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 The binary is partitioned into four parts as:
 
 
@@ -308,7 +308,7 @@ position. ``image_id`` indicates how loader handles current binary. Loaders who
 don't support separate loading just ignore all v2 binaries.
 
 Initializing the pager
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 The pager is initialized as early as possible during boot in order to minimize
 the "init" area. The global variable ``tee_mm_vcore`` describes the virtual
 memory range that is covered by the level 2 translation table supplied to
@@ -349,7 +349,7 @@ supplied with ``unmap == false`` since those page have valid content and are in
 use.
 
 Invocation
-~~~~~~~~~~
+==========
 The pager is invoked as part of the abort handler. A pool of physical pages are
 used to map different virtual addresses. When a new virtual address needs to be
 mapped a free physical page is mapped at the new address, if a free physical
@@ -359,7 +359,7 @@ verified. If it is OK the pager returns from the exception to resume the
 execution.
 
 Paging of user TA
-~~~~~~~~~~~~~~~~~
+=================
 Paging of user TAs can optionally be enabled with ``CFG_PAGED_USER_TA=y``.
 Paging of user TAs is analogous to paging of OP-TEE kernel parts but with a few
 differences:
@@ -376,7 +376,7 @@ permissions used when the TA is running.
 .. _stacks:
 
 Stacks
-^^^^^^
+******
 Different stacks are used during different stages. The stacks are:
 
     - **Secure monitor stack** (128 bytes), bound to the CPU. Only available if
@@ -424,7 +424,7 @@ storage of registers and also keeps the relevant stack pointers. In general when
 we talk about assigning a stack pointer to the CPU below we mean ``SP_EL0``.
 
 Boot
-~~~~
+====
 During early boot the CPU is configured with the temp stack which is used until
 OP-TEE exits to normal world the first time.
 
@@ -434,20 +434,20 @@ OP-TEE exits to normal world the first time.
 pointer.
 
 Normal entry
-~~~~~~~~~~~~
+============
 Each time OP-TEE is entered from normal world the temp stack is used as the
 initial stack. For fast calls, this is the only stack used. For normal calls an
 empty thread slot is selected and the CPU switches to that stack.
 
 Normal exit
-~~~~~~~~~~~
+===========
 Normal exit occurs when a thread has finished its task and the thread is freed.
 When the main thread function, ``tee_entry_std(...)``, returns interrupts are
 disabled and the CPU switches to the temp stack instead. The thread is freed and
 OP-TEE exits to normal world.
 
 RPC exit
-~~~~~~~~
+========
 RPC exit occurs when OP-TEE need some service from normal world. RPC can
 currently only be performed with a thread is in running state. RPC is initiated
 with a call to ``thread_rpc(...)`` which saves the state in a way that when the
@@ -456,7 +456,7 @@ did a normal return. CPU switches to use the temp stack before returning to
 normal world.
 
 Foreign interrupt exit
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 Foreign interrupt exit occurs when OP-TEE receives a foreign interrupt. For Arm
 GICv2 mode, foreign interrupt is sent as IRQ which is always handled in normal
 world. Foreign interrupt exit is similar to RPC exit but it is
@@ -477,14 +477,14 @@ exiting to normal world CPU state is changed to SVC and temp stack is selected.
 original ``SP_EL0`` is saved in the thread context to be restored when resuming.
 
 Resume entry
-~~~~~~~~~~~~
+============
 OP-TEE is entered using the temp stack in the same way as for normal entry. The
 thread to resume is looked up and the state is restored to resume execution. The
 procedure to resume from an RPC exit or an foreign interrupt exit is exactly the
 same.
 
 Syscall
-~~~~~~~
+=======
 Syscall's are executed using the thread stack.
 
 **Notes for Armv7-A/AArch32:**
@@ -504,12 +504,12 @@ directly to ``thread_unwind_user_mode(...)``.
 .. _shared_memory:
 
 Shared Memory
-^^^^^^^^^^^^^
+*************
 Shared Memory is a block of memory that is shared between the non-secure and the
 secure world. It is used to transfer data between both worlds.
 
 Shared Memory Allocation
-~~~~~~~~~~~~~~~~~~~~~~~~
+========================
 The shared memory is allocated by the Linux driver from a pool ``struct
 shm_pool``, the pool contains:
 
@@ -524,7 +524,7 @@ shm_pool``, the pool contains:
       and secure world.
 
 Shared Memory Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 It is the Linux kernel driver for OP-TEE that is responsible for initializing
 the shared memory pool, given information provided by the OP-TEE core. The
 Linux driver issues a SMC call ``OPTEE_SMC_GET_SHM_CONFIG`` to retrieve the
@@ -546,7 +546,7 @@ initialize the shared memory pool accordingly.
     Joakim: bootcfg_get_memory(...) is no longer in our code. Text needs update.
 
 Shared Memory Chunk Allocation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==============================
 It is the Linux kernel driver for OP-TEE that is responsible for allocating
 chunks of shared memory. OP-TEE linux kernel driver relies on linux kernel
 generic allocation support (``CONFIG_GENERIC_ALLOCATION``) to allocation/release
@@ -555,7 +555,7 @@ kernel dma-buf support (``CONFIG_DMA_SHARED_BUFFER``) to track shared memory
 buffers references.
 
 Using shared memory
-~~~~~~~~~~~~~~~~~~~
+===================
 **From the Client Application**
 
 The client application can ask for shared memory allocation using the
@@ -606,9 +606,9 @@ driver.
 .. _smc:
 
 SMC
-^^^
+***
 SMC Interface
-~~~~~~~~~~~~~
+=============
 OP-TEE's SMC interface is defined in two levels using optee_smc.h_ and
 optee_msg.h_. The former file defines SMC identifiers and what is passed in the
 registers for each SMC. The latter file defines the OP-TEE Message protocol
@@ -616,7 +616,7 @@ which is not restricted to only SMC even if that currently is the only option
 available.
 
 SMC communication
-~~~~~~~~~~~~~~~~~
+=================
 The main structure used for the SMC communication is defined in ``struct
 optee_msg_arg`` (in optee_msg.h_). If we are looking into the source code, we
 could see that communication mainly is achieved using ``optee_msg_arg`` and
@@ -633,7 +633,7 @@ fast call.
 .. _thread_handling:
 
 Thread handling
-^^^^^^^^^^^^^^^
+***************
 OP-TEE core uses a couple of threads to be able to support running jobs in
 parallel (not fully enabled!). There are handlers for different purposes. In
 thread.c_ you will find a function called ``thread_init_primary(...)`` which
@@ -643,7 +643,7 @@ for these services, but the platform can decide if they want to implement their
 own platform specific handlers instead.
 
 Synchronization primitives
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 OP-TEE has three primitives for synchronization of threads and CPUs:
 *spin-lock*, *mutex*, and *condvar*.
 

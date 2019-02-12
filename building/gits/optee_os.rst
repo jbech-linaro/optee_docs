@@ -1,13 +1,13 @@
 .. _optee_os:
 
-========
+########
 optee_os
-========
+########
 
 .. _optee_os_build_system:
 
 Build system
-^^^^^^^^^^^^
+************
 The OP-TEE build system is based on both GNU make and CMake (Linux user space
 applications). optee_os consists of a main ``Makefile`` in the root of the
 project together with ``sub.mk`` files in all source directories. In addition,
@@ -63,12 +63,12 @@ generate the build rules.
 invocation of make itself.
 
 Choosing the build target
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 The target architecture, platform and build directory may be selected by setting
 environment or make variables (``VAR=value make`` or ``make VAR=value``).
 
 ARCH - CPU architecture
-~~~~~~~~~~~~~~~~~~~~~~~
+=======================
 ``$(ARCH)`` is the CPU architecture to be built. Currently, the only supported
 value is ``arm`` for 32-bit or 64-bit Armv7-A or Armv8-A. Please note that
 contrary to the Linux kernel, ``$(ARCH)`` should **not** be set to ``arm64`` for
@@ -83,7 +83,7 @@ Architecture-specific source code belongs to sub-directories that follow the
 ``lib/libutee/arch/arm`` and so on.
 
 CROSS_COMPILE
-~~~~~~~~~~~~~
+=============
 ``$(CROSS_COMPILE)`` is the prefix used to invoke the (32-bit) cross-compiler
 toolchain. The default value is ``arm-linux-gnueabihf-``. This is the variable
 you want to change in case you want to use ccache_ to speed you recompilations:
@@ -127,7 +127,7 @@ Examples:
 .. _platform_flavor:
 
 PLATFORM / PLATFORM_FLAVOR
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 A `platform` is a family of closely related hardware configurations. A platform
 `flavor` is a variant of such configurations. When used together they define the
 target hardware on which OP-TEE will be run.
@@ -146,7 +146,7 @@ Platform-specific source code belongs to ``core/arch/$(ARCH)/plat-$(PLATFORM)``,
 for instance: ``core/arch/arm/plat-vexpress`` or ``core/arch/arm/plat-stm``.
 
 O - output directory
-~~~~~~~~~~~~~~~~~~~~
+====================
 All output files go into a platform-specific build directory, which is by
 default ``out/$(ARCH)-plat-$(PLATFORM)``.
 
@@ -190,7 +190,7 @@ the TEE Core: ``$(O)/include/generated/conf.h`` (see below).
 .. _configuration_and_flags:
 
 Configuration and flags
-^^^^^^^^^^^^^^^^^^^^^^^
+***********************
 The following variables are defined in ``core/arch/$(ARCH)/$(ARCH).mk``:
 
     - ``$(core-platform-aflags)``, ``$(core-platform-cflags)`` and
@@ -215,13 +215,13 @@ The following variables are defined in ``core/arch/$(ARCH)/$(ARCH).mk``:
       added to the TEE Core.
 
 Linker scripts
-^^^^^^^^^^^^^^
+**************
 The file ``core/arch/$(ARCH)/plat-$(PLATFORM)/link.mk`` contains the rules to
 link the TEE Core and perform any related tasks, such as running ``objdump`` to
 produce a dump file. ``link.mk`` adds files to the ``all:`` target.
 
 Source files
-^^^^^^^^^^^^
+************
 Each directory that contains source files has a file called ``sub.mk``. This
 makefile defines the source files that should be included in the build, as well
 as any subdirectories that should be processed, too. For example:
@@ -251,7 +251,7 @@ In addition to source files, ``sub.mk`` may define compiler flags, include
 directories and/or configuration variables as explained below.
 
 Compiler flags
-^^^^^^^^^^^^^^
+**************
 Default compiler flags are defined in ``mk/compile.mk``. Note that
 platform-specific flags must not appear in this file which is common to all
 platforms.
@@ -286,7 +286,7 @@ affect all the source files that belong to the library: ``cppflags-lib-y`` and
 ``cflags-lib-y``.
 
 Include directories
-^^^^^^^^^^^^^^^^^^^
+*******************
 Include directories may be added to ``global-incdirs-y``, in which case they
 will be accessible from all the source files and will be copied to
 ``export-ta_arm{32,64}/include`` and ``export-ta_arm{32,64}/host_include``.
@@ -297,7 +297,7 @@ additional directories that will be used for that library only.
 .. _configuration_variables:
 
 Configuration variables
-^^^^^^^^^^^^^^^^^^^^^^^
+***********************
 Some features may be enabled, disabled or otherwise controlled at compile time
 through makefile variables. Default values are normally provided in makefiles
 with the ``?=`` operator so that their value may be easily overridden by
@@ -322,7 +322,7 @@ Depending on their value, variables may be considered either boolean or
 non-boolean, which affects how they are translated into ``conf.h``.
 
 Boolean configuration variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===============================
 When a configuration variable controls the presence or absence of a feature,
 ``y`` means **enabled**, while ``n``, empty value or an undefined variable means
 **disabled**. For instance, the following commands are equivalent and would
@@ -373,7 +373,7 @@ to use constructs like:
     #endif
 
 Non-boolean configuration variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===================================
 Configuration variables that are not recognized as booleans are simply output
 unchanged into `<generated/conf.h>`. For instance:
 
@@ -388,7 +388,7 @@ unchanged into `<generated/conf.h>`. For instance:
     #define CFG_TEE_CORE_LOG_LEVEL 4 /* '4' */
 
 Configuration dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 Some combinations of configuration variables may not be valid. This should be
 dealt with by custom checks in makefiles. ``mk/checkconf.h`` provides functions
 to help detect and deal with such situations.

@@ -5,7 +5,7 @@ execution context: normal world to secure world, or secure world to normal
 world.
 
 Use cases of world context switch
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=================================
 This section lists all the cases where optee_os is involved in world context
 switches. Optee_os executes in the secure world. World switch is done by the
 cores secure monitor level/mode, referred below as the Monitor.
@@ -30,7 +30,7 @@ temporarily return back to normal world via the Monitor to let normal world
 serve the interrupt.
 
 Core exception vectors
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 Monitor vector is ``VBAR_EL3`` in AArch64 and ``MVBAR`` in Armv7-A/AArch32.
 Monitor can be reached while normal world or secure world is executing. The
 executing secure state is known to the Monitor through the ``SCR_NS``.
@@ -74,7 +74,7 @@ executing world. This is reflected by a static value of ``SCR_(IRQ|FIQ)``.
 .. _native_foreign_irqs:
 
 Native and foreign interrupts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================
 Two types of interrupt are defined in optee_os:
 
     - **Native interrupt** - The interrupt handled by optee_os (for example:
@@ -93,7 +93,7 @@ trapped during secure world execution might need to be efficiently routed to
 the normal world.
 
 Normal World invokes optee_os using SMC
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=======================================
 
 **Entering the Secure Monitor**
 
@@ -142,7 +142,7 @@ with IRQ and FIQ blocked. SMCs are categorised in two flavors: **fast** and
     SMC entry to secure world
 
 Deliver non-secure interrupts to Normal World
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================================
 This section uses the Arm GICv1/v2 conventions: IRQ signals non-secure
 interrupts while FIQ signals secure interrupts. On a GICv3 configuration, one
 should exchange IRQ and FIQ in this section.
@@ -187,7 +187,7 @@ Since ``SCR_IRQ`` is cleared, an IRQ will be delivered using the state vector
 normal world, the monitor and the Trusted OS are not involved at all.
 
 Deliver secure interrupts to Secure World
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================================
 This section uses the Arm GICv1/v2 conventions: FIQ signals secure interrupts
 while IRQ signals non-secure interrupts. On a GICv3 configuration, one should
 exchange IRQ and FIQ in this section. A FIQ can be received during two different
@@ -229,7 +229,7 @@ using the state vector (``VBAR``) in secure world. The FIQ is received as any
 other exception by Trusted OS, the monitor is not involved at all.
 
 Trusted thread scheduling
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 **Trusted thread for standard services**
 
 OP-TEE standard services are carried through standard SMC. Execution of these

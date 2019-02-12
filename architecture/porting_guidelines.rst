@@ -1,8 +1,8 @@
 .. _porting_guidelines:
 
-==================
+##################
 Porting guidelines
-==================
+##################
 This document serves a dual purpose:
 
 * Serve as a base for getting OP-TEE up and running on a new device with initial
@@ -23,7 +23,7 @@ missing pieces we are talking about here.
 .. _add_a_new_platform:
 
 Add a new platform
-^^^^^^^^^^^^^^^^^^
+******************
 The first thing you need to do after you have decided to port OP-TEE to another
 device is to add a new platform device. That can either be adding a new platform
 variant (``PLATFORM_FLAVOR``) if it is a device from a family already supported,
@@ -33,7 +33,7 @@ our fictive platform for "gendev" just so we have something to refer to when
 writing examples further down.
 
 core/arch/arm
-~~~~~~~~~~~~~~~~~
+=================
 In ``core/arch/arm`` you will find all the currently supported devices. That is
 where you are supposed to add a new platform or modify an existing one.
 Typically you will find this set of files in a specific platform folder:
@@ -205,7 +205,7 @@ kind of memory firewall for this (more about that further down). As you can see
 we have also added the UART configuration here, i.e., the ``DEVICE0_xyz`` part.
 
 Official board support in OP-TEE?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=================================
 We do encourage everyone to submit their board support to the OP-TEE project
 itself, so it becomes part of the official releases and will be maintained by
 the OP-TEE community itself. If you intend to do so, then there are a few more
@@ -253,7 +253,7 @@ a new ``*.mk`` in :ref:`build`) for the device you have added to OP-TEE.
 .. _hardware_unique_key:
 
 Hardware Unique Key
-^^^^^^^^^^^^^^^^^^^
+*******************
 Most devices have some kind of Hardware Unique Key (HUK) that is mainly used to
 derive other keys. The HUK could for example be used when deriving keys used in
 secure storage etc. The important thing with the HUK is that it needs to be well
@@ -272,7 +272,7 @@ especially not the key that is the root for everything else, so this is not
 something we recommend that you should do.
 
 Secure Clock
-^^^^^^^^^^^^
+************
 The Time API in GlobalPlatform Internal Core API specification defines three
 sources of time; system time, TA persistent time and REE time. The REE time is
 by nature considered as an unsecure source of time, but the other two should in
@@ -290,7 +290,7 @@ probably want to change the implementation there to instead use the secure clock
 ``ta_time_prot_lvl`` in ``tee_svc.c``).
 
 Root and Chain of Trust
-^^^^^^^^^^^^^^^^^^^^^^^
+***********************
 To be able to assure that your devices are running the (untampered) binaries you
 intended to run you will need to establish some kind of trust anchor on the
 devices.
@@ -314,7 +314,7 @@ We have successfully verified OP-TEE by using the authentication framework from
 Trusted Firmware A (see :ref:`secure_boot` for the details).
 
 Hardware Crypto IP
-^^^^^^^^^^^^^^^^^^
+******************
 By default OP-TEE uses a software crypto library (currently mbed TLS and
 LibTomCrypt) and you have the ability to enable Crypto Extensions that were
 introduced with ARMv8-A (if the device is capable of that). Some of the devices
@@ -336,7 +336,7 @@ predict the data added as entropy. As a consequence, unless the RNG is based on
 hardware the generated random will be quite weak.
 
 Power Management / PSCI
-^^^^^^^^^^^^^^^^^^^^^^^
+***********************
 In the :ref:`add_a_new_platform` section where we talked about the file
 ``main.c``, we added a couple of handlers related to power management, we are
 talking about the following lines:
@@ -360,7 +360,7 @@ CPU states, secure hardware IPs' registers and TZASC and other memory firewall
 related setting when these callbacks are being called.
 
 Memory firewalls / TZASC
-^^^^^^^^^^^^^^^^^^^^^^^^
+************************
 Arm have defined a system IP / SoC peripheral called TrustZone Address Space
 Controller (TZASC, see TZC-380_ and TZC-400_). TZASC can be used to configure
 DDR memory into separate regions in the physcial address space, where each
@@ -376,7 +376,7 @@ that you must make sure that you have configured whatever memory firewall your
 device has such that it has a secure and a non-secure memory area.
 
 Trusted Application private/public keypair
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+******************************************
 By default all Trusted Applications (TA's) are signed with the pre-generated
 2048-bit RSA development key (private key). This key is located in the ``keys``
 folder (in the root of optee_os.git) and is named ``default_ta.pem``. This key

@@ -5,9 +5,9 @@
 
 .. _platforms_supported:
 
-===================
+###################
 Platforms supported
-===================
+###################
 Several platforms are supported. In order to manage slight differences between
 platforms, a ``PLATFORM_FLAVOR`` flag has been introduced. The ``PLATFORM`` and
 ``PLATFORM_FLAVOR`` flags define the whole configuration for a chip the where

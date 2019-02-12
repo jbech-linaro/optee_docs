@@ -1,8 +1,8 @@
 .. _rpi3:
 
-==============
+##############
 Raspberry Pi 3
-==============
+##############
 `Sequitur Labs`_ did the initial OP-TEE port which at the time also came with
 modifications in U-Boot, Trusted Firmware A and Linux kernel. Since that initial
 port more and more patches have found mainline trees and today the OP-TEE setup
@@ -10,7 +10,7 @@ for Raspberry Pi 3 uses only upstream tree's with the exception of Linux kernel.
 
 
 Disclaimer
-^^^^^^^^^^
+**********
 .. warning::
 
     This port of Trusted Firmware A and OP-TEE to Raspberry Pi 3 **IS NOT
@@ -25,7 +25,7 @@ Disclaimer
 .. _rpi3_software:
 
 What is expected to work?
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 First, note that all OP-TEE developer builds (ref, :ref:`build`) have rather
 simple overall goals:
 
@@ -76,7 +76,7 @@ context to it.
 .. _rpi3_support_buildroot:
 
 Buildroot
-~~~~~~~~~
+=========
 We are using Buildroot as the tool to create a stripped down filesystem for
 Linux where we also put OP-TEE binaries like Trusted Applications, client
 libraries and TEE supplicant. If a user wants to add/enable additional packages,
@@ -87,21 +87,21 @@ then that is also possible by adding new lines in ``common.mk`` in :ref:`build`
 .. _rpi3_support_hdmi:
 
 HDMI
-~~~~
+====
 X isn't enabled and we have not built nor enabled any drivers for graphics.
 
 
 .. _rpi3_support_nfs:
 
 NFS
-~~~
+===
 Works to boot up a Linux root filesystem, more on that further down.
 
 
 .. _rpi3_support_random_package:
 
 Random packages
-~~~~~~~~~~~~~~~
+===============
 See the :ref:`rpi3_support_buildroot` section above. You can enable packages
 supported by Buildroot, but as mentioned initially in this section, lack of
 drivers and other daemons etc might make it impossible to run.
@@ -110,7 +110,7 @@ drivers and other daemons etc might make it impossible to run.
 .. _rpi3_support_raspbian:
 
 Raspbian
-~~~~~~~~
+========
 We are not using it. However, people (from `Sequitur Labs`_) have successfully
 been able to add OP-TEE to Raspbian builds. But since we're not using it and
 haven't tried, we simply don't support it.
@@ -119,7 +119,7 @@ haven't tried, we simply don't support it.
 .. _rpi3_support_secure_boot:
 
 Secure boot
-~~~~~~~~~~~
+===========
 First pay attention to the initial warning on this page. I.e., no matter what
 you are doing with Raspberry Pi and TrustZone / OP-TEE you **cannot** make it
 secure. But that doesn't mean that you cannot "enable" secure features as such
@@ -134,7 +134,7 @@ Framework`_" and `RPi3 in TF-A`_.
 .. _rpi3_support_tftp:
 
 TFTP
-~~~~
+====
 When you reach U-Boot (see :ref:`rpi3_boot_sequence`), then you can start using
 TFTP to load boot firmware etc. Note that if you overwrite ``armstub8.bin`` for
 example and that happens to be faulty, then you will need to re-mount the BOOT
@@ -146,14 +146,14 @@ the device see the changes.
 .. _rpi3_support_uart:
 
 UART
-~~~~
+====
 Fully supported, for more details look at the UART section further down.
 
 
 .. _rpi3_support_wifi:
 
 Wi-Fi
-~~~~~
+=====
 Even though Raspberry Pi 3 has a Wi-Fi chip, we do not support it in our
 stripped down builds.
 
@@ -161,7 +161,7 @@ stripped down builds.
 .. _rpi_hardware:
 
 What versions of Raspberry Pi will work?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+****************************************
 Below is a table of supported hardware in our OP-TEE developer builds. We have
 only used the Raspberry Pi 3 Model B, i.e., the first RPi 3 device that was
 released. But we know that people have successfully been able to use it with
@@ -199,7 +199,7 @@ simply say "No" below.
 .. _rpi3_boot_sequence:
 
 Boot sequence
-^^^^^^^^^^^^^
+*************
     - The **GPU** starts executing the first stage bootloader, which is stored
       in ROM on the SoC. The first stage bootloader reads the SD-card, and loads
       the second stage bootloader (``bootcode.bin``) into the L2 cache, and runs
@@ -220,7 +220,7 @@ Boot sequence
 .. _rpi3_build_instructions:
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 1. Start by following the :ref:`get_and_build_the_solution` as described in
    :ref:`build`, but stop at the ":ref:`build_flash`" step (i.e., **don't** run
    the make flash command!).
@@ -265,7 +265,7 @@ Build instructions
 .. _rpi3_nfs:
 
 NFS boot
-^^^^^^^^
+********
 Booting via NFS is quite useful for several reasons, but the obvious reason when
 working with Raspberry Pi is that you don't have to move the SD-card back and
 forth between the host machine and the Raspberry Pi 3 itself when working with
@@ -289,7 +289,7 @@ environment.
 
 
 Configure NFS
-~~~~~~~~~~~~~
+=============
 Start by installing the NFS server
 
 .. code-block:: bash
@@ -333,7 +333,7 @@ After this, restart the NFS kernel server
     If you get nothing there, then your NFS server hasn't been setup correctly.
 
 Prepare files to be shared
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 We are now going to put the root filesystem on the location we prepared in the
 previous section.
 
@@ -349,7 +349,7 @@ previous section.
     $ sudo rm -rf /srv/nfs/rpi/boot/*
 
 uboot.env configuration
-~~~~~~~~~~~~~~~~~~~~~~~
+=======================
 The file ``uboot.env`` contains boot configurations that tells what binaries to
 load and at what addresses. When using NFS you need to tell U-Boot where the NFS
 server is located (IP and path). Since the exact IP and path varies for each
@@ -361,7 +361,7 @@ the U-Boot console. Pick the one that you suits your needs. We will cover each
 of them separately here.
 
 Change uboot.env.txt
-~~~~~~~~~~~~~~~~~~~~
+====================
 In an editor open: ``<rpi3-project>/build/rpi3/firmware/uboot.env.txt`` and
 change:
 
@@ -394,7 +394,7 @@ Finally, you need to copy the updated ``<rpi3-project>/out/uboot.env`` to the
 **BOOT** partition of your SD-card).
 
 Update u-boot.env from U-Boot console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=====================================
 Boot up the device until you see U-Boot running and counting down, then hit any
 key and will see the ``U-Boot>`` prompt. You can then update the
 ``nfsserverip``, ``gatewayip`` and ``nfspath`` by writing
@@ -412,7 +412,7 @@ If you want those environment variables to persist between boots, then type.
     U-Boot> saveenv
 
 Boot up with NFS
-~~~~~~~~~~~~~~~~
+================
 With all preparations above done correctly, you should now be able to boot up
 the device and kernel, secure side OP-TEE and the entire root filesystem should
 be loaded from the network shares (NFS). Power up the Raspberry, halt in U-Boot and
@@ -438,7 +438,7 @@ Just rebuild and copy is sufficient.
 .. _rpi3_jtag:
 
 JTAG
-^^^^
+****
 To enable JTAG you need to add a line saying ``enable_jtag_gpio=1`` in
 ``config.txt``. There are two ways you can do this, both requires that you to
 mount the **BOOT** partition on the SD-card at your computer (see the ``make
@@ -446,13 +446,13 @@ img-help`` step under :ref:`rpi3_build_instructions`). **After** you have
 mounted the BOOT partition continue with whichever way is most suitable for you.
 
 Change config.txt directly
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 With your editor, open ``/media/boot/config.txt`` and add a line
 ``enable_jtag_gpio=1``, save the file, unmount the BOOT partition and you're
 good to go after rebooting the device.
 
 Rebuild and untar
-~~~~~~~~~~~~~~~~~
+=================
 1. With your editor, open ``<rpi3-project>/build/rpi3/firmware/config.txt`` and
    add a line ``enable_jtag_gpio=1``, save the file.
 
@@ -472,7 +472,7 @@ Rebuild and untar
 .. _rpi3_jtag_cable:
 
 JTAG/RPi3 cable
-~~~~~~~~~~~~~~~
+===============
 We have created our own cables that consists of a standard 20-pin JTAG
 connector and a 22-pin connector for the Raspberry Pi 3 itself. Then using a
 ribbon cable we have connected the cables according to the table below (JTAG pin
@@ -511,7 +511,7 @@ ribbon cable we have connected the cables according to the table below (JTAG pin
 .. _rpi3_uart_cable:
 
 UART/RPi3 cable
-^^^^^^^^^^^^^^^
+***************
 In addition to the JTAG connections we have also wired up the RX/TX to be able
 to use the UART. Note, for this you don't need to do JTAG wirings, i.e., it's
 perfectly fine to just wire up the UART only. There are many ready made cables
@@ -537,9 +537,9 @@ for this on the net (`eBay`_) and cost almost nothing. Get one of those if you
 .. _rpi3_openocd:
 
 OpenOCD
-^^^^^^^
+*******
 Build OpenOCD
-~~~~~~~~~~~~~
+=============
 Before building OpenOCD, ensure that you have the ``libusb-dev`` installed.
 
 .. code-block:: bash
@@ -570,13 +570,13 @@ properly (``make install``) or if he will just run it from the tree directly.
 The rest of this guide will just run it from the tree.
 
 OpenOCD RPi3 configuration file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===============================
 Unfortunately, the necessary `RPi3 OpenOCD config`_ isn't upstreamed yet into
 the `official OpenOCD`_ repository, so you should use the one stored here
 ``<rpi3-project/build/rpi3/debugger/pi3.cfg``.
 
 Running OpenOCD
-~~~~~~~~~~~~~~~
+===============
 Depending on the JTAG debugger you are using you'll need to find and use the
 interface file for that particular debugger. We've been using `J-Link
 debuggers`_ and `Bus Blaster`_ successfully. To start an OpenOCD session using a
@@ -606,7 +606,7 @@ using GDB, then there is not much incentive connecting to OpenOCD directly,
 since you will be able to do the same in GDB by the ``monitor`` command.
 
 Use GDB
-~~~~~~~
+=======
 OpenOCD will by default listen to GDB connections on port ``3333``. So after
 starting OpenOCD, make a connection to GDB.
 
@@ -632,7 +632,7 @@ connect and load the symbols for TEE core. For Linux kernel and other binaries
 you would do the same.
 
 Debug session example
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 After making an initial Raspberry Pi 3 build for OP-TEE where you've enabled
 JTAG, installed and built OpenOCD, connected the JTAG cable, then you're ready
 for debugging OP-TEE using JTAG on Raspberry 3. Boot up the Raspberry Pi 3 until

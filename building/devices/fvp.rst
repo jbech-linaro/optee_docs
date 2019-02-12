@@ -1,8 +1,8 @@
 .. _fvp:
 
-===
+###
 FVP
-===
+###
 The instructions here will tell how to build and run OP-TEE using Foundation
 Models.
 
@@ -10,7 +10,7 @@ Models.
 .. _fvp_build_instructions:
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 Start out by following the ":ref:`get_and_build_the_solution`" as described in
 :ref:`build`. However, stop before doing ":ref:`build_make`".
 

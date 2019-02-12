@@ -1,8 +1,8 @@
 .. _contribute:
 
-==========
+##########
 Contribute
-==========
+##########
 Contributions to OP-TEE are managed by the OP-TEE :ref:`core_team` and anyone
 can contribute to OP-TEE as long as it is understood that it will require a
 `Signed-off-by` tag from the one submitting the patch(es). The Signed-off-by tag
@@ -14,7 +14,7 @@ rules stated in the ``Developer Certificate of Origin`` as stated below.
 .. _DCO:
 
 Developer Certificate of Origin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*******************************
 
 .. code-block:: none
 
@@ -68,12 +68,12 @@ Use your real name or on some rare cases a company email address, but we
 disallow pseudonyms or anonymous contributions.
 
 GitHub
-^^^^^^
+******
 This section describes how to use GitHub for OP-TEE development and
 contributions.
 
 Setting up an account
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 You do not need to own a GitHub account in order to clone a repository. But if
 you want to contribute, you need to create an account at GitHub_. Note that a
 free plan is sufficient to collaborate.
@@ -83,7 +83,7 @@ supplying your username and password each time you pull or push something.
 To configure SSH for GitHub, please refer to `Connecting to GitHub with SSH`_.
 
 Forking
-~~~~~~~
+=======
 Only owners of the OP-TEE projects have write permissions to the git
 repositories of those projects. Contributors **should fork** ``OP-TEE/*.git``
 and/or ``linaro-swg/*.git`` into their own account, then work on this forked
@@ -91,13 +91,13 @@ repository. The complete documentation about **forking** can be found at `fork a
 repo`_.
 
 Creating pull requests
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 When you want to submit a patch to the OP-TEE project, you are supposed to
 create a `pull request`_ to the git where you forked your git from. How that is
 done using GitHub is explained at the GitHub `pull request`_ page.
 
 Commit messages
-~~~~~~~~~~~~~~~
+===============
 
     - The **subject line** should explain **what** the patch does as precisely
       as possible. It is usually prefixed with keywords indicating which part of
@@ -130,7 +130,7 @@ Commit messages
       quotes and parentheses).
 
 Review feedback
-~~~~~~~~~~~~~~~
+===============
 It is very likely that you will get review comments from other OP-TEE users
 asking you to fix certain things etc. When fixing review comments, do:
 
@@ -143,7 +143,7 @@ asking you to fix certain things etc. When fixing review comments, do:
       for review again.
 
 Finalizing your contribution
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 Once you and reviewers have agreed on the patch set, which is when all the
 people who have commented on the pull request have given their ``Acked-by:`` or
 ``Reviewed-by:``, you need to consolidate your commits:

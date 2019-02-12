@@ -1,7 +1,7 @@
 .. _abort_dumps:
 
 Abort dumps / call stack
-========================
+########################
 When OP-TEE encounters a serious error condition, it prints diagnostic
 information to the secure console. The message contains a call stack if
 ``CFG_UNWIND=y`` (enabled by default).

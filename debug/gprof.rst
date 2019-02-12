@@ -1,7 +1,7 @@
 .. _gprof:
 
 Gprof
-=====
+#####
 This describes to do profiling of user Trusted Applications with ``gprof``.
 
 The configuration option ``CFG_TA_GPROF_SUPPORT=y`` enables OP-TEE to collect
@@ -11,7 +11,7 @@ compiled with ``-pg``. Once collected, the profiling data are formatted in the
 to disk and later processed and displayed by the standard ``gprof`` tool.
 
 Usage
-^^^^^
+*****
 
     - Build OP-TEE OS with ``CFG_TA_GPROF_SUPPORT=y``. You may also set
       ``CFG_ULIBS_GPROF=y`` to instrument the user TA libraries (libutee,
@@ -32,7 +32,7 @@ Usage
       gmon-<ta_uuid>.out``
 
 Implementation
-^^^^^^^^^^^^^^
+**************
 Part of the profiling is implemented in libutee. Another part is done in the TEE
 core by a pseudo-TA (``core/arch/arm/sta/gprof.c``). Two types of data are
 collected:

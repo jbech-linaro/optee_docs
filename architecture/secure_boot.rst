@@ -1,11 +1,11 @@
 .. _secure_boot:
 
-===========
+###########
 Secure boot
-===========
+###########
 
 Armv8-A - Using the authentication framework in TF-A
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+****************************************************
 This section gives a brief description on how to enable the verification of
 OP-TEE using the authentication framework in Trusted Firmware A (TF-A), i.e.,
 something that could be used in an Armv8-A environment.
@@ -37,7 +37,7 @@ Above steps have been tested on FVP platform, all verification steps are OK and
 xtest runs successfully without regression.
 
 Armv7-A systems
-^^^^^^^^^^^^^^^
+***************
 Unlike for Armv8-A systems where one can use a more standardized way of doing
 secure boot by leverage the authentication framework as described above, most
 device manufacturers have their own way of doing secure boot. Please reach out

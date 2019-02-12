@@ -1,7 +1,7 @@
 .. _benchmark_framework:
 
 Benchmark framework
-===================
+###################
 
 Due to its nature, OP-TEE is being a solution spanning over several
 architectural layers, where each layer includes its own complex parts. For
@@ -21,10 +21,10 @@ It is necessary to receive latency values for:
 	    * The same way back
 
 Implementation details
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
 
 Design overview
-~~~~~~~~~~~~~~~
+===============
 
 Benchmark framework consists of such components:
 
@@ -56,7 +56,7 @@ is allocated/registered.
    source file
 
 Timestamp source
-~~~~~~~~~~~~~~~~
+================
 
 Arm Performance Monitor Units are used as the main source of timestamp values.
 The reason why this technology was chosen is that it is supported on all
@@ -76,7 +76,7 @@ about:
       getting a symbol name (a filename and line number)
 
 Call sequence diagram
-~~~~~~~~~~~~~~~~~~~~~ 
+===================== 
 
 .. image:: ../images/benchmark/benchmark_sequence.png
 
@@ -84,10 +84,10 @@ Call sequence diagram
    benchmark_sequence.msc source file
 
 Running benchmarks
-^^^^^^^^^^^^^^^^^^
+******************
 
 Benchmark application usage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 
 Before using Benchmark framework, OP-TEE should be rebuild with
 ``CFG_TEE_BENCHMARK`` flag enabled.
@@ -108,7 +108,7 @@ When client_app finishes its execution, optee_benchmark_ will generate
 stored.
 
 Adding custom timestamps
-~~~~~~~~~~~~~~~~~~~~~~~~
+========================
 
 Currently, timestamping is done only for ``InvokeCommand`` calls, but it's also
 possible to choose custom places in the supported OP-TEE layers. To add
@@ -126,13 +126,13 @@ timestamp storing command to custom c source file:
        in the function, where you want to put timestamp from.
 
 Analyzing results
-~~~~~~~~~~~~~~~~~
+=================
 
 Will be added soon.
 
 
 Limitations and further steps
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*****************************
 
     * Implementation of application which will analyze timestamp data and
       provide statistics for different types of calls providing avg/min/max

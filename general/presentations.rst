@@ -1,7 +1,7 @@
 .. _presentations:
 
 Presentations
-=============
+#############
 Below are presentations coming from engineers working with OP-TEE in one or
 another way. Note that the older they are, the less relevant is the information
 in them. So do not trust blindly what was said back in the days, cross check

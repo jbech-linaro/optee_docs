@@ -1,8 +1,8 @@
 .. _optee_test:
 
-==========
+##########
 optee_test
-==========
+##########
 The optee_test.git contains the source code for the TEE sanity test suite in
 Linux using the ARM(R) TrustZone(R) technology. It is typically referred to as
 `xtest`. By default there are several thousands of tests when running the code
@@ -19,11 +19,11 @@ to these to as:
       purchased directly from GlobalPlatform).
 
 git location
-^^^^^^^^^^^^
+************
 https://github.com/OP-TEE/optee_test
 
 License
-^^^^^^^
+*******
 .. todo::
 
     Joakim: Necessary to state that here? Changing the "License headers" page to
@@ -34,7 +34,7 @@ The client applications (``optee_test/host/*``) are provided under the
 provided under the `BSD 2-Clause`_.
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 At the moment you can **only** build the code in this git as part of the entire
 system, i.e. as a part of a full OP-TEE developer setup. So, please refer to
 the instructions at the :ref:`build` page to learn how to build a full OP-TEE
@@ -56,7 +56,7 @@ developer setup. Building purely standalone is **not** possible (*) because:
 .. _globalplatform_tests:
 
 Extended test (GlobalPlatform tests)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+************************************
 One can purchase the `GlobalPlatform Compliance Test suite`_ which comes with
 .xml files describing the tests and the Trusted Applications. The standard tests
 (xtest + TA's) that are free and open source can be extended to also include the
@@ -85,12 +85,12 @@ It makes use of the following environment variable:
 
 
 Run xtest
-^^^^^^^^^
+*********
 It's important to understand that you run ``xtest`` on the device itself, i.e.,
 this is nothing that you run on the host machine.
 
 xtest - default
-~~~~~~~~~~~~~~~
+===============
 The most simple case is to run the default configuration:
 
 .. code-block:: bash
@@ -98,7 +98,7 @@ The most simple case is to run the default configuration:
 	$ xtest
 
 xtest - all
-~~~~~~~~~~~
+===========
 This runs all tests within the standard xtest. Using the ``-l`` parameter you
 can tweak the amount of tests you will run. ``15`` is the most and ``0`` is the
 least.
@@ -108,7 +108,7 @@ least.
 	$ xtest -l 15
 
 xtest - single
-~~~~~~~~~~~~~~
+==============
 To run a single test case, just specify its numbers, for example:
 
 .. code-block:: bash
@@ -116,7 +116,7 @@ To run a single test case, just specify its numbers, for example:
 	$ xtest 1001
 
 xtest - family
-~~~~~~~~~~~~~~
+==============
 To run a family (``1xxx``, ``2xxx`` and so on), just specify its number prefixed
 with an underscore. This for example will run the 1xxx family.
 
@@ -125,7 +125,7 @@ with an underscore. This for example will run the 1xxx family.
 	$ xtest _1
 
 xtest - benchmark
-~~~~~~~~~~~~~~~~~
+=================
 To run the benchmark tests, run xtest like this:
 
 .. code-block:: bash
@@ -140,7 +140,7 @@ example:
 	$ xtest -t benchmark 2001
 
 xtest - regression
-~~~~~~~~~~~~~~~~~~
+==================
 To run the regression tests, run xtest like this:
 
 .. code-block:: bash
@@ -155,7 +155,7 @@ example:
 	$ xtest -t regression 2004
 
 xtest - aes-perf
-~~~~~~~~~~~~~~~~
+================
 This is benchmark test for AES and you run it like this:
 
 .. code-block:: bash
@@ -169,7 +169,7 @@ This is benchmark test for AES and you run it like this:
     ``$ xtest --aes-perf -h``
 
 xtest - sha-perf
-~~~~~~~~~~~~~~~~
+================
 This is benchmark test for SHA-xxx and you run it like this:
 
 .. code-block:: bash
@@ -189,7 +189,7 @@ This is benchmark test for SHA-xxx and you run it like this:
     Joakim: Should have a section about --install-ta also.
 
 Coding standards
-^^^^^^^^^^^^^^^^
+****************
 See :ref:`coding_standards`.
 
 .. _BSD 2-Clause: http://opensource.org/licenses/BSD-2-Clause

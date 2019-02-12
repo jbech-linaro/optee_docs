@@ -1,8 +1,8 @@
 .. _optee_client:
 
-============
+############
 optee_client
-============
+############
 optee_client git contains the source code for the TEE client library in Linux.
 This component provides the TEE Client API as defined by the GlobalPlatform TEE
 standard. It is distributed under the BSD 2-clause open source license.
@@ -14,11 +14,11 @@ the Trusted OS in secure world with miscellaneous features, such as file system
 access.
 
 git location
-^^^^^^^^^^^^
+************
 https://github.com/OP-TEE/optee_client
 
 License
-^^^^^^^
+*******
 .. todo::
 
     Joakim: Necessary to state that here? Changing the "License headers" page to
@@ -27,7 +27,7 @@ License
 The software is provided under the `BSD 2-Clause`_ license.
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 You can build the code in this git only or build it as part of the entire
 system, i.e. as a part of a full OP-TEE developer setup. For the latter, please
 refer to instructions at the :ref:`build` page. For standalone builds we
@@ -35,19 +35,19 @@ currently support building with both CMake as well as with regular GNU
 Makefiles.
 
 Configure the toolchain
-~~~~~~~~~~~~~~~~~~~~~~~
+=======================
 First step is to download and configure a toolchain, see the :ref:`toolchains`
 page for instructions.
 
 Clone optee_client
-~~~~~~~~~~~~~~~~~~
+==================
 .. code-block:: bash
 
     $ git clone https://github.com/OP-TEE/optee_client
     $ cd optee_client
 
 Build using CMake
-~~~~~~~~~~~~~~~~~
+=================
 .. code-block:: bash
 
     $ mkdir build
@@ -75,7 +75,7 @@ the location that you gave as an argument. In this example
     $ make install
 
 Build using GNU Make
-~~~~~~~~~~~~~~~~~~~~
+====================
 The ``Makefile`` is configured to use ``arm-linux-gnueabihf-`` by default.
 
 .. code-block:: bash
@@ -93,7 +93,7 @@ After this step the compiled binaries can be found in the sub-folder ``out``.
 
 
 Compiler flags
-^^^^^^^^^^^^^^
+**************
 To be able to see all commands when building you could build using following
 flags:
 
@@ -110,7 +110,7 @@ flags:
     $ make VERBOSE=1
 
 Coding standards
-^^^^^^^^^^^^^^^^
+****************
 See :ref:`coding_standards`.
 
 .. _BSD 2-Clause: http://opensource.org/licenses/BSD-2-Clause

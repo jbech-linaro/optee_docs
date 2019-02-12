@@ -1,8 +1,8 @@
 .. _optee_examples:
 
-==============
+##############
 optee_examples
-==============
+##############
 This document describes the sample applications that are included in the OP-TEE,
 that aim to showcase specific functionality and use cases.
 
@@ -11,7 +11,7 @@ For sake of simplicity, all OP-TEE example test application are prefixed with
 and can be found in separate directories.
 
 acipher
-^^^^^^^
+*******
 
     ================================ ========================================
     Application name                 UUID
@@ -23,7 +23,7 @@ Generates an RSA key pair of specified size and encrypts a supplied string with
 it using the GlobalPlatform TEE Internal Core API.
 
 aes
-^^^
+***
 
     ================================ ========================================
     Application name                 UUID
@@ -38,7 +38,7 @@ and ciphered data.
 .. _hello_world:
 
 hello_world
-^^^^^^^^^^^
+***********
 
     ================================ ========================================
     Application name                 UUID
@@ -50,7 +50,7 @@ This is a very simple Trusted Application to answer a hello command and
 incrementing an integer value.
 
 hotp
-^^^^
+****
 
     ================================ ========================================
     Application name                 UUID
@@ -61,7 +61,7 @@ hotp
 .. include:: hotp.rst
 
 random
-^^^^^^
+******
 
     ================================ ========================================
     Application name                 UUID
@@ -73,7 +73,7 @@ Generates a random UUID using capabilities of TEE API
 (``TEE_GenerateRandom()``).
 
 secure_storage
-^^^^^^^^^^^^^^
+**************
 
     ================================ ========================================
     Application name                 UUID

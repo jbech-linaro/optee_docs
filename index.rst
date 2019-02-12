@@ -1,5 +1,5 @@
 OP-TEE Documentation
-====================
+####################
 This is the official location for OP-TEE documentation.
 
 .. toctree::

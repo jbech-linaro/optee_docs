@@ -1,10 +1,10 @@
 .. _globalplatform_api:
 
-==================
+##################
 GlobalPlatform API
-==================
+##################
 Introduction
-^^^^^^^^^^^^
+************
 GlobalPlatform_ works across industries to identify, develop and publish
 specifications which facilitate the secure and interoperable deployment and
 management of multiple embedded applications on secure chip technology. OP-TEE
@@ -15,7 +15,7 @@ and TEE Internal Core API Specification v1.1.2 (GPD_SPE_010).
 .. _tee_client_api:
 
 TEE Client API
-^^^^^^^^^^^^^^
+**************
 The TEE Client API describes and defines how a client running in a rich
 operating environment (REE) should communicate with the TEE. To identify a
 Trusted Application (TA) to be used, the client provides an UUID_. All TA's
@@ -23,14 +23,14 @@ exposes one or several functions. Those functions corresponds to a so called
 ``commandID`` which also is sent by the client.
 
 TEE Contexts
-~~~~~~~~~~~~
+============
 The TEE Context is used for creating a logical connection between the client and
 the TEE. The context must be initialized before the TEE Session can be created.
 When the client has completed a jobs running in secure world, it should finalize
 the context and thereby also releasing resources.
 
 TEE Sessions
-~~~~~~~~~~~~
+============
 Sessions are used to create logical connections between a client and a specific
 Trusted Application. When the session has been established the client have a
 opened up the communication channel towards the specified Trusted Application
@@ -39,7 +39,7 @@ can start to exchange data.
 
 
 TEE Client API example / usage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==============================
 Below you will find the main functions as defined by GlobalPlatform and which
 are used in the communication between the client and the TEE.
 
@@ -90,7 +90,7 @@ API** in the GlobalPlatform TEE Client API Specification_ v1.0.
 .. _tee_internal_core_api:
 
 TEE Internal Core API
-^^^^^^^^^^^^^^^^^^^^^
+*********************
 The Internal Core API is the API that is exposed to the Trusted Applications
 running in the secure world. The TEE Internal API consists of four major parts:
 
@@ -100,7 +100,7 @@ running in the secure world. The TEE Internal API consists of four major parts:
     4. Arithmetical API
 
 Examples / usage
-~~~~~~~~~~~~~~~~
+================
 Calling the Internal Core API is done in the same way as described above using
 Client API. The best place to find information how this should be done is in the
 TEE Internal Core API Specification_ v1.1.2 which contains many examples of how
@@ -111,12 +111,12 @@ optee_examples_ git.
 .. _extensions:
 
 Extensions
-^^^^^^^^^^
+**********
 In addition to what is stated in :ref:`tee_internal_core_api`, there are some
 non-official extensions in OP-TEE.
 
 Cache Maintenance Support
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 Following functions have been introduced in order to operate with cache:
 
 .. code-block:: c
@@ -161,7 +161,7 @@ returned:
 .. _concat_kdf:
 
 Concat KDF
-~~~~~~~~~~
+==========
 Support for the Concatenation Key Derivation Function (Concat KDF) according to
 `SP 800-56A`_ (*Recommendation for Pair-Wise Key Establishment Schemes Using
 Discrete Logarithm Cryptography*) can be found in OP-TEE. You may disable this
@@ -364,7 +364,7 @@ The following entries shall be added to **Table 6-11**:
 .. _hkdf:
 
 HKDF
-~~~~
+====
 OP-TEE implements the *HMAC-based Extract-and-Expand Key Derivation Function
 (HKDF)* as specified in `RFC 5869`_. This file documents the extensions to the
 :ref:`tee_internal_core_api` v1.1 that were implemented to support this
@@ -563,7 +563,7 @@ The following entries shall be added to **Table 6-11**:
 .. _pbkdf2:
 
 PBKDF2
-~~~~~~
+======
 This document describes the OP-TEE implementation of the key derivation
 function, *PBKDF2* as specified in `RFC 2898`_ section 5.2. This RFC is a
 republication of PKCS #5 v2.0 from RSA Laboratories' Public-Key Cryptography

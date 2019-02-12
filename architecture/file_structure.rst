@@ -6,11 +6,11 @@
 .. _file_structure:
 
 File structure
-==============
+##############
 This page describes what different folders in :ref:`optee_os` contains.
 
 Top level directories
-^^^^^^^^^^^^^^^^^^^^^
+*********************
 .. list-table:: Top level directories
     :header-rows: 1
     :widths: 1 5
@@ -41,7 +41,7 @@ Top level directories
         ``O=...`` on the command line
 
 /core
-^^^^^
+*****
 .. list-table:: Structure of /core
     :header-rows: 1
     :widths: 1 5
@@ -62,7 +62,7 @@ Top level directories
       - Generic TEE files
 
 /core/arch
-^^^^^^^^^^
+**********
 .. list-table:: Structure of /core/arch
     :header-rows: 1
     :widths: 1 5
@@ -78,7 +78,7 @@ Top level directories
         process, only used for some development
 
 /core/arch/arm
-^^^^^^^^^^^^^^
+**************
 .. list-table:: Structure of /core/arch/arm
     :header-rows: 1
     :widths: 1 5
@@ -106,7 +106,7 @@ Top level directories
       - Specific files for the ``foo`` platform
 
 /core/arch/arm/include
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
 .. list-table:: Structure of /core/arch/arm/include
     :header-rows: 1
     :widths: 1 5
@@ -130,7 +130,7 @@ Top level directories
       - Include files exposing API for Secure Monitor
 
 /core/lib/lib{crypto,sla}
-^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************
 .. list-table:: Structure of /core/lib/lib{crypto,sla}
     :header-rows: 1
     :widths: 1 5
@@ -145,7 +145,7 @@ Top level directories
       - Include files exposing the API of the library
 
 /lib/libutils
-^^^^^^^^^^^^^
+*************
 .. list-table:: Structure of /lib/libutils
     :header-rows: 1
     :widths: 1 5

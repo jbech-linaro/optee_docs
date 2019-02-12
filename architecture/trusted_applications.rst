@@ -1,8 +1,8 @@
 .. _trusted_applications:
 
-====================
+####################
 Trusted Applications
-====================
+####################
 There are two ways to implement Trusted Applications (TAs), Pseudo TAs and user
 mode TAs. User mode TAs are full featured Trusted Applications as specified by
 the :ref:`globalplatform_api` TEE specifications, these are simply the ones
@@ -12,7 +12,7 @@ cases this is the preferred type of TA to write and use.
 .. _pta:
 
 Pseudo Trusted Applications
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***************************
 These are implemented directly to the OP-TEE core tree in, e.g.,
 ``core/arch/arm/pta`` and are built along with and statically built into the
 OP-TEE core blob.
@@ -41,7 +41,7 @@ that to the ``sub.mk`` in the same directory.
 .. _user_mode_ta:
 
 User Mode Trusted Applications
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+******************************
 User Mode Trusted Applications are loaded (mapped into memory) by OP-TEE core in
 the Secure World when something in Rich Execution Environment (REE) wants to
 talk to that particular application UUID. They run at a lower CPU privilege
@@ -53,14 +53,14 @@ as specified by the GlobalPlatform TEE specifications. There are several types
 of user mode TAs, which differ by the way they are stored.
 
 TA locations
-^^^^^^^^^^^^
+************
 Plain TAs (user mode) can reside and be loaded from various places. There are
 three ways currently supported in OP-TEE.
 
 .. _early_ta:
 
 Early TA
-~~~~~~~~
+========
 The so-called early TAs are virtually identical to the REE FS TAs, but instead
 of being loaded from the Normal World file system, they are linked into a
 special data section in the TEE core blob. Therefore, they are available even
@@ -70,7 +70,7 @@ more details in the `early TA commit`_.
 .. _ree_fs_ta:
 
 REE filesystem TA
-~~~~~~~~~~~~~~~~~
+=================
 They consist of a cleartext signed ELF_ file, named from the UUID of the TA and
 the suffix ``.ta``. They are built separately from the OP-TEE core boot-time
 blob, although when they are built they use the same build system, and are
@@ -84,7 +84,7 @@ encrypted.
 .. _secure_storage_ta:
 
 Secure Storage TA
-~~~~~~~~~~~~~~~~~
+=================
 These are stored in secure storage. The meta data is stored in a database of all
 installed TAs and the actual binary is stored encrypted and integrity protected
 as a separate file in the untrusted REE filesystem (flash). Before these TAs can
@@ -102,17 +102,17 @@ with the command:
 .. _ta_properties:
 
 TA Properties
-^^^^^^^^^^^^^
+*************
 This section give a more in depth description of the TA properties (see
 :ref:`build_trusted_applications` also).
 
 1. GlobalPlatform properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 Standard TA properties must be defined through property flag in macro
 ``TA_FLAGS`` in ``user_ta_header_defines.h``
 
 1.1 Single Instance
-~~~~~~~~~~~~~~~~~~~
+===================
 ``"gpd.ta.singleInstance"`` is a boolean property of the TA. This property
 defines if one instance of the TA must be created and will receive all open
 session request, or if a new specific TA instance must be created for each
@@ -122,7 +122,7 @@ to configuration of this property. The boolean property is set to ``true`` if
 property is set to ``false``.
 
 1.2 Multi-session
-~~~~~~~~~~~~~~~~~
+=================
 ``"gpd.ta.multiSession"`` is a boolean property of the TA. This property defines
 if the TA instance can handle several sessions. If disabled, TA instance support
 only one session. In such case, if the TA already has a opened session, any open
@@ -137,7 +137,7 @@ The boolean property is set to ``true`` if ``TA_FLAGS`` sets bit
 ``TA_FLAG_MULTI_SESSION``, otherwise the boolean property is set to ``false``.
 
 1.3 Keep Alive
-~~~~~~~~~~~~~~
+==============
 ``"gpd.ta.instanceKeepAlive"`` is a boolean property of the TA. This property
 defines if the TA instance created must be destroyed or not when all sessions
 opened towards the TA are closed. If the property is enabled, TA instance, once
@@ -154,7 +154,7 @@ property. The boolean property is set to ``true`` if ``TA_FLAGS`` sets bit
 ``false``.
 
 1.4 Heap Size
-~~~~~~~~~~~~~
+=============
 ``"gpd.ta.dataSize"`` is a 32bit integer property of the TA. This property
 defines the size in bytes of the TA allocation pool, in which ``TEE_Malloc()``
 and friends allocate memory. The value of the property must be defined by the
@@ -162,23 +162,23 @@ macro ``TA_DATA_SIZE`` in ``user_ta_header_defines.h`` (see
 :ref:`build_ta_properties`).
 
 1.5 Stack Size
-~~~~~~~~~~~~~~
+==============
 ``"gpd.ta.stackSize"`` is a 32bit integer property of the TA. This property
 defines the size in bytes of the stack used for TA execution. The value of the
 property must be defined by the macro ``TA_STACK_SIZE`` in
 ``user_ta_header_defines.h`` (see :ref:`build_ta_properties`).
 
 2. Property extensions
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 2.1 User Mode Flag
-~~~~~~~~~~~~~~~~~~
+==================
 ``TA_FLAG_USER_MODE`` is a bit flag supported by ``TA_FLAGS``. This property
 flag is currently meaningless in OP-TEE. It may be set or not without impact on
 TA execution. All OP-TEE TAs are executed in user mode/level. Because of this we
 **do not** recommend to use this flag.
 
 2.2 DDR Flag
-~~~~~~~~~~~~
+============
 ``TA_FLAG_EXEC_DDR`` is a bit flag supported by ``TA_FLAGS``. This property flag
 is currently meaningless in OP-TEE. Nevertheless it shall be set. It is a legacy
 property flag that aimed at targeting location for the TA execution, internal
@@ -191,7 +191,7 @@ RAM or external DDR. Therefore all TAs must set ``TA_FLAG_EXEC_DDR`` in
     This flag will soon be deprecated.
 
 2.3 Secure Data Path Flag
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 ``TA_FLAG_SECURE_DATA_PATH`` is a bit flag supported by ``TA_FLAGS``. This
 property flag claims the secure data support from the OP-TEE OS for the TA.
 Refer to the OP-TEE OS for secure data path support. TAs that do not set
@@ -200,7 +200,7 @@ to handle memory reference invocation parameters that relate to secure data path
 buffers.
 
 2.4 Remap Support Flag
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 ``TA_FLAG_REMAP_SUPPORT`` is a bit flag supported by ``TA_FLAGS``. This property
 flag is currently meaningless in OP-TEE and therefore we recommend to not use
 this flag.
@@ -210,7 +210,7 @@ this flag.
     This flag will soon be deprecated.
 
 2.5 Cache maintenance Flag
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 ``TA_FLAG_CACHE_MAINTENANCE`` is a bit flag supported by ``TA_FLAGS``. This
 property flag claims access to the cache maintenance API for the TA:
 ``TEE_CacheXxxx()``. Refer to the OP-TEE to check if cache API support is

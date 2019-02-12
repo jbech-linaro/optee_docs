@@ -1,12 +1,12 @@
 .. _hikey:
 
-=========
+#########
 HiKey 620
-=========
+#########
 The instructions here will tell how to run OP-TEE on `HiKey 620`_.
 
 Multiple sources for HiKey and OP-TEE instructions?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***************************************************
 First you must understand that the HiKey project as such is led by the 96Boards
 project. So, if you **aren't** interested in running OP-TEE on the device, then
 you should stop reading here and instead have a look at the `official HiKey
@@ -33,7 +33,7 @@ I.e, for OP-TEE this should be considered as a well maintained guide with a
 fully working setup.
 
 Supported HiKey boards
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
 There are four different versions of the HiKey board.
 
     +-------+--------------+--------+-------+-------------------+
@@ -50,7 +50,7 @@ All of them works, but where differences apply we have default configurations
 that works for the LeMaker 8GB eMMC versions.
 
 UART adapter board
-^^^^^^^^^^^^^^^^^^
+******************
 Everything is configured to use the `96Boards UART Adapter Board`_. The UART is
 by default configured to ``UART3``. If you don't have any UART adapter board and
 instead would like to use ``UART0``, then you need to change that before
@@ -58,13 +58,13 @@ building. See ``CFG_NW_CONSOLE_UART`` and ``CFG_NW_CONSOLE_UART`` in
 `hikey.mk`_.
 
 Build instructions
-^^^^^^^^^^^^^^^^^^
+******************
 Just follow the ":ref:`get_and_build_the_solution`" as described in
 :ref:`build`. The ``make flash`` step will tell you how you should set the
 jumpers on the board.
 
 Recovery
-^^^^^^^^
+********
 If you manage to corrupt the device, so that fastboot doesn't load automatically
 on boot, then you will need to run the recovery procedure. Basically what you
 will need to do is use another make target and change some jumpers. All that is

@@ -1,8 +1,8 @@
 .. _disclosure_policy:
 
-=================
+#################
 Disclosure policy
-=================
+#################
 When a vulnerability has been reported (see :ref:`vulnerability_reporting`) to
 the :ref:`core_team`, it is up to them to implement mitigations and fixes as
 well as report back to stakeholders in a responsible way. This page describes
@@ -14,7 +14,7 @@ the responsible disclosure policy that applies to the OP-TEE project.
     companies who are members of Linaro.
 
 Rules
-^^^^^
+*****
 To have some kind of ground to stand on we have defined a set of rules and
 conditions that applies both when it comes to being a taker of information as
 well as being reporter of security issues. It should be noted that it is hard to
@@ -30,7 +30,7 @@ general, we strive and try to do our best to follow the rules etc that have been
 defined on this particular page.
 
 Receiving information
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 The one receiving information about and fixes related to OP-TEE security
 vulnerabilities must follow these rules:
 
@@ -48,7 +48,7 @@ vulnerabilities must follow these rules:
 .. _reporting_issues:
 
 Reporting issues
-~~~~~~~~~~~~~~~~
+================
 The one reporting security vulnerabilities to the core team and Linaro are asked
 to do it under the conditions mentioned below. It might seem like a long list,
 but we hope that it won't scare people away from reporting issues. It's mostly
@@ -92,7 +92,7 @@ between them and the reporter.
 
 
 Trusted Stakeholders
-^^^^^^^^^^^^^^^^^^^^
+********************
 The core team keeps track of companies and maintainers who are considered as
 trustworthy OP-TEE users. This is a vetted list and people from companies can
 only be added to that list after first talking to the core team. In short what
@@ -112,7 +112,7 @@ is required to be added to that list is:
     reason to do so.
 
 Disclosure deadline
-^^^^^^^^^^^^^^^^^^^
+*******************
 By default we are following the industry standard with 90-days disclosure
 deadline. This applies both when **we** find security issues that needs to be
 fixed in the upstream project, as well as when we are the ones reporting issues
@@ -130,7 +130,7 @@ they must inform the core team and Linaro about it as soon as possible and then
 we will come up with an alternate plan.
 
 0day exploits
-~~~~~~~~~~~~~
+=============
 This is a previously unknown and unpatched vulnerability which is been used
 actively in the wild. As a consequence of that we believe that 0day_ exploits
 require a much more urgent action. I.e., a fix or some kind of mitigation that
@@ -139,7 +139,7 @@ fixes and mitigations are within 14 days from the day when we learned about the
 0day exploit (full weeks, including weekends).
 
 Issue process
-^^^^^^^^^^^^^
+*************
 For **regular** security issues (non 0day) we follow the flow chart below. Note
 that the orange path is when it is a **low** (and maybe medium) severity issue
 we are dealing with, so that is a special case with an alternate path.
@@ -211,7 +211,7 @@ For **0day** exploits we follow this flow chart:
 
 
 Recognition
-^^^^^^^^^^^
+***********
 Once the disclosure deadline has passed and information and mitigations will go
 public we want to give credits to the ones finding, reporting and fixing the
 issues. Typically that is given in two ways. One is in textual form at our
@@ -241,13 +241,13 @@ reason. A patch would typically look like this:
     Suggested-by: Jane Doe <jane.doe@notable-hackers.com>
 
 CVE
-^^^
+***
 If there is a need to request a CVE identifier, then the `Distributed Weakness
 Filing Project`_ should be used. At that page you will find the current link to
 the DWF project.
 
 Severity scoring
-^^^^^^^^^^^^^^^^
+****************
 When deciding the severity for a vulnerability we start out by doing a scoring
 similar to the DREAD_ scoring system, but tweaked for OP-TEE purposes. This
 mainly serves as a guide to get some kind of indication of the severity. The
@@ -424,7 +424,7 @@ This should answer how easy it is to discover the threat.
 .. _severity_table:
 
 Severity table
-~~~~~~~~~~~~~~
+==============
 Based on the DREAD score, we get some kind of indication of the severity. In the
 table below you can see how we are mapping things between a DREAD score and
 severity.
@@ -469,7 +469,7 @@ severity.
 
 
 Example
-~~~~~~~
+=======
 To have a better understanding how this would look like in practice, let's show
 a couple of examples.
 

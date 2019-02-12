@@ -1,6 +1,6 @@
-=============
+#############
 Build and run
-=============
+#############
 
 In this part of the documentation you will find information telling you how to
 build OP-TEE as a whole developer setup or as individual components. Likewise it

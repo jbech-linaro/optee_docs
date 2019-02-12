@@ -1,8 +1,8 @@
 .. _optee_gits:
 
-===========
+###########
 OP-TEE gits
-===========
+###########
 
 These are the gits considered as the main OP-TEE gits which together makes up
 the entire TEE solution.

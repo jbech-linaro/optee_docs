@@ -1,7 +1,7 @@
 .. _coding_standards:
 
 Coding standards
-================
+################
 
 In this project we are trying to adhere to the same coding convention as used
 in the Linux kernel (see CodingStyle_). We achieve this by running

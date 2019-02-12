@@ -1,6 +1,6 @@
-============
+############
 About OP-TEE
-============
+############
 OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a
 non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone
 technology. OP-TEE implements :ref:`tee_internal_core_api` v1.1.x which is the
@@ -32,7 +32,7 @@ The main design goals for OP-TEE are:
 
 
 OP-TEE components
-^^^^^^^^^^^^^^^^^
+*****************
 OP-TEE is divided in various components:
 
     - A secure privileged layer, executing at Arm secure PL-1 (v7-A) or EL-1
@@ -56,7 +56,7 @@ These components are available from several git repositories. The main ones are
 :ref:`optee_examples` and the :ref:`linux_kernel`.
 
 History
-^^^^^^^
+*******
 OP-TEE was initially developed by ST-Ericsson (and later on by
 STMicroelectronics), but this was before OP-TEE got the name "OP-TEE" and was
 turned into an open source project. Back then it was a closed source and a

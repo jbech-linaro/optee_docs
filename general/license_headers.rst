@@ -4,15 +4,15 @@
 
 .. _license_headers:
 
-===============
+###############
 License headers
-===============
+###############
 This document defines the format of the copyright and license headers in OP-TEE
 source files. Such headers shall comply with the rules described here, which are
 compatible with the rules adopted by the Linux kernel community.
 
 New source files
-^^^^^^^^^^^^^^^^
+****************
 
     - **Rule 1.1** Shall contain exactly one SPDX license identifier, which can
       express a single or multiple licenses (refer to SPDX_ for syntax details).
@@ -37,7 +37,7 @@ Note that files imported from external projects are not new files. The rules for
 pre-existing files (below) apply.
 
 Pre-existing or imported files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+******************************
 
     - **Rule 2.1** SPDX license identifiers shall be added according to the
       license notice(s) in the file and the rules above (1.1 and 1.2*)
