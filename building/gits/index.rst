@@ -13,6 +13,7 @@ the entire TEE solution.
    build
    manifest
    optee_client
+   optee_docs
    optee_examples/optee_examples
    optee_os
    optee_test
