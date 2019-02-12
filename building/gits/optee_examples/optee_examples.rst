@@ -178,15 +178,9 @@ secure_storage
 A Trusted Application to read/write raw data into the OP-TEE secure storage
 using the GlobalPlatform TEE Internal Core API.
 
-
-.. todo::
-
-    How to build a Trusted Application
-    [TA basics] documentation presents the basics for  implementing and building
-    an OP-TEE trusted application.
-
-    One can also refer to the examples provided: source files and make scripts.
-
-    [TA basics]:	./docs/TA_basics.md
+Further reading
+***************
+Some additional information about how to write and compile Trusted Applications
+can be found at the :ref:`build_trusted_applications` page.
 
 .. _BSD 2-Clause: http://opensource.org/licenses/BSD-2-Clause

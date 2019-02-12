@@ -12,6 +12,7 @@ the entire TEE solution.
 
    build
    manifest
+   optee_benchmark
    optee_client
    optee_docs
    optee_examples/optee_examples

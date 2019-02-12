@@ -2,7 +2,6 @@
 
 Benchmark framework
 ###################
-
 Due to its nature, OP-TEE is being a solution spanning over several
 architectural layers, where each layer includes its own complex parts. For
 further optimizations of performance, there is a need of tool which will
@@ -25,7 +24,6 @@ Implementation details
 
 Design overview
 ===============
-
 Benchmark framework consists of such components:
 
     1. **Benchmark Client Application (CA)**: a dedicated client application,
@@ -57,7 +55,6 @@ is allocated/registered.
 
 Timestamp source
 ================
-
 Arm Performance Monitor Units are used as the main source of timestamp values.
 The reason why this technology was chosen is that it is supported on all
 Armv7-A/Armv8-A cores. Besides it can provide precise pre-cpu cycle counter
@@ -77,38 +74,13 @@ about:
 
 Call sequence diagram
 ===================== 
-
 .. image:: ../images/benchmark/benchmark_sequence.png
 
 .. For benchmark call sequence diagram use http://mscgen.js.org and
    benchmark_sequence.msc source file
 
-Running benchmarks
-******************
-
-Benchmark application usage
-===========================
-
-Before using Benchmark framework, OP-TEE should be rebuild with
-``CFG_TEE_BENCHMARK`` flag enabled.
-
-.. code-block:: bash
-
-    $ make CFG_TEE_BENCHMARK=y
-
-Then, regular CA and its params should be by-passed to optee_benchmark_ CA.
-
-.. code-block:: bash
-
-    $ benchmark client_app [client_app params]
-
-
-When client_app finishes its execution, optee_benchmark_ will generate
-``<client_app>.ts`` timestamp data file in the same directory, where CA is
-stored.
-
 Adding custom timestamps
-========================
+************************
 
 Currently, timestamping is done only for ``InvokeCommand`` calls, but it's also
 possible to choose custom places in the supported OP-TEE layers. To add
@@ -125,10 +97,16 @@ timestamp storing command to custom c source file:
     2. Invoke ``bm_timestamp()`` (for linux kmod use ``optee_bm_timestamp()``)
        in the function, where you want to put timestamp from.
 
-Analyzing results
-=================
+.. todo::
 
-Will be added soon.
+    Joakim: Igor's planned tool should go here.
+    Analyzing results
+    =================
+    Will be added soon.
+
+Build and run benchmark
+***********************
+Please see the instructions available at :ref:`optee_benchmark`.
 
 
 Limitations and further steps
@@ -146,6 +124,3 @@ Limitations and further steps
       session.
 
     * Timestamping within interrupt context in the OP-TEE OS Core.
-
-
-.. _optee_benchmark: https://github.com/linaro-swg/optee_benchmark
