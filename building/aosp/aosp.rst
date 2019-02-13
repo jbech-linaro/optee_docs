@@ -96,18 +96,33 @@ there is no need trying to flash the device.
 
 .. hint::
 
-    You can add ``-squashfs`` to ``build.sh`` option to make ``system.img`` size
-    smaller, but this will make ``/system`` read-only, so you won't be able to push
-    files to it.
+    You can add the ``-squashfs`` option to ``build.sh`` option to make
+    ``system.img`` size smaller, but this will make ``/system`` read-only, so
+    you won't be able to push files to it.
 
-Other existing files are for internal development purposes ONLY and **NOT
-SUPPORTED**!
+For older releases (other versions of relatively stable builds), use
+below instead of ``./sync-p.sh``.
+
+.. code-block:: bash
+
+    $ ./wrappers/sync.sh -v p -t <hikey|hikey960> \
+            -bm <name of a pinned manifest file in archive/> \
+            2>&1 |tee logs/sync-p.log
+
+E.g.
+    .. code-block:: bash
+
+        $ ./wrappers/sync.sh -v p -t hikey \
+            -bm pinned-manifest-stable_yvr18.xml \
+            2>&1 |tee logs/sync-p.log
+
+Other existing files are for internal development purposes ONLY and
+**NOT SUPPORTED**!
 
 Flashing the image
 ******************
 The instructions for flashing the image can be found in detail under
-``device/linaro/hikey{960}/install/README`` in the tree (available after running
-the sync scripts).
+``device/linaro/hikey/installer/hikey{960}/README`` in the tree.
 
     1. Set jumpers/switches ``1-2`` and ``3-4``, and unset ``5-6``.
     2. Reset the board. After that, invoke:
@@ -157,7 +172,7 @@ please see :ref:`optee_test_run_xtest` at :ref:`optee_test`.
 
 Running VTS Gtest unit for Gatekeeper and Keymaster (Optional)
 **************************************************************
-On the device after going into the ``adb shell``, run:
+On the device after going into the command prompt, run:
 
 .. code-block:: bash
 
