@@ -122,7 +122,8 @@ building the OP-TEE packages.
 
 Cache Maintenance Support
 =========================
-Following functions have been introduced in order to operate with cache:
+Following functions have been introduced in order to allow Trusted Applications
+to operate with the data cache:
 
 .. code-block:: c
 
