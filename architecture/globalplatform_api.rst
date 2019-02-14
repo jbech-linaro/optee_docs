@@ -158,6 +158,42 @@ returned:
     - The memory is **not** user space memory.
 
 
+.. _rsassa_na1:
+
+PKCS#1 v1.5 RSASSA without hash OID
+===================================
+This extension adds identifer``TEE_ALG_RSASSA_PKCS1_V1_5`` to allow signing and
+verifying messages with RSASSA-PKCS1-v1_5, in `RFC 3447`_, without including the
+OID of the hash in the signature. You may disable this extension by setting the
+following configuration variable in ``conf.mk``:
+
+.. code-block:: make
+
+    CFG_CRYPTO_RSASSA_NA1 := n
+
+The TEE Internal Core API was extended with a new algorithm descriptor.
+
+.. list-table::
+    :widths: 10 60
+    :header-rows: 1
+
+    * - Algorithm
+      - Possible Modes
+
+    * - TEE_ALG_RSASSA_PKCS1_V1_5
+      - TEE_MODE_SIGN / TEE_MODE_VERIFY
+
+.. list-table::
+    :widths: 10 60
+    :header-rows: 1
+
+    * - Algorithm
+      - Identifier
+
+    * - TEE_ALG_RSASSA_PKCS1_V1_5
+      - 0xF0000830
+
+
 .. _concat_kdf:
 
 Concat KDF
@@ -740,6 +776,7 @@ The following entries shall be added to **Table 6-11**:
 .. _optee_examples: https://github.com/linaro-swg/optee_examples
 .. _TZC-400: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0504c/index.html
 .. _RFC 2898: https://www.ietf.org/rfc/rfc2898.txt
+.. _RFC 3447: https://tools.ietf.org/html/rfc3447#section-8.2
 .. _RFC 5869: https://tools.ietf.org/html/rfc5869
 .. _Specification: https://globalplatform.org/specs-library/?filter-committee=tee
 .. _SP 800-56A: http://csrc.nist.gov/publications/nistpubs/800-56A/SP800-56A_Revision1_Mar08-2007.pdf
