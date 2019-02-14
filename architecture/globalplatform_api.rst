@@ -115,6 +115,11 @@ Extensions
 In addition to what is stated in :ref:`tee_internal_core_api`, there are some
 non-official extensions in OP-TEE.
 
+Trusted Applications should include header file ``tee_api_defines_extensions.h``
+to import the definitions of the extensions. For each extension, a configuration
+directive prefixed ``CFG_`` allows one to disable support for the extension when
+building the OP-TEE packages.
+
 Cache Maintenance Support
 =========================
 Following functions have been introduced in order to operate with cache:
@@ -156,6 +161,14 @@ returned:
     - The memory range has not the write access, that is
       ``TEE_MEMORY_ACCESS_WRITE`` is not set.
     - The memory is **not** user space memory.
+
+
+You may disable this extension by setting the following configuration variable
+in ``conf.mk``:
+
+.. code-block:: make
+
+    CFG_CACHE_API := n
 
 
 .. _rsassa_na1:
