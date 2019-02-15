@@ -18,27 +18,11 @@ https://github.com/OP-TEE/optee_docs
 
 Install Sphinx
 **************
-Before doing anything else, first install and configure Sphinx.
+Before doing anything else, first install Sphinx and the dependencies.
 
 .. code-block:: bash
 
-    $ pip3 install --user sphinx sphinx_rtd_theme
-
-This will put a couple of new binaries under ``$HOME/.local/bin``. These are
-normally not in your ``$PATH``. So export you have to use the full path or
-export it temporary of put in an init file (like ``.bashrc`` for example). In
-this example we are just exporting it temporarily.
-
-.. code-block:: bash
-
-    $ export PATH=$PATH:$HOME/.local/bin
-
-Since we are also using Graphviz_ to generate some diagrams, we also need to
-install that.
-
-.. code-block:: bash
-
-    $ sudo apt install graphviz
+    $ sudo apt install graphviz python3-sphinx python3-sphinx-rtd-theme
 
 Build optee_docs
 ****************
@@ -148,5 +132,4 @@ subsections etc, those are:
     - ", for paragraphs
 
 
-.. _Graphviz: https://www.graphviz.org
 .. _Sphinx: http://www.sphinx-doc.org
