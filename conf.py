@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'OP-TEE'
+project = 'OP-TEE documentation'
 copyright = '2018, Linaro'
 author = 'Linaro'
 

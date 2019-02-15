@@ -1,5 +1,5 @@
-Architecture documentation
-##########################
+Architecture
+############
 
 .. toctree::
    :maxdepth: 2
