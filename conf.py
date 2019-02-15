@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'OP-TEE documentation'
-copyright = '2018, Linaro'
+copyright = '2019 Linaro'
 author = 'Linaro'
 
 # The short X.Y version
