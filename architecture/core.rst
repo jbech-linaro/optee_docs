@@ -490,6 +490,14 @@ not "unpaged" or "init" becomes "paged".
 
 Partitioning of the binary
 ==========================
+.. note::
+    The struct definitions provided in this section are explicitly covered by
+    the following dual license:
+
+    .. code-block:: none
+
+        SPDX-License-Identifier: (BSD-2-Clause OR GPL-2.0)
+
 The binary is partitioned into four parts as:
 
 
