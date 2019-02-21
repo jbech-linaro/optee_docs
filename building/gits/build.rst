@@ -67,6 +67,7 @@ OpenEmbedded we have no guide ready, however there are teams in Linaro who are
 building OP-TEE using OpenEmbedded. If you want to get in contact with them,
 please reach out to us (see :ref:`contact`).
 
+.. _optee_developer_setup:
 
 Platforms supported by build.git
 ********************************

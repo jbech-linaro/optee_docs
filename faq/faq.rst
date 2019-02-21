@@ -130,11 +130,12 @@ Q: I got build errors running latest, why?
 ==========================================
     - What did you try to build? Only :ref:`optee_os`? A full OP-TEE developer
       setup using QEMU, HiKey, RPi3, Juno using repo? AOSP? OpenEmbedded? What
-      we build on daily basis are the [OP-TEE repo setups], but other builds
-      like AOSP and OpenEmbedded are builds that we try from time to time, but
-      not very often within Security Working Group. Having that said there are
-      other teams in Linaro working with such builds, but they most often base
-      their builds on OP-TEE stable releases.
+      we build on daily basis are the OP-TEE developer setups (see
+      :ref:`optee_developer_setup`) , but other builds like AOSP and
+      OpenEmbedded are builds that we try from time to time, but not very often
+      within Security Working Group. Having that said there are other teams in
+      Linaro working with such builds, but they most often base their builds on
+      OP-TEE stable releases.
 
     - By running latest instead of stable also comes with a risk of getting
       build errors due to version and/or interdependency skew which can result
