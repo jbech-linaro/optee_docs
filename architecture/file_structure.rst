@@ -52,6 +52,9 @@ Top level directories
     * - /arch
       - Architecture and platform specific files
 
+    * - /include
+      - Header files of resources exported by the core
+
     * - /lib
       - Generic libraries that are likely to be replaced in a final product
 
@@ -73,10 +76,6 @@ Top level directories
     * - /arm
       - ARMv7 and Aarch32 specific architecture and platform specific files
 
-    * - /user_mode
-      - Linux used space specific files when debugging TEE Core as a user space
-        process, only used for some development
-
 /core/arch/arm
 **************
 .. list-table:: Structure of /core/arch/arm
@@ -85,6 +84,9 @@ Top level directories
 
     * - Directory
       - Description
+
+    * - /dts
+      - Device tree source files
 
     * - /include
       - Include files used in rest of TEE core but not in any supporting
@@ -128,6 +130,21 @@ Top level directories
 
     * - /sm
       - Include files exposing API for Secure Monitor
+
+/core/include
+*************************
+.. list-table:: Structure of /core/include
+    :header-rows: 1
+    :widths: 1 5
+
+    * - Directory
+      - Description
+
+    * - /drivers
+      - Include files exposing API for /core/drivers files
+
+    * - /dt-bindings
+      - Include files for the device tree bindings
 
 /core/lib/lib{crypto,sla}
 *************************

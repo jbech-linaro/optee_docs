@@ -6,6 +6,7 @@ Architecture
 
    core
    Crypto <crypto>
+   device_tree
    file_structure
    globalplatform_api
    libraries
