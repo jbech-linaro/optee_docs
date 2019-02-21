@@ -14,3 +14,4 @@ Architecture
    secure_boot
    secure_storage
    trusted_applications
+   virtualization
