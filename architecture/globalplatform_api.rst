@@ -26,22 +26,22 @@ TEE Contexts
 ============
 The TEE Context is used for creating a logical connection between the client and
 the TEE. The context must be initialized before the TEE Session can be created.
-When the client has completed a jobs running in secure world, it should finalize
-the context and thereby also releasing resources.
+When the client has completed a job running in secure world, it should finalize
+the context and thereby also release resources.
 
 TEE Sessions
 ============
 Sessions are used to create logical connections between a client and a specific
-Trusted Application. When the session has been established the client have a
-opened up the communication channel towards the specified Trusted Application
+Trusted Application. When the session has been established the client has opened
+up the communication channel towards the specified Trusted Application
 identified by the ``UUID``. At this stage the client and the Trusted Application
 can start to exchange data.
 
 
 TEE Client API example / usage
 ==============================
-Below you will find the main functions as defined by GlobalPlatform and which
-are used in the communication between the client and the TEE.
+Below you will find the main functions as defined by GlobalPlatform and are used
+in the communication between the client and the TEE.
 
 .. code-block:: c
 
@@ -81,7 +81,7 @@ In principle the commands are called in this order:
     TEEC_FinalizeContext(...)
 
 It is not uncommon that ``TEEC_InvokeCommand(...)`` is called several times in
-row when the session has been established.
+a row when the session has been established.
 
 For a complete example, please see chapter **5.2 Example 1: Using the TEE Client
 API** in the GlobalPlatform TEE Client API Specification_ v1.0.
