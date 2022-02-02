@@ -36,12 +36,12 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Atmel ATSAMA5D2-XULT Board <http://www.atmel.com/tools/atsama5d2-xult.aspx>`_
      - ``PLATFORM=sam``
      - Yes
-     - Yes
+     - No (v3.7.0)
 
    * - `Broadcom ns3 <https://www.broadcom.com/products/ethernet-connectivity/smartnic/bcm58800>`_
      - ``PLATFORM=bcm-ns3``
      - No
-     - Yes
+     - No (v3.5.0)
 
    * - `DeveloperBox (Socionext Synquacer SC2A11) <https://www.96boards.org/product/developerbox/>`_
      - ``PLATFORM=synquacer``
@@ -51,7 +51,7 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `FSL ls1021a <http://www.freescale.com/tools/embedded-software-and-tools/hardware-development-tools/tower-development-boards/mcu-and-processor-modules/powerquicc-and-qoriq-modules/qoriq-ls1021a-tower-system-module:TWR-LS1021A?lang_cd=en>`_
      - ``PLATFORM=ls-ls1021atwr``
      - Yes
-     - Yes
+     - No (v2.6.0)
 
    * - `NXP ls1043ardb <http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls1043a-reference-design-board:LS1043A-RDB>`_
      - ``PLATFORM=ls-ls1043ardb``
@@ -131,7 +131,7 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `NXP i.MX7Solo WaRP7 Board <http://www.nxp.com/products/developer-resources/reference-designs/warp7-next-generation-iot-and-wearable-development-platform:WARP7>`_
      - ``PLATFORM=imx-mx7swarp7``
      - Yes
-     - Yes
+     - No (v3.8.0)
 
    * - `NXP i.MX8MQEVK Board <https://www.nxp.com/support/developer-resources/run-time-software/i.mx-developer-resources/evaluation-kit-for-the-i.mx-8m-applications-processor:MCIMX8M-EVK>`_
      - ``PLATFORM=imx-imx8mqevk``
@@ -151,7 +151,7 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `HiSilicon D02 <http://open-estuary.org/d02-2>`_
      - ``PLATFORM=d02``
      - No
-     - Yes
+     - No (v3.0.0)
 
    * - `HiSilicon Hi3519AV100 Demo Board <http://www.hisilicon.com/en/Products/ProductList/Surveillance>`_
      - ``PLATFORM=hisilicon-hi3519av100_demo``
@@ -171,21 +171,21 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Marvell ARMADA 7K Family <http://www.marvell.com/embedded-processors/armada-70xx/>`_
      - ``PLATFORM=marvell-armada7k8k``
      - Yes
-     - Yes
+     - No (v3.2.0)
 
    * - `Marvell ARMADA 8K Family <http://www.marvell.com/embedded-processors/armada-80xx/>`_
      - ``PLATFORM=marvell-armada7k8k``
      - Yes
-     - Yes
+     - No (v3.2.0)
 
    * - `Marvell ARMADA 3700 Family <http://www.marvell.com/embedded-processors/armada-3700/>`_
      - ``PLATFORM=marvell-armada3700``
      - Yes
-     - Yes
+     - No (v3.2.0)
 
    * - `MediaTek MT8173 EVB Board <https://www.mediatek.com/products/tablets/mt8173>`_
      - ``PLATFORM=mediatek-mt8173``
-     - No
+     - No (v3.0.0)
      - Yes
 
    * - `Poplar Board (HiSilicon Hi3798C V200) <https://www.96boards.org/product/poplar>`_
@@ -211,7 +211,7 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Renesas RCAR <https://www.renesas.com/en-sg/solutions/automotive/products/rcar-h3.html>`_
      - ``PLATFORM=rcar``
      - No
-     - Yes
+     - No (v3.12.0)
 
    * - `Renesas RZ/G <https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rz-cortex-a-mpus/rzg-linux-platform/rzg-marketplace/board-solutions>`_
      - ``PLATFORM=rzg``
@@ -221,27 +221,27 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Rockchip PX30 <http://rock-chips.com/a/en/products/rkpower/2018/0709/913.html>`_
      - ``PLATFORM=rockchip-px30``
      - No
-     - Yes
+     - Yes TODO
 
    * - `Rockchip RK322X <http://www.rock-chips.com/a/en/products/RK32_Series/2016/1109/799.html>`_
      - ``PLATFORM=rockchip-rk322x``
      - No
-     - Yes
+     - No (v3.3.0)
 
    * - `Rockchip RK3399 <http://rock-chips.com/a/en/products/RK33_Series/2016/0419/758.html>`_
      - ``PLATFORM=rockchip-rk3399``
      - Yes
-     - Yes
+     - Yes TODO
 
    * - `STMicroelectronics b2260 - h410 (96boards fmt) <http://www.st.com/web/en/catalog/mmc/FM131/SC999/SS1628/PF258776>`_
      - ``PLATFORM=stm-b2260``
      - No
-     - Yes
+     - No (v3.5.0)
 
    * - `STMicroelectronics b2120 - h310 / h410 <http://www.st.com/web/en/catalog/mmc/FM131/SC999/SS1628/PF258776>`_
      - ``PLATFORM=stm-cannes``
      - No
-     - Yes
+     - No (v2.5.0)
 
    * - `STMicroelectronics STM32MP1 series <http://www.st.com/stm32mp1>`_
      - ``PLATFORM=stm32mp1``
@@ -256,22 +256,22 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Texas Instruments AM65x <http://www.ti.com/processors/sitara-arm/am6x-cortex-a53-r5/overview.html>`_
      - ``PLATFORM=k3-am65x``
      - Yes
-     - Yes
+     - No (v3.8.0)
 
    * - `Texas Instruments DRA7xx <http://www.ti.com/processors/automotive-processors/drax-infotainment-socs/overview.html>`_
      - ``PLATFORM=ti-dra7xx``
      - Yes
-     - Yes
+     - No (v3.8.0)
 
    * - `Texas Instruments AM57xx <http://www.ti.com/processors/sitara/arm-cortex-a15/am57x/overview.html>`_
      - ``PLATFORM=ti-am57xx``
      - Yes
-     - Yes
+     - No (v3.8.0)
 
    * - `Texas Instruments AM43xx <http://www.ti.com/processors/sitara/arm-cortex-a9/am438x/overview.html>`_
      - ``PLATFORM=ti-am43xx``
      - Yes
-     - Yes
+     - No (v3.8.0)
 
    * - `Xilinx Zynq 7000 ZC702 <http://www.xilinx.com/products/boards-and-kits/ek-z7-zc702-g.html>`_
      - ``PLATFORM=zynq7k-zc702``
@@ -281,7 +281,7 @@ please refer to the file MAINTAINERS_ for contact details for various platforms.
    * - `Xilinx Zynq UltraScale+ MPSOC <http://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html>`_
      - ``PLATFORM=zynqmp-zcu102``
      - Yes
-     - No (v2.4.0)
+     - Yes
 
    * - `Spreadtrum SC9860 <http://spreadtrum.com/en/SC9860GV.html>`_
      - ``PLATFORM=sprd-sc9860``
